@@ -1,0 +1,411 @@
+/* Google Font - Poppins */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100..900&display=swap');
+
+/* ====== Base Styles ====== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+:root {
+  --body-color: #E4E9F7;
+  --sidebar-color: #FFF;
+  --primary-color: #800000;
+  --primary-color-light: #F6FSFF;
+  --toggle-color: #DDD;
+  --text-color: #707070;
+
+  --tran-02: all 0.2s ease;
+  --tran-03: all 0.3s ease;
+  --tran-04: all 0.4s ease;
+  --tran-05: all 0.5s ease;
+}
+
+body {
+  height: 100vh;
+  background: var(--body-color);
+  display: flex;
+}
+
+/* ====== Sidebar ====== */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 250px;
+  padding: 10px 14px;
+  background: var(--sidebar-color);
+}
+
+.sidebar .text {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.sidebar .image {
+  min-width: 60px;
+  display: flex;
+  align-items: center;
+}
+
+.sidebar li {
+  height: 50px;
+  margin: 10px;
+  list-style: none;
+  display: flex;
+  align-items: center;
+}
+
+.sidebar li .icon,
+.sidebar li .text {
+  color: var(--text-color);
+  transition: var(--tran-03);
+}
+
+.sidebar li .icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 60px;
+  font-size: 20px;
+}
+
+.sidebar header {
+  position: relative;
+}
+
+.sidebar .image-text {
+  display: flex;
+  align-items: center;
+}
+
+.sidebar .image-text img {
+  width: 60px;
+  border-radius: 6px;
+}
+
+.header-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.header-text .name {
+  font-weight: 600;
+}
+
+.sidebar header .toggle {
+  position: absolute;
+  top: 50%;
+  right: -25px;
+  transform: translateY(-50%);
+  height: 25px;
+  width: 25px;
+  background: var(--primary-color);
+  color: var(--sidebar-color);
+  font-size: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar li a {
+  text-decoration: none;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  border-radius: 6px;
+  transition: var(--tran-04);
+}
+
+.sidebar li a:hover {
+  background: var(--primary-color);
+}
+
+.sidebar li a:hover .icon,
+.sidebar li a:hover .text {
+  color: var(--sidebar-color);
+}
+
+.sidebar .search-box,
+.menu-bar .mode {
+  background: var(--primary-color-light);
+}
+
+.sidebar .menu-bar {
+  height: calc(100% - 50px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* ====== Dashboard Content ====== */
+.dashboard-content {
+  margin-left: 250px;
+  padding: 2rem;
+  width: 100%;
+  min-height: 100vh;
+  background: var(--body-color);
+}
+
+.dashboard-content h1 {
+  font-size: 24px;
+  color: var(--primary-color);
+  margin-bottom: 1.5rem;
+}
+
+/* ====== Cards ====== */
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.card {
+  background: var(--sidebar-color);
+  border-radius: 10px;
+  padding: 20px;
+  flex: 1 1 calc(33.333% - 40px);
+  max-width: calc(33.333% - 40px);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  transition: var(--tran-03);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.card i {
+  font-size: 2.5rem;
+  color: var(--primary-color);
+}
+
+.card h3 {
+  font-size: 22px;
+  color: var(--primary-color);
+}
+
+.card p {
+  font-size: 14px;
+  color: var(--text-color);
+}
+
+/* ====== Modals ====== */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  padding-top: 80px;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background-color: #fff;
+  margin: auto;
+  padding: 20px;
+  width: 300px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.modal-content input[type="text"],
+.modal-content input[type="date"],
+.modal-content input[type="file"] {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.modal-content button,
+.modal-buttons button {
+  background-color: #800000;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.modal-buttons button {
+  width: 120px;
+}
+
+.modal-content button:hover,
+.modal-buttons button:hover {
+  background-color: #a00000;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* ====== Table ====== */
+.table-section h2 {
+  background-color: #fff;
+  padding: 10px 15px;
+  border-radius: 6px;
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 20px;
+  color: #333;
+}
+
+.table-section table {
+  background: transparent;
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-size: 15px;
+  color: #000;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.table-section th,
+.table-section td {
+  padding: 12px 15px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  text-align: left;
+}
+
+.table-section th {
+  background-color: rgba(255, 255, 255, 0.85);
+  font-weight: 600;
+}
+
+.table-section tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* ====== Buttons ====== */
+.btn-update,
+.btn-delete,
+.btn-add {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  color: #fff;
+  text-decoration: none;
+}
+
+.btn-update {
+  background-color: #800000;
+}
+
+.btn-update:hover {
+  background-color: #a00000;
+}
+
+.btn-delete {
+  background-color: #b30000;
+}
+
+.btn-delete:hover {
+  background-color: #cc0000;
+}
+
+.btn-add {
+  background-color: #800000;
+  font-size: 16px;
+}
+
+.btn-add:hover {
+  background-color: #a00000;
+}
+
+.add-button-container {
+  text-align: right;
+  margin: 10px 0 20px;
+}
+
+/* ====== Search Bar ====== */
+.search-bar {
+  margin: 30px 0 10px;
+  display: flex;
+  justify-content: center;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 8px 12px;
+  width: 100%;
+  max-width: 450px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search-container input[type="text"] {
+  border: none;
+  outline: none;
+  flex: 1;
+  font-size: 14px;
+  background: transparent;
+}
+
+.search-container i {
+  font-size: 20px;
+  color: #800000;
+  margin-left: 8px;
+  cursor: pointer;
+}
+
+/* ====== Responsive ====== */
+@media screen and (max-width: 992px) {
+  .card {
+    flex: 1 1 45%;
+    max-width: 45%;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .card {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+
+  .dashboard-content {
+    padding: 1rem;
+    margin-left: 0;
+  }
+
+  .sidebar {
+    width: 100%;
+    position: static;
+  }
+}
