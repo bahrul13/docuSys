@@ -1,10 +1,7 @@
-
 document.addEventListener('DOMContentLoaded', () => {
   const body = document.querySelector('body');
   const sidebar = document.querySelector('.sidebar');
   const toggle = sidebar?.querySelector('.toggle');
-  const modeSwitch = body.querySelector('.toggle-switch');
-  const modeText = body.querySelector('.mode-text');
 
   // Sidebar toggle
   toggle?.addEventListener('click', () => {
@@ -20,12 +17,14 @@ document.addEventListener('DOMContentLoaded', () => {
     trs.forEach((tr, i) => {
       if (i === 0) return; // Skip header
       const tds = tr.querySelectorAll('td');
-      const visible = Array.from(tds).some(td => td.textContent.toLowerCase().includes(filter));
+      const visible = Array.from(tds).some(td =>
+        td.textContent.toLowerCase().includes(filter)
+      );
       tr.style.display = visible ? '' : 'none';
     });
   };
 
-  // Modal controls
+  // Modal helpers
   const showModal = (id) => document.getElementById(id).style.display = 'block';
   const hideModal = (id) => document.getElementById(id).style.display = 'none';
 
@@ -36,7 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('deleteId').value = id;
     showModal('deleteModal');
   };
-
   window.closeDeleteModal = () => hideModal('deleteModal');
 
   window.openUpdateModal = (id, program, issuance_date) => {
@@ -45,12 +43,17 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('updateDate').value = issuance_date;
     showModal('updateModal');
   };
-
   window.closeUpdateModal = () => hideModal('updateModal');
   window.closeUploadModal = () => hideModal('uploadModal');
-  window.closeMessageModal = () => hideModal('messageModal');
 
-  // Close modals when clicking outside
+  window.closeMessageModal = () => {
+    hideModal('messageModal');
+    const url = new URL(window.location);
+    url.searchParams.delete('updated');
+    window.history.replaceState({}, document.title, url);
+  };
+
+  // Close modals by clicking outside
   window.onclick = function (event) {
     const modalIds = [
       'addModal', 'deleteModal', 'updateModal',
@@ -65,18 +68,3 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
 });
-
-function closeMessageModal() {
-  document.getElementById('messageModal').style.display = 'none';
-  // Optional: remove the URL parameter after closing the modal
-  const url = new URL(window.location);
-  url.searchParams.delete('updated');
-  window.history.replaceState({}, document.title, url);
-}
-
-window.onload = function () {
-  const message = "<?= $updateMessage ?>";
-  if (message) {
-    document.getElementById('messageModal').style.display = 'block';
-  }
-};

@@ -201,6 +201,26 @@ body {
 }
 
 /* ====== Modals ====== */
+#addModal > div > form{
+  padding-top: 15px;
+}
+
+#updateModal > div > form{
+  padding-top: 15px;
+}
+
+#deleteModal > div > h1{
+  color: #800000;
+}
+
+#addModal > div > h1{
+  color: #800000;
+}
+
+#updateModal > div > h1{
+  color: #800000
+}
+
 .modal {
   display: none;
   position: fixed;
@@ -234,7 +254,7 @@ body {
 
 .modal-content button,
 .modal-buttons button {
-  background-color: #800000;
+  background-color: #28a745;
   color: #fff;
   border: none;
   padding: 8px 16px;
@@ -322,28 +342,28 @@ body {
 }
 
 .btn-update {
-  background-color: #800000;
+  background-color: #17a2b8;
 }
 
 .btn-update:hover {
-  background-color: #a00000;
+  background-color: #0056b3;
 }
 
 .btn-delete {
-  background-color: #b30000;
+  background-color: #dc3545;
 }
 
 .btn-delete:hover {
-  background-color: #cc0000;
+  background-color: #c82333;
 }
 
 .btn-add {
-  background-color: #800000;
+  background-color: #28a745;
   font-size: 16px;
 }
 
 .btn-add:hover {
-  background-color: #a00000;
+  background-color: #218838;
 }
 
 .add-button-container {
@@ -354,8 +374,12 @@ body {
 /* ====== Search Bar ====== */
 .search-bar {
   margin: 30px 0 10px;
-  display: flex;
-  justify-content: center;
+}
+
+#searchInput{
+  width: 100%;
+  padding: 10px;
+  border-radius: 25px;
 }
 
 .search-container {
@@ -371,6 +395,7 @@ body {
 }
 
 .search-container input[type="text"] {
+  width: 100%;
   border: none;
   outline: none;
   flex: 1;

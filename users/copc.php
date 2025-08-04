@@ -55,7 +55,7 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
     <div id="addModal" class="modal">
       <div class="modal-content">
         <span class="close" onclick="closeModal()">&times;</span>
-        <h3>Add New COPC</h3>
+        <h1>Add New COPC</h1>
         <form action="../handlers/add_copc.php" method="POST" enctype="multipart/form-data">
           <label>Program</label>
           <input type="text" name="program" required>
@@ -66,7 +66,7 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
           <label>PDF File</label>
           <input type="file" name="file_name" accept="application/pdf" required>
 
-          <button type="submit">Upload</button>
+          <button type="submit">Add</button>
         </form>
       </div>
     </div>
@@ -128,8 +128,10 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
 <div id="deleteModal" class="modal">
   <div class="modal-content">
     <span class="close" onclick="closeDeleteModal()">&times;</span>
-    <h3>Confirm Deletion</h3>
+    <h1>Confirm Deletion</h1>
+    <br>
     <p>Are you sure you want to delete this file?</p>
+    <br>
     <form id="deleteForm" method="GET" action="../handlers/delete_copc.php">
       <input type="hidden" name="id" id="deleteId">
       <button type="submit">Confirm</button>
@@ -144,7 +146,7 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
 <div id="updateModal" class="modal">
   <div class="modal-content">
     <span class="close" onclick="closeUpdateModal()">&times;</span>
-    <h3>Update COPC</h3>
+    <h1>Update COPC</h1>
     <form action="../handlers/update_copc.php" method="POST" enctype="multipart/form-data">
       <input type="hidden" name="id" id="updateId">
       <label>Program</label>
@@ -179,7 +181,13 @@ if (isset($_GET['updated'])) {
     <p id="messageText"><?= htmlspecialchars($updateMessage) ?></p>
   </div>
 </div>
-
-
+<script>
+  // Show message modal if applicable
+    const updateMessage = <?= json_encode($updateMessage ?? "") ?>;
+    if (updateMessage) {
+      document.getElementById('messageText').textContent = updateMessage;
+      showModal('messageModal');
+    }
+</script>
 </body>
 </html>
