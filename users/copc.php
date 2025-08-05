@@ -4,6 +4,13 @@ require '../db/db_conn.php';
 
 // Check if user is admin
 $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
+
+// Fetch programs from database
+$programs = [];
+$result = $conn->query("SELECT * FROM programs ORDER BY name ASC");
+while ($row = $result->fetch_assoc()) {
+    $programs[] = $row;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -47,28 +54,7 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
 
     <?php if ($isAdmin): ?>
     <div class="add-button-container">
-      <button class="btn-add" onclick="openModal()">Add COPC</button>
-    </div>
-    <?php endif; ?>
-
-    <?php if ($isAdmin): ?>
-    <div id="addModal" class="modal">
-      <div class="modal-content">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <h1>Add New COPC</h1>
-        <form action="../handlers/add_copc.php" method="POST" enctype="multipart/form-data">
-          <label>Program</label>
-          <input type="text" name="program" required>
-
-          <label>Date of Issuance</label>
-          <input type="date" name="issuance_date" required>
-
-          <label>PDF File</label>
-          <input type="file" name="file_name" accept="application/pdf" required>
-
-          <button type="submit">Add</button>
-        </form>
-      </div>
+      <a href="../views/add_copc_page.php" class="btn-add">Add COPC</a>
     </div>
     <?php endif; ?>
 
@@ -76,7 +62,6 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
       <table>
         <thead>
           <tr>
-            <th>ID</th>
             <th>Program</th>
             <th>Date of Issuance</th>
             <th>PDF File</th>
@@ -93,7 +78,6 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
           while ($row = $result->fetch_assoc()):
         ?>
           <tr>
-            <td><?= htmlspecialchars($row['id']) ?></td>
             <td><?= htmlspecialchars($row['program']) ?></td>
             <td><?= htmlspecialchars($row['issuance_date']) ?></td>
             <td><a href="../uploads/copc/<?= htmlspecialchars($row['file_name']) ?>" target="_blank">View PDF</a></td>
@@ -129,9 +113,7 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
   <div class="modal-content">
     <span class="close" onclick="closeDeleteModal()">&times;</span>
     <h1>Confirm Deletion</h1>
-    <br>
     <p>Are you sure you want to delete this file?</p>
-    <br>
     <form id="deleteForm" method="GET" action="../handlers/delete_copc.php">
       <input type="hidden" name="id" id="deleteId">
       <button type="submit">Confirm</button>
@@ -181,13 +163,15 @@ if (isset($_GET['updated'])) {
     <p id="messageText"><?= htmlspecialchars($updateMessage) ?></p>
   </div>
 </div>
+
 <script>
   // Show message modal if applicable
-    const updateMessage = <?= json_encode($updateMessage ?? "") ?>;
-    if (updateMessage) {
-      document.getElementById('messageText').textContent = updateMessage;
-      showModal('messageModal');
-    }
+  const updateMessage = <?= json_encode($updateMessage ?? "") ?>;
+  if (updateMessage) {
+    document.getElementById('messageText').textContent = updateMessage;
+    showModal('messageModal');
+  }
 </script>
+
 </body>
 </html>

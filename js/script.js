@@ -68,3 +68,35 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
 });
+
+function openModal() {
+    document.getElementById('programModal').style.display = 'flex';
+  }
+  function closeModal() {
+    document.getElementById('programModal').style.display = 'none';
+  }
+
+  document.getElementById('addProgramForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const newProgram = document.getElementById('newProgram').value;
+
+    fetch('../handlers/add_program.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: 'program_name=' + encodeURIComponent(newProgram)
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        const select = document.getElementById('program');
+        const option = document.createElement('option');
+        option.value = newProgram;
+        option.text = newProgram;
+        option.selected = true;
+        select.add(option);
+        closeModal();
+      } else {
+        alert('Failed to add program: ' + data.message);
+      }
+    });
+  });

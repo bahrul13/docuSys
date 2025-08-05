@@ -47,6 +47,15 @@
             <span class="text nav-text">Other Documents</span>
           </a>
         </li>
+
+        <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
+          <li class="nav-link">
+            <a href="../users/programs.php">
+              <i class='bx bx-file icon'></i>
+              <span class="text nav-text">Programs</span>
+            </a>
+          </li>
+        <?php endif; ?>
       </ul>
     </div>
 

@@ -434,3 +434,182 @@ body {
     position: static;
   }
 }
+
+.form-box {
+  max-width: 500px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.form-box input[type="text"],
+.form-box input[type="date"],
+.form-box input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.btn-cancel {
+  padding: 10px 20px;
+  background-color: gray;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  text-decoration: none;
+}
+
+.btn-cancel:hover {
+  background-color: #555;
+}
+
+.form-box select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+  appearance: none; /* Removes default arrow in some browsers */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  font-size: 16px;
+}
+
+.form-box select:focus {
+  outline: none;
+  border-color: #5b9bd5; /* highlight border on focus */
+  box-shadow: 0 0 5px rgba(91, 155, 213, 0.5);
+}
+
+.form-box option {
+  padding: 10px;
+}
+
+/* Wrapper to position icon */
+.select-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.select-wrapper select {
+  width: 100%;
+  padding: 10px;
+  padding-right: 40px; /* space for icon */
+  margin-top: 5px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  appearance: none;
+  background-color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.select-wrapper select:focus {
+  outline: none;
+  border-color: #5b9bd5;
+  box-shadow: 0 0 5px rgba(91, 155, 213, 0.5);
+}
+
+.select-wrapper .select-icon {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none; /* so clicks go through to the select */
+  color: #666;
+  font-size: 20px;
+}
+
+/* ====== Add Program Page Styles ====== */
+.container {
+  max-width: 500px;
+  margin: 80px auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: var(--primary-color);
+  font-size: 24px;
+}
+
+.container label {
+  font-weight: 500;
+  display: block;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.container input[type="text"] {
+  width: 100%;
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+  font-size: 15px;
+  transition: border-color 0.3s ease;
+}
+
+.container input[type="text"]:focus {
+  border-color: var(--primary-color);
+  outline: none;
+}
+
+.container button[type="submit"] {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--primary-color);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.container button[type="submit"]:hover {
+  background-color: #a00000;
+}
+
+.message {
+  text-align: center;
+  margin-top: 15px;
+  font-weight: 500;
+  color: green;
+}
+
+.message.error {
+  color: red;
+}
+
+.container .back {
+  display: block;
+  text-align: center;
+  margin-top: 20px;
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.container .back:hover {
+  text-decoration: underline;
+}
