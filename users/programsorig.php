@@ -13,7 +13,25 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
   <title>Programs</title>
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="../css/style.css" />
+  <style>
+    .alert {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: #38a169;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 4px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      z-index: 1000;
+      animation: fadeIn 0.5s ease-in-out;
+    }
 
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
 <body>
 
@@ -30,20 +48,6 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
   </script>
 <?php endif; ?>
 
-<!-- DELETE FLASH MESSAGE -->
-<?php if (isset($_SESSION['delete_flash'])): ?>
-  <div class="delete-alert" id="deleteFlash">
-    <?= $_SESSION['delete_flash']; unset($_SESSION['delete_flash']); ?>
-  </div>
-  <script>
-    setTimeout(() => {
-      const alert = document.getElementById('deleteFlash');
-      if (alert) alert.remove();
-    }, 3000);
-  </script>
-<?php endif; ?>
-
-
 <section class="dashboard-content">
   <h1>Programs</h1>
 
@@ -54,18 +58,13 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
         <?php
         $countQuery = "SELECT COUNT(*) AS total FROM programs";
         $countResult = $conn->query($countQuery);
-
-        $totalPrograms = 0;
-        if ($countResult && $row = $countResult->fetch_assoc()) {
-            $totalPrograms = $row['total'];
-        }
+        $totalPrograms = $countResult && $row = $countResult->fetch_assoc() ? $row['total'] : 0;
         ?>
         <h3><?= $totalPrograms ?></h3>
         <p>Total number of Programs</p>
       </div>
     </div>
   </div>
-
 
   <div class="search-bar">
     <input type="text" id="searchInput" placeholder="Search programs..." onkeyup="filterTable()" />
@@ -133,7 +132,7 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
 <div id="deleteProgramModal" class="modal">
   <div class="modal-content">
     <span class="close" onclick="closeDeleteProgramModal()">&times;</span>
-    <h1>Delete Program</h1>
+    <h2>Delete Program</h2>
     <p>Are you sure you want to delete this program?</p>
     <form action="../handlers/delete_prog.php" method="POST">
       <input type="hidden" name="id" id="deleteProgramId">
@@ -143,9 +142,7 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
   </div>
 </div>
 <?php endif; ?>
-<style>
 
-</style>
 <script src="../js/script.js"></script>
 </body>
 </html>

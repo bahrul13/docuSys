@@ -1,10 +1,11 @@
 <?php
+session_start();
 include '../db/db_conn.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $program_name = trim($_POST['program_name']);
 
-    if (!empty($program_name) && !empty($program)) {
+    if (!empty($program_name)) {
         // Check if program_name already exists
         $check_stmt = $conn->prepare("SELECT id FROM programs WHERE name = ?");
         $check_stmt->bind_param("s", $program_name);
@@ -12,8 +13,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $check_stmt->store_result();
 
         if ($check_stmt->num_rows > 0) {
-            // Program name already exists
-            header("Location: ../users/programs.php?message=Error: Program name already exists.");
+            $_SESSION['flash'] = "❌ Program name already exists.";
+            header("Location: ../users/programs.php");
             exit();
         }
 
@@ -22,15 +23,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bind_param("s", $program_name);
 
         if ($stmt->execute()) {
-            header("Location: ../users/programs.php?message=Program added successfully");
-            exit();
+            $_SESSION['flash'] = "✅ Program added successfully.";
         } else {
-            header("Location: ../users/programs.php?message=Error: Could not save the program.");
-            exit();
+            $_SESSION['flash'] = "❌ Error: Could not save the program.";
         }
+
+        header("Location: ../users/programs.php");
+        exit();
     } else {
-        header("Location: ../users/programs.php?message=Error: All fields are required.");
+        $_SESSION['flash'] = "❌ All fields are required.";
+        header("Location: ../users/programs.php");
         exit();
     }
 }
-?>

@@ -100,3 +100,31 @@ function openModal() {
       }
     });
   });
+
+
+   function openUpdateProgramModal(id, name) {
+    document.getElementById('updateProgramId').value = id;
+    document.getElementById('updateProgramName').value = name;
+    document.getElementById('updateProgramModal').style.display = 'block';
+  }
+
+  function closeUpdateProgramModal() {
+    document.getElementById('updateProgramModal').style.display = 'none';
+  }
+
+  function openDeleteProgramModal(id) {
+    document.getElementById('deleteProgramId').value = id;
+    document.getElementById('deleteProgramModal').style.display = 'block';
+  }
+
+  function closeDeleteProgramModal() {
+    document.getElementById('deleteProgramModal').style.display = 'none';
+  }
+
+  // Close modal when clicking outside
+  window.onclick = function(event) {
+    const updateModal = document.getElementById('updateProgramModal');
+    const deleteModal = document.getElementById('deleteProgramModal');
+    if (event.target === updateModal) updateModal.style.display = 'none';
+    if (event.target === deleteModal) deleteModal.style.display = 'none';
+  };

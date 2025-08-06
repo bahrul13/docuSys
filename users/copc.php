@@ -9,7 +9,7 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
 $programs = [];
 $result = $conn->query("SELECT * FROM programs ORDER BY name ASC");
 while ($row = $result->fetch_assoc()) {
-    $programs[] = $row;
+    $programs[] = $row['name'];
 }
 ?>
 <!DOCTYPE html>
@@ -32,15 +32,39 @@ while ($row = $result->fetch_assoc()) {
     <div class="card">
       <i class='bx bx-file'></i>
       <div>
-        <h3>120</h3>
-        <p>Total COPC Documents</p>
+        <?php
+        // Query to count the total number of programs
+        $countQuery = "SELECT COUNT(*) AS total FROM copc";
+        $countResult = $conn->query($countQuery);
+        $totalCopc = 0;
+        if ($countResult && $row = $countResult->fetch_assoc()) {
+            $totalCopc = $row['total'];
+        }
+        ?>
+        <h3><?= $totalCopc ?></h3>
+        <p>Total number of COPC</p>
       </div>
     </div>
     <div class="card">
-      <i class='bx bx-user'></i>
+      <i class='bx bx-file'></i>
       <div>
-        <h3>15</h3>
-        <p>Total Recently Uploaded Documents</p>
+      <?php
+        // Get current date minus 7 days
+        $sevenDaysAgo = date('Y-m-d H:i:s', strtotime('-7 days'));
+
+        // SQL query to count recent uploads
+        $recentQuery = "SELECT COUNT(*) AS recent_total FROM copc WHERE uploaded_at >= ?";
+        $stmt = $conn->prepare($recentQuery);
+        $stmt->bind_param("s", $sevenDaysAgo);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $recentTotal = 0;
+        if ($result && $row = $result->fetch_assoc()) {
+            $recentTotal = $row['recent_total'];
+        }
+        ?>
+        <h3><?= $recentTotal ?></h3>
+        <p>Files Uploaded in Last 7 Days</p>
       </div>
     </div>
   </div>
@@ -93,11 +117,8 @@ while ($row = $result->fetch_assoc()) {
             </td>
             <?php endif; ?>
           </tr>
-        <?php
-          endwhile;
-        else:
-        ?>
-          <tr><td colspan="<?= $isAdmin ? 6 : 5 ?>">No documents found.</td></tr>
+        <?php endwhile; else: ?>
+          <tr><td colspan="<?= $isAdmin ? 5 : 4 ?>">No documents found.</td></tr>
         <?php endif; ?>
         </tbody>
       </table>
@@ -113,10 +134,10 @@ while ($row = $result->fetch_assoc()) {
   <div class="modal-content">
     <span class="close" onclick="closeDeleteModal()">&times;</span>
     <h1>Confirm Deletion</h1>
-    <p>Are you sure you want to delete this file?</p>
-    <form id="deleteForm" method="GET" action="../handlers/delete_copc.php">
+    <p>Are you sure you want to delete this COPC?</p>
+    <form id="deleteForm" method="POST" action="../handlers/delete_copc.php">
       <input type="hidden" name="id" id="deleteId">
-      <button type="submit">Confirm</button>
+      <button type="submit" class="btn-delete-confirm">Confirm</button>
       <button type="button" onclick="closeDeleteModal()" style="background-color: gray; margin-left: 10px;">Cancel</button>
     </form>
   </div>
@@ -130,48 +151,37 @@ while ($row = $result->fetch_assoc()) {
     <span class="close" onclick="closeUpdateModal()">&times;</span>
     <h1>Update COPC</h1>
     <form action="../handlers/update_copc.php" method="POST" enctype="multipart/form-data">
+      
+      <!-- Hidden field for ID -->
       <input type="hidden" name="id" id="updateId">
-      <label>Program</label>
-      <input type="text" name="program" id="updateProgram" required>
 
-      <label>Date of Issuance</label>
+      <!-- Program Dropdown -->
+      <label for="updateProgram">Program</label>
+      <div class="select-wrapper">
+        <select name="program" id="updateProgram" required>
+          <option value="" disabled selected>Select Program</option>
+          <?php foreach ($programs as $prog): ?>
+            <option value="<?= htmlspecialchars($prog) ?>"><?= htmlspecialchars($prog) ?></option>
+          <?php endforeach; ?>
+        </select>
+        <i class="bx bx-chevron-down select-icon"></i>
+      </div>
+
+      <!-- Date Picker -->
+      <label for="updateDate">Date of Issuance</label>
       <input type="date" name="issuance_date" id="updateDate" required>
 
-      <label>Replace PDF File (optional)</label>
-      <input type="file" name="file_name" accept="application/pdf">
+      <!-- File Upload -->
+      <label for="updateFile">Replace PDF File (optional)</label>
+      <input type="file" name="file_name" id="updateFile" accept="application/pdf">
 
+      <!-- Submit Button -->
       <button type="submit">Update</button>
     </form>
   </div>
 </div>
 <?php endif; ?>
 
-<?php
-$updateMessage = '';
-if (isset($_GET['updated'])) {
-    if ($_GET['updated'] == 1) {
-        $updateMessage = "File updated successfully!";
-    } elseif ($_GET['updated'] == 0) {
-        $updateMessage = "Failed to update the file.";
-    }
-}
-?>
-
-<div id="messageModal" class="modal" style="display:none;">
-  <div class="modal-content">
-    <span class="close" onclick="closeMessageModal()">&times;</span>
-    <p id="messageText"><?= htmlspecialchars($updateMessage) ?></p>
-  </div>
-</div>
-
-<script>
-  // Show message modal if applicable
-  const updateMessage = <?= json_encode($updateMessage ?? "") ?>;
-  if (updateMessage) {
-    document.getElementById('messageText').textContent = updateMessage;
-    showModal('messageModal');
-  }
-</script>
 
 </body>
 </html>

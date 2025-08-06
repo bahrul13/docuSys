@@ -8,6 +8,8 @@ if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
     header('Location: ../login.php');
     exit();
 }
+
+include('../db/db_conn.php');
 ?>
 
 <!DOCTYPE html>
@@ -33,8 +35,17 @@ if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
         <div class="card">
             <i class='bx bx-file'></i>
             <div>
-                <h3>120</h3>
-                <p>Total Documents</p>
+                <?php
+                $countQuery = "SELECT COUNT(*) AS total FROM programs";
+                $countResult = $conn->query($countQuery);
+
+                $totalPrograms = 0;
+                if ($countResult && $row = $countResult->fetch_assoc()) {
+                    $totalPrograms = $row['total'];
+                }
+                ?>
+                <h3><?= $totalPrograms ?></h3>
+                <p>Total number of Programs</p>
             </div>
         </div>
         <div class="card">
