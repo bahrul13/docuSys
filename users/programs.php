@@ -45,9 +45,8 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
 
 
 <section class="dashboard-content">
-  <h1>Programs</h1>
 
-  <div class="cards">
+  <!-- <div class="cards">
     <div class="card">
       <i class='bx bx-file'></i>
       <div>
@@ -64,15 +63,14 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
         <p>Total number of Programs</p>
       </div>
     </div>
-  </div>
-
-
-  <div class="search-bar">
-    <input type="text" id="searchInput" placeholder="Search programs..." onkeyup="filterTable()" />
-  </div>
+  </div> -->
 
   <section class="table-section">
     <h2>List of Programs</h2>
+
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search programs..." onkeyup="filterTable()" />
+    </div>
 
     <?php if ($isAdmin): ?>
     <div class="add-button-container">

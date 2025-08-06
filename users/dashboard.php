@@ -29,7 +29,9 @@ include('../db/db_conn.php');
     <?php include('../includes/sidebar.php'); ?>
 
   <section class="dashboard-content">
-    <h1>Welcome, Admin</h1>
+    <h1 style="
+    padding: 20px;
+    color: var(--primary-color);">Welcome, Admin</h1>
 
     <div class="cards">
         <div class="card">
@@ -51,8 +53,17 @@ include('../db/db_conn.php');
         <div class="card">
             <i class='bx bx-user'></i>
             <div>
-                <h3>15</h3>
-                <p>Total TRBA</p>
+                <?php
+                $countQuery = "SELECT COUNT(*) AS total FROM copc";
+                $countResult = $conn->query($countQuery);
+
+                $totalCopc = 0;
+                if ($countResult && $row = $countResult->fetch_assoc()) {
+                    $totalCopc = $row['total'];
+                }
+                ?>
+                <h3><?= $totalCopc ?></h3>
+                <p>Total number of COPC</p>
             </div>
         </div>
         <div class="card">

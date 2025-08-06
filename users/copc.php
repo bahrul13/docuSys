@@ -26,8 +26,8 @@ while ($row = $result->fetch_assoc()) {
 <?php include('../includes/sidebar.php'); ?>
 
 <section class="dashboard-content">
-  <h1>Certificate Of Program Compliance Report</h1>
 
+<!-- 
   <div class="cards">
     <div class="card">
       <i class='bx bx-file'></i>
@@ -67,14 +67,14 @@ while ($row = $result->fetch_assoc()) {
         <p>Files Uploaded in Last 7 Days</p>
       </div>
     </div>
-  </div>
-
-  <div class="search-bar">
-    <input type="text" id="searchInput" placeholder="Search documents..." onkeyup="filterTable()" />
-  </div>
+  </div> -->
 
   <section class="table-section">
-    <h2>COPC List</h2>
+    <h2>List of Certificate of Program Compliance Files</h2>
+
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search documents..." onkeyup="filterTable()" />
+    </div>
 
     <?php if ($isAdmin): ?>
     <div class="add-button-container">

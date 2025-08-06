@@ -1,5 +1,6 @@
 <?php
 session_start();
+require '../db/db_conn.php';
 
 // Check if user is admin
 $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
@@ -22,9 +23,8 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
 <?php include('../includes/sidebar.php'); ?>
 
 <section class="dashboard-content">
-  <h1>Summary of Findings and Recommendation</h1>
 
-  <!-- 🔷 Dashboard Cards -->
+  <!-- 🔷 Dashboard Cards
   <div class="cards">
     <div class="card">
         <i class='bx bx-file'></i>
@@ -40,16 +40,17 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
             <p>Total Recently Uploaded Documents</p>
         </div>
     </div>
-  </div>
-
-  <!-- 🔍 Search Bar -->
-  <div class="search-bar">
-    <input type="text" id="searchInput" placeholder="Search documents..." onkeyup="filterTable()" />
-  </div>
+  </div> -->
 
   <!-- 📄 Table Section -->
   <section class="table-section">
-    <h2>SFR List</h2>
+    <h2>List of Summary of Findings and Recommendation Files</h2>
+
+    <!-- 🔍 Search Bar -->
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search documents..." onkeyup="filterTable()" />
+    </div>
+    
     <div class="table-container">
       <table>
         <thead>

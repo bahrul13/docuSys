@@ -6,7 +6,7 @@
       </span>
 
       <div class="text header-text">
-        <span class="name">Document Management System</span>
+        <span class="name">QMSO Document Management System</span>
       </div>
     </div>
   </header>
@@ -31,7 +31,7 @@
         </li>
         <li class="nav-link">
           <a href="../users/sfr.php">
-            <i class='bx bx-file icon'></i>
+            <i class='bx bx-detail icon'></i>
             <span class="text nav-text">SFR</span>
           </a>
         </li>
@@ -43,19 +43,51 @@
         </li>
         <li class="nav-link">
           <a href="../users/other.php">
-            <i class='bx bx-file icon'></i>
-            <span class="text nav-text">Other Documents</span>
+            <i class='bx bx-award icon'></i>
+            <span class="text nav-text">Accreditation Documents</span>
           </a>
         </li>
 
         <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
+          <li class="nav-link dropdown">
+            <a href="" class="dropdown-toggle">
+              <i class='bx bx-dots-horizontal-rounded icon'></i>
+              <span class="text nav-text">Others</span>
+              <i class='bx bx-chevron-down icon dropdown-icon'></i>
+            </a>
+            <ul class="dropdown-menu">
+              <li>
+                <a href="../users/programs.php">
+                  <i class="bx bx-book icon"></i>
+                  <span class="text nav-text">Programs</span>
+                </a>
+              </li>
+              <li>
+                <a href="../users/department.php">
+                  <i class="bx bx-building icon"></i>
+                  <span class="text nav-text">Departments</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+        <?php endif; ?>
+
+
+
+        <!-- <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
           <li class="nav-link">
             <a href="../users/programs.php">
               <i class='bx bx-file icon'></i>
               <span class="text nav-text">Programs</span>
             </a>
           </li>
-        <?php endif; ?>
+          <li class="nav-link">
+            <a href="../users/department.php">
+              <i class='bx bx-file icon'></i>
+              <span class="text nav-text">Departments</span>
+            </a>
+          </li>
+        <?php endif; ?> -->
       </ul>
     </div>
 
