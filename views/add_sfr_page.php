@@ -30,14 +30,13 @@ while ($row = $result->fetch_assoc()) {
 <?php include('../includes/sidebar.php'); ?>
 
 <section class="dashboard-content">
-  <h1>Add Certificate of Program Compliance (COPC)</h1>
+  <h1>Add Summary of Findings and Recommendations (SFR)</h1>
 
   <div class="form-container">
-    <form action="../handlers/add_copc.php" method="POST" enctype="multipart/form-data" class="form-box">
+    <form action="../handlers/add_sfr.php" method="POST" enctype="multipart/form-data" class="form-box">
       <label for="program">Program Name</label>
       <div class="select-wrapper">
-        
-        <select name="program" id="program" required>
+        <select name="program_name" id="program" required>
           <option value="" disabled selected>Select Program Name</option>
           <?php foreach ($programs as $prog): ?>
             <option value="<?= htmlspecialchars($prog) ?>"><?= htmlspecialchars($prog) ?></option>
@@ -46,15 +45,27 @@ while ($row = $result->fetch_assoc()) {
         <i class="bx bx-chevron-down select-icon"></i>
       </div>
 
-      <label for="issuance_date">Date of Issuance</label>
-      <input type="date" name="issuance_date" id="issuance_date" required>
+      <div class="select-wrapper">
+        <label for="survey_type">Type of Survey</label>
+        <select name="survey_type" id="survey_type" required>
+          <option value="">Select Type of Survey</option>
+          <option value="Level 1">Level 1</option>
+          <option value="Level 2">Level 2</option>
+          <option value="Level 3">Level 3</option>
+          <option value="Level 4">Level 4</option>
+        </select>
+        <i class="bx bx-chevron-down select-icon"></i>
+      </div>
+
+      <label for="survey_date">Date of Survey</label>
+      <input type="date" name="survey_date" id="survey_date" required>
 
       <label for="file_name">PDF File</label>
       <input type="file" name="file_name" id="file_name" accept="application/pdf" required>
 
       <div class="form-buttons">
-        <button type="submit" class="btn-add">Add COPC</button>
-        <a href="../users/copc.php" class="btn-cancel">Cancel</a>
+        <button type="submit" class="btn-add">Add SFR</button>
+        <a href="../users/sfr.php" class="btn-cancel">Cancel</a>
       </div>
     </form>
   </div>

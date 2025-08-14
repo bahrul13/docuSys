@@ -4,6 +4,14 @@ require '../db/db_conn.php';
 
 // Check if user is admin
 $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
+
+// Fetch programs from database
+$programs = [];
+$result = $conn->query("SELECT * FROM programs ORDER BY name ASC");
+while ($row = $result->fetch_assoc()) {
+    $programs[] = $row['name'];
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -22,25 +30,18 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
 
 <?php include('../includes/sidebar.php'); ?>
 
-<section class="dashboard-content">
+ <!-- FLASH MESSAGE -->
+  <?php if (isset($_SESSION['flash'])): ?>
+    <div class="alert" id="flashMessage"><?= $_SESSION['flash']; unset($_SESSION['flash']); ?></div>
+    <script>
+      setTimeout(() => {
+        const alert = document.getElementById('flashMessage');
+        if (alert) alert.remove();
+      }, 3000);
+    </script>
+  <?php endif; ?>
 
-  <!-- 🔷 Dashboard Cards
-  <div class="cards">
-    <div class="card">
-        <i class='bx bx-file'></i>
-        <div>
-            <h3>120</h3>
-            <p>Total SFR Documents</p>
-        </div>
-    </div>
-    <div class="card">
-        <i class='bx bx-user'></i>
-        <div>
-            <h3>15</h3>
-            <p>Total Recently Uploaded Documents</p>
-        </div>
-    </div>
-  </div> -->
+<section class="dashboard-content">
 
   <!-- 📄 Table Section -->
   <section class="table-section">
@@ -50,74 +51,123 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
     <div class="search-bar">
       <input type="text" id="searchInput" placeholder="Search documents..." onkeyup="filterTable()" />
     </div>
+
+    <?php if ($isAdmin): ?>
+    <div class="add-button-container">
+      <a href="../views/add_sfr_page.php" class="btn-add">Add SFR</a>
+    </div>
+    <?php endif; ?>
     
     <div class="table-container">
       <table>
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Document Name</th>
-            <th>Uploaded By</th>
+            <th>Program Name</th>
+            <th>Survey Type</th>
+            <th>Survey Date</th>
+            <th>File</th>
             <th>Date Uploaded</th>
-            <?php if ($isAdmin): ?>
-              <th>Action</th>
-            <?php endif; ?>
+            <?php if ($isAdmin): ?><th>Action</th><?php endif; ?>
           </tr>
         </thead>
         <tbody>
+        <?php
+        $sql = "SELECT * FROM sfr ORDER BY date_uploaded DESC";
+        $result = $conn->query($sql);
+
+        if ($result && $result->num_rows > 0):
+          while ($row = $result->fetch_assoc()):
+        ?>
           <tr>
-            <td>1</td>
-            <td>Project Report 2024</td>
-            <td>Admin</td>
-            <td>2025-07-28</td>
+            <td><?= htmlspecialchars($row['program_name']) ?></td>
+            <td><?= htmlspecialchars($row['survey_type']) ?></td>
+            <td><?= htmlspecialchars($row['survey_date']) ?></td>
+            <td><a href="../uploads/sfr/<?= htmlspecialchars($row['file_name']) ?>" target="_blank">View PDF</a></td>
+            <td><?= htmlspecialchars($row['date_uploaded']) ?></td>
             <?php if ($isAdmin): ?>
-              <td>
-                <a href="update.php?id=1" class="btn-update">Update</a>
-                <a href="delete.php?id=1" class="btn-delete" onclick="return confirm('Are you sure you want to delete this file?');">Delete</a>
-              </td>
+            <td>
+              <button class="btn-update" onclick="openUpdateSfrModal(
+                <?= $row['id'] ?>,
+                '<?= htmlspecialchars($row['program_name'], ENT_QUOTES) ?>',
+                '<?= htmlspecialchars($row['survey_type'], ENT_QUOTES) ?>',
+                '<?= $row['survey_date'] ?>'
+              )">Update</button>
+              <button class="btn-delete" onclick="openDeleteSfrModal(<?= $row['id'] ?>)">Delete</button>
+            </td>
             <?php endif; ?>
           </tr>
-          <tr>
-            <td>2</td>
-            <td>Policy Draft</td>
-            <td>Editor</td>
-            <td>2025-07-25</td>
-            <?php if ($isAdmin): ?>
-              <td>
-                <a href="update.php?id=2" class="btn-update">Update</a>
-                <a href="delete.php?id=2" class="btn-delete" onclick="return confirm('Are you sure you want to delete this file?');">Delete</a>
-              </td>
-            <?php endif; ?>
-          </tr>
+        <?php endwhile; else: ?>
+          <tr><td colspan="<?= $isAdmin ? 6 : 5 ?>">No documents found.</td></tr>
+        <?php endif; ?>
         </tbody>
       </table>
     </div>
   </section>
 </section>
 
-<script src="../js/script.js"></script>
+<?php if ($isAdmin): ?>
+<!-- UPDATE SFR MODAL -->
+<div id="updateSfrModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeUpdateSfrModal()">&times;</span>
+    <h1>Update SFR</h1>
+    <form action="../handlers/update_sfr.php" method="POST" enctype="multipart/form-data">
+      <input type="hidden" name="id" id="updateSfrId">
+
+      <label for="updateSfrProgramName">Program Name</label>
+      <div class="select-wrapper">
+        <select name="program_name" id="updateSfrProgramName" required>
+          <option value="" disabled selected>Select Program</option>
+          <?php foreach ($programs as $prog): ?>
+            <option value="<?= htmlspecialchars($prog) ?>"><?= htmlspecialchars($prog) ?></option>
+          <?php endforeach; ?>
+        </select>
+        <i class="bx bx-chevron-down select-icon"></i>
+      </div>
+
+      <div class="select-wrapper">
+        <label for="updateSfrSurveyType">Type of Survey</label>
+        <select name="survey_type" id="updateSfrSurveyType" required>
+          <option value="">Select Type of Survey</option>
+          <option value="Level 1">Level 1</option>
+          <option value="Level 2">Level 2</option>
+          <option value="Level 3">Level 3</option>
+          <option value="Level 4">Level 4</option>
+        </select>
+        <i class="bx bx-chevron-down select-icon"></i>
+      </div>
+
+      <label for="updateSfrSurveyDate">Survey Date</label>
+      <input type="date" name="survey_date" id="updateSfrSurveyDate" required>
+
+      <label for="updateSfrFile">Upload New PDF (optional)</label>
+      <input type="file" name="file_name" id="updateSfrFile" accept="application/pdf">
+
+      <button type="submit">Update</button>
+    </form>
+  </div>
+</div>
+
+<!-- DELETE SFR MODAL -->
+<div id="deleteSfrModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeDeleteSfrModal()">&times;</span>
+    <h1>Delete SFR</h1>
+    <p>Are you sure you want to delete this SFR record?</p>
+    <form action="../handlers/delete_sfr.php" method="POST">
+      <input type="hidden" name="id" id="deleteSfrId">
+      <button type="submit" class="btn-delete-confirm">Confirm</button>
+      <button type="button" onclick="closeDeleteSfrModal()" style="background-color: gray; margin-left: 10px;">Cancel</button>
+    </form>
+  </div>
+</div>
+<?php endif; ?>
+
 <script>
-function filterTable() {
-  const input = document.getElementById("searchInput");
-  const filter = input.value.toLowerCase();
-  const table = document.querySelector("table");
-  const trs = table.getElementsByTagName("tr");
 
-  for (let i = 1; i < trs.length; i++) {
-    const tds = trs[i].getElementsByTagName("td");
-    let visible = false;
-
-    for (let j = 0; j < tds.length; j++) {
-      if (tds[j] && tds[j].innerText.toLowerCase().includes(filter)) {
-        visible = true;
-        break;
-      }
-    }
-
-    trs[i].style.display = visible ? "" : "none";
-  }
-}
 </script>
+
+<script src="../js/script.js"></script>
 
 </body>
 </html>

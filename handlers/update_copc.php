@@ -2,6 +2,13 @@
 session_start();
 require '../db/db_conn.php';
 
+// Check if admin
+if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
+    $_SESSION['flash'] = "Access denied.";
+    header("Location: ../users/programs.php");
+    exit();
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = $_POST['id'];
     $program = $_POST['program'];
@@ -16,7 +23,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt = $conn->prepare("UPDATE copc SET program = ?, issuance_date = ?, file_name = ? WHERE id = ?");
             $stmt->bind_param("sssi", $program, $issuance_date, $fileName, $id);
         } else {
-            die("File upload failed.");
+            $_SESSION['flash'] = "❌ File upload failed.";
+            header("Location: ../users/copc.php");
+            exit();
         }
     } else {
         $stmt = $conn->prepare("UPDATE copc SET program = ?, issuance_date = ? WHERE id = ?");
@@ -24,10 +33,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if ($stmt->execute()) {
-        header("Location: ../users/copc.php?updated=0");
-        exit();
+        $_SESSION['flash'] = "✅ COPC record updated successfully.";
     } else {
-        echo "Update failed.";
+        $_SESSION['flash'] = "❌ Failed to update COPC record.";
     }
+
+    $stmt->close();
+    $conn->close();
+    
+    header("Location: ../users/copc.php");
+    exit();
+} else {
+    $_SESSION['flash'] = "⚠️ Invalid request method.";
+    header("Location: ../users/copc.php");
+    exit();
 }
 ?>

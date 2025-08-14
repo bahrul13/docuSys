@@ -101,6 +101,7 @@ function openModal() {
     });
   });
 
+  //PROGRAM MODALS
 
    function openUpdateProgramModal(id, name) {
     document.getElementById('updateProgramId').value = id;
@@ -128,3 +129,31 @@ function openModal() {
     if (event.target === updateModal) updateModal.style.display = 'none';
     if (event.target === deleteModal) deleteModal.style.display = 'none';
   };
+
+
+  //SFR MODALS
+
+  // Open Update Modal
+function openUpdateSfrModal(id, programName, surveyType, surveyDate) {
+  document.getElementById('updateSfrId').value = id;
+  document.getElementById('updateSfrProgramName').value = programName;
+  document.getElementById('updateSfrSurveyType').value = surveyType;
+  document.getElementById('updateSfrSurveyDate').value = surveyDate;
+  document.getElementById('updateSfrModal').style.display = 'block';
+}
+
+// Close Update Modal
+function closeUpdateSfrModal() {
+  document.getElementById('updateSfrModal').style.display = 'none';
+}
+
+// Open Delete Modal
+function openDeleteSfrModal(id) {
+  document.getElementById('deleteSfrId').value = id;
+  document.getElementById('deleteSfrModal').style.display = 'block';
+}
+
+// Close Delete Modal
+function closeDeleteSfrModal() {
+  document.getElementById('deleteSfrModal').style.display = 'none';
+}

@@ -71,23 +71,6 @@
             </ul>
           </li>
         <?php endif; ?>
-
-
-
-        <!-- <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
-          <li class="nav-link">
-            <a href="../users/programs.php">
-              <i class='bx bx-file icon'></i>
-              <span class="text nav-text">Programs</span>
-            </a>
-          </li>
-          <li class="nav-link">
-            <a href="../users/department.php">
-              <i class='bx bx-file icon'></i>
-              <span class="text nav-text">Departments</span>
-            </a>
-          </li>
-        <?php endif; ?> -->
       </ul>
     </div>
 
@@ -101,7 +84,7 @@
         </li>
 
         <!-- Modal HTML -->
-        <div id="logoutModal" class="modal">
+        <!-- <div id="logoutModal" class="modal">
           <div class="modal-content">
             <p>Are you sure you want to logout?</p>
             <div class="modal-buttons">
@@ -109,13 +92,13 @@
               <button id="cancelLogout">Cancel</button>
             </div>
           </div>
-        </div>
+        </div> -->
       <?php endif; ?>
     </div>
   </div>
 </nav>
 
-<script>
+<!-- <script>
 document.addEventListener("DOMContentLoaded", function () {
   const logoutLink = document.getElementById("logoutLink");
   const modal = document.getElementById("logoutModal");
@@ -143,4 +126,4 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 });
-</script>
+</script> -->

@@ -204,28 +204,13 @@ body {
   overflow: hidden;
 }
 
-/* Watermark Logo in the center */
-.dashboard-content::before {
-  content: "";
-  position: absolute;
-  top: 60%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-image: url('../uploads/R.png'); /* Replace with your actual logo file path */
-  background-repeat: no-repeat;
-  background-size: 600px auto; /* Adjust logo size */
-  opacity: 0.5;
-  width: 600px;
-  height: 600px;
-  pointer-events: none; /* Allows interaction through the logo */
-  z-index: 0;
-}
-
 /* Ensures main content stays above the logo */
 .dashboard-content > * {
   position: relative;
   z-index: 1;
 }
+
+
 
 /* ====== Cards ====== */
 .cards {
@@ -271,7 +256,8 @@ body {
 /* ====== Modals ====== */
 #addModal > div > form,
 #updateModal > div > form,
-#updateProgramModal > div > form {
+#updateProgramModal > div > form,
+#updateSfrModal > div> form {
   padding-top: 15px;
   display: flex;
   flex-direction: column;
@@ -281,7 +267,10 @@ body {
 #deleteModal > div > h1,
 #addModal > div > h1,
 #updateModal > div > h1,
-#deleteProgramModal > div > h1  {
+#deleteProgramModal > div > h1,
+#updateProgramModal > div > h1,
+#deleteSfrModal > div > h1,
+#updateSfrModal > div > h1  {
   color: #800000;
   margin-bottom: 20px; /* space below the modal heading */
 }
@@ -369,13 +358,13 @@ body {
 
 /* ====== Table ====== */
 .table-section h2 {
-  background-color: #fff;
+  background-color: #800000;
   padding: 10px 15px;
   border-radius: 6px;
   text-align: center;
   margin-bottom: 10px;
   font-size: 20px;
-  color: #333;
+  color: #fff;
 }
 
 .table-section table {

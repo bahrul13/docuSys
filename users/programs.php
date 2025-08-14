@@ -117,7 +117,7 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
 <div id="updateProgramModal" class="modal">
   <div class="modal-content">
     <span class="close" onclick="closeUpdateProgramModal()">&times;</span>
-    <h2>Update Program</h2>
+    <h1>Update Program</h1>
     <form action="../handlers/update_prog.php" method="POST">
       <input type="hidden" name="id" id="updateProgramId">
       <label for="updateProgramName">Program Name</label>

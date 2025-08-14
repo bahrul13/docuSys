@@ -1,5 +1,5 @@
 <?php
-// delete.php
+session_start();
 require '../db/db_conn.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
@@ -18,14 +18,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
         // Delete from database
         $deleteStmt = $conn->prepare("DELETE FROM copc WHERE id = ?");
         $deleteStmt->bind_param("i", $id);
+
         if ($deleteStmt->execute()) {
             // Delete physical file if it exists
             if (file_exists($filePath)) {
                 unlink($filePath);
             }
+            $_SESSION['flash'] = "✅ Document deleted successfully.";
+        } else {
+            $_SESSION['flash'] = "❌ Failed to delete the document from database.";
         }
+
+        $deleteStmt->close();
+    } else {
+        $_SESSION['flash'] = "⚠️ Document not found.";
     }
+
+    $stmt->close();
+} else {
+    $_SESSION['flash'] = "⚠️ Invalid request.";
 }
 
+$conn->close();
 header("Location: ../users/copc.php");
 exit();
+?>

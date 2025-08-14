@@ -25,6 +25,31 @@ while ($row = $result->fetch_assoc()) {
 
 <?php include('../includes/sidebar.php'); ?>
 
+
+  <!-- FLASH MESSAGE -->
+  <?php if (isset($_SESSION['flash'])): ?>
+    <div class="alert" id="flashMessage"><?= $_SESSION['flash']; unset($_SESSION['flash']); ?></div>
+    <script>
+      setTimeout(() => {
+        const alert = document.getElementById('flashMessage');
+        if (alert) alert.remove();
+      }, 3000);
+    </script>
+  <?php endif; ?>
+
+  <!-- DELETE FLASH MESSAGE -->
+  <?php if (isset($_SESSION['delete_flash'])): ?>
+    <div class="delete-alert" id="deleteFlash">
+      <?= $_SESSION['delete_flash']; unset($_SESSION['delete_flash']); ?>
+    </div>
+    <script>
+      setTimeout(() => {
+        const alert = document.getElementById('deleteFlash');
+        if (alert) alert.remove();
+      }, 3000);
+    </script>
+  <?php endif; ?>
+
 <section class="dashboard-content">
 
 <!-- 
@@ -86,7 +111,7 @@ while ($row = $result->fetch_assoc()) {
       <table>
         <thead>
           <tr>
-            <th>Program</th>
+            <th>Program Name</th>
             <th>Date of Issuance</th>
             <th>PDF File</th>
             <th>Date Uploaded</th>
@@ -156,10 +181,10 @@ while ($row = $result->fetch_assoc()) {
       <input type="hidden" name="id" id="updateId">
 
       <!-- Program Dropdown -->
-      <label for="updateProgram">Program</label>
+      <label for="updateProgram">Program Name</label>
       <div class="select-wrapper">
         <select name="program" id="updateProgram" required>
-          <option value="" disabled selected>Select Program</option>
+          <option value="" disabled selected>Select Program Name</option>
           <?php foreach ($programs as $prog): ?>
             <option value="<?= htmlspecialchars($prog) ?>"><?= htmlspecialchars($prog) ?></option>
           <?php endforeach; ?>
