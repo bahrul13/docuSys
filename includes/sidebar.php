@@ -2,11 +2,11 @@
   <header>
     <div class="image-text">
       <span class="image">
-        <img src="../uploads/R.png" alt="logo" />
+        <img src="../uploads/dms.png" alt="logo" />
       </span>
 
       <div class="text header-text">
-        <span class="name">QMSO Document Management System</span>
+        <span class="name">Document Management System</span>
       </div>
     </div>
   </header>
@@ -62,12 +62,6 @@
                   <span class="text nav-text">Programs</span>
                 </a>
               </li>
-              <li>
-                <a href="../users/department.php">
-                  <i class="bx bx-building icon"></i>
-                  <span class="text nav-text">Departments</span>
-                </a>
-              </li>
             </ul>
           </li>
         <?php endif; ?>
@@ -98,32 +92,3 @@
   </div>
 </nav>
 
-<!-- <script>
-document.addEventListener("DOMContentLoaded", function () {
-  const logoutLink = document.getElementById("logoutLink");
-  const modal = document.getElementById("logoutModal");
-  const confirmBtn = document.getElementById("confirmLogout");
-  const cancelBtn = document.getElementById("cancelLogout");
-
-  if (logoutLink) {
-    logoutLink.addEventListener("click", function (event) {
-      event.preventDefault();
-      modal.style.display = "block";
-    });
-
-    confirmBtn.addEventListener("click", function () {
-      window.location.href = logoutLink.href;
-    });
-
-    cancelBtn.addEventListener("click", function () {
-      modal.style.display = "none";
-    });
-
-    window.addEventListener("click", function (event) {
-      if (event.target === modal) {
-        modal.style.display = "none";
-      }
-    });
-  }
-});
-</script> -->

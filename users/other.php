@@ -17,6 +17,9 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
 
   <!-- CSS File -->
   <link rel="stylesheet" href="../css/style.css" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/uploads/dms.png">
 </head>
 <body>
 

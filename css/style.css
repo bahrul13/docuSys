@@ -12,7 +12,7 @@
 :root {
   --body-color: #E4E9F7;
   --sidebar-color: #FFF;
-  --primary-color: #800000;
+  --primary-color: #1E5A94;
   --primary-color-light: #F6FSFF;
   --toggle-color: #DDD;
   --text-color: #707070;
@@ -130,6 +130,18 @@ body {
 .sidebar li a:hover .icon,
 .sidebar li a:hover .text {
   color: var(--sidebar-color);
+}
+
+/* Active nav-link glow */
+.sidebar li a.active {
+  background: var(--primary-color);
+  color: #fff;
+  box-shadow: 0 0 10px #1E5A94, 0 0 20px #1E5A94;
+}
+
+.sidebar li a.active .icon,
+.sidebar li a.active .text {
+  color: #fff;
 }
 
 .sidebar .search-box,
@@ -271,7 +283,7 @@ body {
 #updateProgramModal > div > h1,
 #deleteSfrModal > div > h1,
 #updateSfrModal > div > h1  {
-  color: #800000;
+  color: #1E5A94;
   margin-bottom: 20px; /* space below the modal heading */
 }
 
@@ -358,7 +370,7 @@ body {
 
 /* ====== Table ====== */
 .table-section h2 {
-  background-color: #800000;
+  background-color: #1E5A94;
   padding: 10px 15px;
   border-radius: 6px;
   text-align: center;

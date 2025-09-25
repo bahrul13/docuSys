@@ -17,32 +17,15 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
 
   <!-- CSS File -->
   <link rel="stylesheet" href="../css/style.css" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/uploads/dms.png">
 </head>
 <body>
 
 <?php include('../includes/sidebar.php'); ?>
 
 <section class="dashboard-content">
-
-  <!-- 🔷 Dashboard Cards
-  <div class="cards">
-    <div class="card">
-        <i class='bx bx-file'></i>
-        <div>
-            <h3>120</h3>
-            <p>Total TRBA Documents</p>
-        </div>
-    </div>
-    <div class="card">
-        <i class='bx bx-user'></i>
-        <div>
-            <h3>15</h3>
-            <p>Total Recently Uploaded Documents</p>
-        </div>
-    </div>
-  </div> -->
-
-
 
   <!-- 📄 Table Section -->
   <section class="table-section">
@@ -52,14 +35,21 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
       <div class="search-bar">
         <input type="text" id="searchInput" placeholder="Search documents..." onkeyup="filterTable()" />
       </div>
+
+      <?php if ($isAdmin): ?>
+    <div class="add-button-container">
+      <a href="../views/add_trba_page.php" class="btn-add">Add TRBA</a>
+    </div>
+    <?php endif; ?>
       
     <div class="table-container">
       <table>
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Document Name</th>
-            <th>Uploaded By</th>
+            <th>Program Name</th>
+            <th>Survey Type</th>
+            <th>Survey Date</th>
+            <th>File</th>
             <th>Date Uploaded</th>
             <?php if ($isAdmin): ?>
               <th>Action</th>
@@ -67,30 +57,34 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
           </tr>
         </thead>
         <tbody>
+        <?php
+        $sql = "SELECT * FROM trba ORDER BY date_uploaded DESC";
+        $result = $conn->query($sql);
+
+        if ($result && $result->num_rows > 0):
+          while ($row = $result->fetch_assoc()):
+        ?>
           <tr>
-            <td>1</td>
-            <td>Project Report 2024</td>
-            <td>Admin</td>
-            <td>2025-07-28</td>
+            <td><?= htmlspecialchars($row['program_name']) ?></td>
+            <td><?= htmlspecialchars($row['survey_type']) ?></td>
+            <td><?= htmlspecialchars($row['survey_date']) ?></td>
+            <td><a href="../uploads/trba/<?= htmlspecialchars($row['file_name']) ?>" target="_blank">View PDF</a></td>
+            <td><?= htmlspecialchars($row['date_uploaded']) ?></td>
             <?php if ($isAdmin): ?>
-              <td>
-                <a href="update.php?id=1" class="btn-update">Update</a>
-                <a href="delete.php?id=1" class="btn-delete" onclick="return confirm('Are you sure you want to delete this file?');">Delete</a>
-              </td>
+            <td>
+              <button class="btn-update" onclick="openUpdateSfrModal(
+                <?= $row['id'] ?>,
+                '<?= htmlspecialchars($row['program_name'], ENT_QUOTES) ?>',
+                '<?= htmlspecialchars($row['survey_type'], ENT_QUOTES) ?>',
+                '<?= $row['survey_date'] ?>'
+              )">Update</button>
+              <button class="btn-delete" onclick="openDeleteSfrModal(<?= $row['id'] ?>)">Delete</button>
+            </td>
             <?php endif; ?>
           </tr>
-          <tr>
-            <td>2</td>
-            <td>Policy Draft</td>
-            <td>Editor</td>
-            <td>2025-07-25</td>
-            <?php if ($isAdmin): ?>
-              <td>
-                <a href="update.php?id=2" class="btn-update">Update</a>
-                <a href="delete.php?id=2" class="btn-delete" onclick="return confirm('Are you sure you want to delete this file?');">Delete</a>
-              </td>
-            <?php endif; ?>
-          </tr>
+        <?php endwhile; else: ?>
+          <tr><td colspan="<?= $isAdmin ? 6 : 5 ?>">No documents found.</td></tr>
+        <?php endif; ?>
         </tbody>
       </table>
     </div>

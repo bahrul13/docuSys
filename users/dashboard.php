@@ -17,13 +17,16 @@ include('../db/db_conn.php');
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Admin Dashboard</title>
+  <title>Dashboard</title>
 
   <!-- Boxicons CDN -->
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
 
   <!-- CSS File -->
   <link rel="stylesheet" href="../css/style.css" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/uploads/dms.png">
 </head>
 <body>
     <?php include('../includes/sidebar.php'); ?>

@@ -44,7 +44,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
     <link rel="stylesheet" href="../css/login.css">
-
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/uploads/dms.png">
+    
     <title>Login</title>
 </head>
 <body>
@@ -52,7 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <div class="forms">
             <div class="form login">
                 <div class="logo">
-                    <img src="../uploads/R.png" alt="Logo" />
+                    <img src="../uploads/dms.png" alt="Logo" />
                 </div>
                 <span class="title">Login</span>
 

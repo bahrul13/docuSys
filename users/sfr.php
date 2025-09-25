@@ -25,6 +25,9 @@ while ($row = $result->fetch_assoc()) {
 
   <!-- CSS File -->
   <link rel="stylesheet" href="../css/style.css" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/uploads/dms.png">
 </head>
 <body>
 
@@ -67,7 +70,9 @@ while ($row = $result->fetch_assoc()) {
             <th>Survey Date</th>
             <th>File</th>
             <th>Date Uploaded</th>
-            <?php if ($isAdmin): ?><th>Action</th><?php endif; ?>
+            <?php if ($isAdmin): ?>
+              <th>Action</th>
+            <?php endif; ?>
           </tr>
         </thead>
         <tbody>
