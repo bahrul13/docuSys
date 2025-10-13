@@ -25,25 +25,31 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
 
 <?php include('../includes/sidebar.php'); ?>
 
-<section class="dashboard-content">
+<!-- FLASH MESSAGE -->
+<?php if (isset($_SESSION['flash'])): ?>
+  <div class="alert" id="flashMessage"><?= $_SESSION['flash']; unset($_SESSION['flash']); ?></div>
+  <script>
+    setTimeout(() => {
+      const alert = document.getElementById('flashMessage');
+      if (alert) alert.remove();
+    }, 3000);
+  </script>
+<?php endif; ?>
 
-  <!-- 🔷 Dashboard Cards
-  <div class="cards">
-    <div class="card">
-        <i class='bx bx-file'></i>
-        <div>
-            <h3>120</h3>
-            <p>Total Documents</p>
-        </div>
-    </div>
-    <div class="card">
-        <i class='bx bx-user'></i>
-        <div>
-            <h3>15</h3>
-            <p>Total Recently Uploaded Documents</p>
-        </div>
-    </div>
-  </div> -->
+<!-- DELETE FLASH MESSAGE -->
+<?php if (isset($_SESSION['delete_flash'])): ?>
+  <div class="delete-alert" id="deleteFlash">
+    <?= $_SESSION['delete_flash']; unset($_SESSION['delete_flash']); ?>
+  </div>
+  <script>
+    setTimeout(() => {
+      const alert = document.getElementById('deleteFlash');
+      if (alert) alert.remove();
+    }, 3000);
+  </script>
+<?php endif; ?>
+
+<section class="dashboard-content">
 
   <!-- 📄 Table Section -->
   <section class="table-section">
@@ -53,43 +59,43 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
     <div class="search-bar">
       <input type="text" id="searchInput" placeholder="Search documents..." onkeyup="filterTable()" />
     </div>
+
+    <?php if ($isAdmin): ?>
+    <div class="add-button-container">
+      <a href="../views/add_docu.php" class="btn-add">Add Document</a>
+    </div>
+    <?php endif; ?>
+
     <div class="table-container">
       <table>
         <thead>
           <tr>
             <th>ID</th>
             <th>Document Name</th>
-            <th>Uploaded By</th>
             <th>Date Uploaded</th>
-            <?php if ($isAdmin): ?>
-              <th>Action</th>
-            <?php endif; ?>
+            <?php if ($isAdmin): ?><th>Action</th><?php endif; ?>
           </tr>
         </thead>
         <tbody>
+          <?php
+          $sql = "SELECT * FROM documents ORDER BY file_name DESC";
+          $result = $conn->query($sql);
+
+          if ($result && $result->num_rows > 0):
+            while ($row = $result->fetch_assoc()):
+          ?>
           <tr>
-            <td>1</td>
-            <td>Project Report 2024</td>
-            <td>Admin</td>
-            <td>2025-07-28</td>
+            <td><?= htmlspecialchars($row['file_name']) ?></td>
             <?php if ($isAdmin): ?>
-              <td>
-                <a href="update.php?id=1" class="btn-update">Update</a>
-                <a href="delete.php?id=1" class="btn-delete" onclick="return confirm('Are you sure you want to delete this file?');">Delete</a>
-              </td>
+            <td>
+              <button class="btn-update" onclick="openUpdateProgramModal(<?= $row['id'] ?>, '<?= htmlspecialchars($row['file_name'], ENT_QUOTES) ?>')">Update</button>
+              <button class="btn-delete" onclick="openDeleteProgramModal(<?= $row['id'] ?>)">Delete</button>
+            </td>
             <?php endif; ?>
           </tr>
-          <tr>
-            <td>2</td>
-            <td>Policy Draft</td>
-            <td>Editor</td>
-            <td>2025-07-25</td>
-            <?php if ($isAdmin): ?>
-              <td>
-                <a href="update.php?id=2" class="btn-update">Update</a>
-                <a href="delete.php?id=2" class="btn-delete" onclick="return confirm('Are you sure you want to delete this file?');">Delete</a>
-              </td>
-            <?php endif; ?>
+          <?php endwhile; else: ?>
+          <tr><td colspan="<?= $isAdmin ? 4 : 4 ?>">No documents found.</td></tr>
+          <?php endif; ?>
           </tr>
         </tbody>
       </table>
