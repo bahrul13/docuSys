@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 14, 2025 at 08:08 AM
+-- Generation Time: Oct 14, 2025 at 12:45 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -49,6 +49,19 @@ INSERT INTO `copc` (`id`, `program`, `issuance_date`, `file_name`, `uploaded_at`
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `documents`
+--
+
+CREATE TABLE `documents` (
+  `id` int(11) NOT NULL,
+  `document` varchar(255) NOT NULL,
+  `file_name` varchar(255) NOT NULL,
+  `uploaded_at` date NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `programs`
 --
 
@@ -85,13 +98,29 @@ CREATE TABLE `sfr` (
   `date_uploaded` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `sfr`
+-- Table structure for table `trba`
 --
 
-INSERT INTO `sfr` (`id`, `program_name`, `survey_type`, `survey_date`, `file_name`, `date_uploaded`) VALUES
-(2, 'Bachelor of Secondary Education', 'Level 2', '2025-08-01', '689d72af59975-Dumpao_L. 2x2 pic.pdf', '2025-08-14'),
-(4, 'Master of Information Technology', 'Level 4', '2025-07-27', '689d794853871-Dumpao_L. 2x2 pic.pdf', '2025-08-14');
+CREATE TABLE `trba` (
+  `id` int(11) NOT NULL,
+  `program_name` varchar(255) NOT NULL,
+  `survey_type` varchar(255) NOT NULL,
+  `survey_date` date NOT NULL,
+  `file_name` varchar(255) NOT NULL,
+  `date_uploaded` date NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `trba`
+--
+
+INSERT INTO `trba` (`id`, `program_name`, `survey_type`, `survey_date`, `file_name`, `date_uploaded`) VALUES
+(1, 'BS in Information Technology', 'Level 1', '2025-09-03', '68d36201aa289-TOR Merged.pdf', '2025-09-24'),
+(2, 'BS in Social Work', 'Level 2', '2025-09-02', '68d363c7152b3-TOR Merged.pdf', '2025-09-24'),
+(3, 'Bachelor of Secondary Education', 'Level 2', '2025-09-01', '68d363f6f1408-TOR Merged.pdf', '2025-09-24');
 
 -- --------------------------------------------------------
 
@@ -127,6 +156,12 @@ ALTER TABLE `copc`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `documents`
+--
+ALTER TABLE `documents`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `programs`
 --
 ALTER TABLE `programs`
@@ -137,6 +172,12 @@ ALTER TABLE `programs`
 -- Indexes for table `sfr`
 --
 ALTER TABLE `sfr`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `trba`
+--
+ALTER TABLE `trba`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -156,6 +197,12 @@ ALTER TABLE `copc`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
+-- AUTO_INCREMENT for table `documents`
+--
+ALTER TABLE `documents`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `programs`
 --
 ALTER TABLE `programs`
@@ -166,6 +213,12 @@ ALTER TABLE `programs`
 --
 ALTER TABLE `sfr`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `trba`
+--
+ALTER TABLE `trba`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `user`
