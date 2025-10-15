@@ -41,20 +41,36 @@ include('../db/db_conn.php');
             <i class='bx bx-file'></i>
             <div>
                 <?php
-                $countQuery = "SELECT COUNT(*) AS total FROM programs";
+                $countQuery = "SELECT COUNT(*) AS total FROM trba";
                 $countResult = $conn->query($countQuery);
 
-                $totalPrograms = 0;
+                $totalTrba = 0;
                 if ($countResult && $row = $countResult->fetch_assoc()) {
-                    $totalPrograms = $row['total'];
+                    $totalTrba = $row['total'];
                 }
                 ?>
-                <h3><?= $totalPrograms ?></h3>
-                <p>Total number of Programs</p>
+                <h3><?= $totalTrba ?></h3>
+                <p>Total number of TRBA</p>
             </div>
         </div>
         <div class="card">
-            <i class='bx bx-user'></i>
+            <i class='bx bx-file'></i>
+            <div>
+                <?php
+                $countQuery = "SELECT COUNT(*) AS total from sfr";
+                $countResult = $conn->query($countQuery);
+
+                $totalSfr = 0;
+                if ($countResult && $row = $countResult->fetch_assoc()) {
+                    $totalSfr = $row['total'];
+                }
+                ?>
+                <h3><?=$totalSfr ?></h3>
+                <p>Total number of SFR</p>
+            </div>
+        </div>
+        <div class="card">
+            <i class='bx bx-file'></i>
             <div>
                 <?php
                 $countQuery = "SELECT COUNT(*) AS total FROM copc";
@@ -70,31 +86,59 @@ include('../db/db_conn.php');
             </div>
         </div>
         <div class="card">
-            <i class='bx bx-cloud-upload'></i>
+            <i class='bx bx-folder'></i>
             <div>
-                <h3>8</h3>
-                <p>Total SFR</p>
+                <?php
+                $countQuery = "SELECT COUNT(*) AS total FROM documents";
+                $countResult = $conn->query($countQuery);
+
+                $totalDocu = 0;
+                if ($countResult && $row = $countResult->fetch_assoc()) {
+                    $totalDocu = $row['total'];
+                }
+                ?>
+                <h3><?= $totalDocu ?></h3>
+                <p>Total Documents</p>
             </div>
         </div>
         <div class="card">
             <i class='bx bx-cloud-upload'></i>
             <div>
-                <h3>8</h3>
-                <p>Total COPC</p>
+                <?php
+                // Query to count total rows from all four tables
+                $countQuery = "
+                    SELECT 
+                        (SELECT COUNT(*) FROM documents) +
+                        (SELECT COUNT(*) FROM copc) +
+                        (SELECT COUNT(*) FROM sfr) +
+                        (SELECT COUNT(*) FROM trba) AS total
+                ";
+
+                $countResult = $conn->query($countQuery);
+
+                $totalUpload = 0;
+                if ($countResult && $row = $countResult->fetch_assoc()) {
+                    $totalUpload = $row['total'];
+                }
+                ?>
+                <h3><?= $totalUpload ?></h3>
+                <p>Total Uploaded Documents</p>
             </div>
         </div>
         <div class="card">
-            <i class='bx bx-cloud-upload'></i>
+            <i class='bx bx-book-content'></i>
             <div>
-                <h3>8</h3>
-                <p>Others</p>
-            </div>
-        </div>
-        <div class="card">
-            <i class='bx bx-cloud-upload'></i>
-            <div>
-                <h3>8</h3>
-                <p>Recent Uploaded Documents</p>
+                <?php
+                $countQuery = "SELECT COUNT(*) AS total FROM programs";
+                $countResult = $conn->query($countQuery);
+
+                $totalProg = 0;
+                if ($countResult && $row = $countResult->fetch_assoc()) {
+                    $totalProg = $row['total'];
+                }
+                ?>
+                <h3><?= $totalProg?></h3>
+                <p>Total Programs</p>
             </div>
         </div>
     </div>
