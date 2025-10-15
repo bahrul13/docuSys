@@ -11,8 +11,8 @@ $result = $conn->query("SELECT * FROM programs ORDER BY name ASC");
 while ($row = $result->fetch_assoc()) {
     $programs[] = $row['name'];
 }
-
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -39,6 +39,19 @@ while ($row = $result->fetch_assoc()) {
     <script>
       setTimeout(() => {
         const alert = document.getElementById('flashMessage');
+        if (alert) alert.remove();
+      }, 3000);
+    </script>
+  <?php endif; ?>
+
+   <!-- DELETE FLASH MESSAGE -->
+  <?php if (isset($_SESSION['delete_flash'])): ?>
+    <div class="delete-alert" id="deleteFlash">
+      <?= $_SESSION['delete_flash']; unset($_SESSION['delete_flash']); ?>
+    </div>
+    <script>
+      setTimeout(() => {
+        const alert = document.getElementById('deleteFlash');
         if (alert) alert.remove();
       }, 3000);
     </script>
@@ -110,6 +123,8 @@ while ($row = $result->fetch_assoc()) {
   </section>
 </section>
 
+<script src="../js/script.js"></script>
+
 <?php if ($isAdmin): ?>
 <!-- UPDATE SFR MODAL -->
 <div id="updateSfrModal" class="modal">
@@ -167,12 +182,6 @@ while ($row = $result->fetch_assoc()) {
   </div>
 </div>
 <?php endif; ?>
-
-<script>
-
-</script>
-
-<script src="../js/script.js"></script>
 
 </body>
 </html>

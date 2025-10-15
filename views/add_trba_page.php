@@ -32,7 +32,7 @@ while ($row = $result->fetch_assoc()) {
 <section class="dashboard-content">
   <h1>Add Technical Review and Board Action (TRBA)</h1>
 
-  <div class="form-container">
+  <div class="trba-form-container">
     <form action="../handlers/add_trba.php" method="POST" enctype="multipart/form-data" class="form-box">
       <label for="program">Program Name</label>
       <div class="select-wrapper">

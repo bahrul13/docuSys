@@ -4,7 +4,15 @@ require '../db/db_conn.php';
 
 // Check if user is admin
 $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
+
+// Fetch programs from database
+$programs = [];
+$result = $conn->query("SELECT * FROM programs ORDER BY name ASC");
+while ($row = $result->fetch_assoc()) {
+    $programs[] = $row['name'];
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,6 +32,30 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
 <body>
 
 <?php include('../includes/sidebar.php'); ?>
+
+  <!-- FLASH MESSAGE -->
+  <?php if (isset($_SESSION['flash'])): ?>
+    <div class="alert" id="flashMessage"><?= $_SESSION['flash']; unset($_SESSION['flash']); ?></div>
+    <script>
+      setTimeout(() => {
+        const alert = document.getElementById('flashMessage');
+        if (alert) alert.remove();
+      }, 3000);
+    </script>
+  <?php endif; ?>
+
+  <!-- DELETE FLASH MESSAGE -->
+  <?php if (isset($_SESSION['delete_flash'])): ?>
+    <div class="delete-alert" id="deleteFlash">
+      <?= $_SESSION['delete_flash']; unset($_SESSION['delete_flash']); ?>
+    </div>
+    <script>
+      setTimeout(() => {
+        const alert = document.getElementById('deleteFlash');
+        if (alert) alert.remove();
+      }, 3000);
+    </script>
+  <?php endif; ?>
 
 <section class="dashboard-content">
 
@@ -72,13 +104,13 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
             <td><?= htmlspecialchars($row['date_uploaded']) ?></td>
             <?php if ($isAdmin): ?>
             <td>
-              <button class="btn-update" onclick="openUpdateSfrModal(
+              <button class="btn-update" onclick="openUpdateTrbaModal(
                 <?= $row['id'] ?>,
                 '<?= htmlspecialchars($row['program_name'], ENT_QUOTES) ?>',
                 '<?= htmlspecialchars($row['survey_type'], ENT_QUOTES) ?>',
                 '<?= $row['survey_date'] ?>'
               )">Update</button>
-              <button class="btn-delete" onclick="openDeleteSfrModal(<?= $row['id'] ?>)">Delete</button>
+              <button class="btn-delete" onclick="openDeleteTrbaModal(<?= $row['id'] ?>)">Delete</button>
             </td>
             <?php endif; ?>
           </tr>
@@ -92,28 +124,64 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
 </section>
 
 <script src="../js/script.js"></script>
-<script>
-function filterTable() {
-  const input = document.getElementById("searchInput");
-  const filter = input.value.toLowerCase();
-  const table = document.querySelector("table");
-  const trs = table.getElementsByTagName("tr");
 
-  for (let i = 1; i < trs.length; i++) {
-    const tds = trs[i].getElementsByTagName("td");
-    let visible = false;
+<?php if ($isAdmin): ?>
+<!-- Update Modal -->
+<div id="updateTrbaModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeUpdateTrbaModal()">&times;</span>
+    <h1>Update TRBA</h1>
+    <form action="../handlers/update_trba.php" method="POST" enctype="multipart/form-data">
+      <input type="hidden" name="id" id="updateTrbaId">
 
-    for (let j = 0; j < tds.length; j++) {
-      if (tds[j] && tds[j].innerText.toLowerCase().includes(filter)) {
-        visible = true;
-        break;
-      }
-    }
+      <label for="updateTrbaProgram">Program Name</label>
+      <div class="select-wrapper">
+        <select name="program_name" id="updateTrbaProgram" required>
+          <option value="" disabled selected>Select Program Name</option>
+          <?php foreach ($programs as $prog): ?>
+            <option value="<?= htmlspecialchars($prog) ?>"><?= htmlspecialchars($prog) ?></option>
+          <?php endforeach; ?>
+        </select>
+        <i class="bx bx-chevron-down select-icon"></i>
+      </div>
 
-    trs[i].style.display = visible ? "" : "none";
-  }
-}
-</script>
+      <div class="select-wrapper">
+        <label for="updateTrbaSurveyType">Type of Survey</label>
+        <select name="survey_type" id="updateTrbaSurveyType" required>
+          <option value="">Select Type of Survey</option>
+          <option value="Level 1">Level 1</option>
+          <option value="Level 2">Level 2</option>
+          <option value="Level 3">Level 3</option>
+          <option value="Level 4">Level 4</option>
+        </select>
+        <i class="bx bx-chevron-down select-icon"></i>
+      </div>
+
+      <label for="updateTrbaSurveyDate">Survey Date</label>
+      <input type="date" name="survey_date" id="updateTrbaSurveyDate" required>
+
+      <label for="updateTrbaFile">Upload New PDF (optional)</label>
+      <input type="file" name="file_name" id="updateTrbaFile" accept="application/pdf">
+
+      <button type="submit">Update</button>
+    </form>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteTrbaModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeDeleteTrbaModal()">&times;</span>
+    <h1>Confirm Deletion</h1>
+    <p>Are you sure you want to delete this TRBA?</p>
+    <form id="deleteTrbaForm" method="POST" action="../handlers/delete_trba.php">
+      <input type="hidden" name="id" id="deleteTrbaId">
+      <button type="submit" class="btn-delete-confirm">Confirm</button>
+      <button type="button" onclick="closeDeleteTrbaModal()" style="background-color: gray; margin-left: 10px;">Cancel</button>
+    </form>
+  </div>
+</div>
+<?php endif; ?>
 
 </body>
 </html>

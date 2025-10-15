@@ -5,7 +5,7 @@ require '../db/db_conn.php';
 // Check if admin
 if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
     $_SESSION['flash'] = "Access denied.";
-    header("Location: ../users/sfr.php");
+    header("Location: ../users/trba.php");
     exit();
 }
 
@@ -17,36 +17,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (isset($_FILES['file_name']) && $_FILES['file_name']['error'] === 0) {
         $fileName = basename($_FILES['file_name']['name']);
-        $targetDir = "../uploads/sfr/";
+        $targetDir = "../uploads/trba/";
         $targetFile = $targetDir . $fileName;
 
         if (move_uploaded_file($_FILES['file_name']['tmp_name'], $targetFile)) {
-            $stmt = $conn->prepare("UPDATE sfr SET program_name = ?, survey_type = ?, survey_date = ?, file_name = ? WHERE id = ?");
+            $stmt = $conn->prepare("UPDATE trba SET program_name = ?, survey_type = ?, survey_date = ?, file_name = ? WHERE id = ?");
             $stmt->bind_param("ssssi", $name, $survey_type, $survey_date, $fileName, $id);
         } else {
             $_SESSION['flash'] = "❌ File upload failed.";
-            header("Location: ../users/sfr.php");
+            header("Location: ../users/trba.php");
             exit();
         }
     } else {
-        $stmt = $conn->prepare("UPDATE sfr SET program_name = ?, survey_type = ?, survey_date = ? WHERE id = ?");
+        $stmt = $conn->prepare("UPDATE trba SET program_name = ?, survey_type = ?, survey_date = ? WHERE id = ?");
         $stmt->bind_param("sssi", $name, $survey_type, $survey_date, $id);
     }
 
     if ($stmt->execute()) {
-        $_SESSION['flash'] = "✅ SFR record updated successfully.";
+        $_SESSION['flash'] = "✅ TRBA record updated successfully.";
     } else {
-        $_SESSION['flash'] = "❌ Failed to update SFR record.";
+        $_SESSION['flash'] = "❌ Failed to update TRBA record.";
     }
 
     $stmt->close();
     $conn->close();
     
-    header("Location: ../users/sfr.php");
+    header("Location: ../users/trba.php");
     exit();
 } else {
     $_SESSION['flash'] = "⚠️ Invalid request method.";
-    header("Location: ../users/sfr.php");
+    header("Location: ../users/trba.php");
     exit();
 }
 ?>

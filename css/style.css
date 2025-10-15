@@ -282,7 +282,11 @@ body {
 #deleteProgramModal > div > h1,
 #updateProgramModal > div > h1,
 #deleteSfrModal > div > h1,
-#updateSfrModal > div > h1  {
+#updateSfrModal > div > h1,
+#deleteTrbaModal > div > h1,
+#updateTrbaModal > div > h1,
+#deleteDocuModal > div > h1,
+#updateDocuModal > div > h1  {
   color: #1E5A94;
   margin-bottom: 20px; /* space below the modal heading */
 }

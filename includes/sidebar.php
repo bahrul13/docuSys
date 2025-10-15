@@ -47,8 +47,16 @@
             <span class="text nav-text">Accreditation Documents</span>
           </a>
         </li>
-
         <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
+        <li class="nav-link">
+          <a href="../users/programs.php">
+            <i class='bx bx-book icon'></i>
+            <span class="text nav-text">Programs</span>
+          </a>
+        </li>
+        <?php endif; ?>
+
+        <!-- <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
           <li class="nav-link dropdown">
             <a href="" class="dropdown-toggle">
               <i class='bx bx-dots-horizontal-rounded icon'></i>
@@ -64,7 +72,7 @@
               </li>
             </ul>
           </li>
-        <?php endif; ?>
+        <?php endif; ?> -->
       </ul>
     </div>
 

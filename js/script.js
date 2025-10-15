@@ -3,12 +3,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const sidebar = document.querySelector('.sidebar');
   const toggle = sidebar?.querySelector('.toggle');
 
-  // Sidebar toggle
+  // ===== Sidebar toggle =====
   toggle?.addEventListener('click', () => {
     sidebar.classList.toggle('close');
   });
 
-  // Search filter
+  // ===== Search filter =====
   window.filterTable = () => {
     const input = document.getElementById('searchInput');
     const filter = input.value.toLowerCase();
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (modal) modal.style.display = 'none';
   };
 
-  // ====== Common Modals ======
+  // ===== Common Modals =====
   window.openModal = () => showModal('addModal');
   window.closeModal = () => hideModal('addModal');
 
@@ -140,6 +140,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.closeDeleteDocuModal = () => hideModal('deleteDocuModal');
 
+  // ===== TRBA Modals =====
+window.openUpdateTrbaModal = (id, program_Name, survey_Type, survey_Date) => {
+  document.getElementById('updateTrbaId').value = id;
+  document.getElementById('updateTrbaProgram').value = program_Name;
+  document.getElementById('updateTrbaSurveyType').value = survey_Type;
+  document.getElementById('updateTrbaSurveyDate').value = survey_Date;
+  showModal('updateTrbaModal');
+};
+
+window.closeUpdateTrbaModal = () => hideModal('updateTrbaModal');
+
+window.openDeleteTrbaModal = (id) => {
+  document.getElementById('deleteTrbaId').value = id;
+  showModal('deleteTrbaModal');
+};
+
+window.closeDeleteTrbaModal = () => hideModal('deleteTrbaModal');
+
+
   // ===== Unified Click Outside Close =====
   window.addEventListener('click', (event) => {
     const modalIds = [
@@ -147,7 +166,8 @@ document.addEventListener('DOMContentLoaded', () => {
       'successModal', 'messageModal', 'programModal',
       'updateProgramModal', 'deleteProgramModal',
       'updateSfrModal', 'deleteSfrModal',
-      'updateDocuModal', 'deleteDocuModal'
+      'updateDocuModal', 'deleteDocuModal',
+      'updateTrbaModal', 'deleteTrbaModal'
     ];
 
     modalIds.forEach(id => {
