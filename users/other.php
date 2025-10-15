@@ -62,7 +62,7 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
 
     <?php if ($isAdmin): ?>
     <div class="add-button-container">
-      <a href="../views/add_docu.php" class="btn-add">Add Document</a>
+      <a href="../views/add_docu_page.php" class="btn-add">Add Document</a>
     </div>
     <?php endif; ?>
 
@@ -70,8 +70,8 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
       <table>
         <thead>
           <tr>
-            <th>ID</th>
             <th>Document Name</th>
+            <th>File</th>
             <th>Date Uploaded</th>
             <?php if ($isAdmin): ?><th>Action</th><?php endif; ?>
           </tr>
@@ -85,11 +85,13 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
             while ($row = $result->fetch_assoc()):
           ?>
           <tr>
-            <td><?= htmlspecialchars($row['file_name']) ?></td>
+            <td><?= htmlspecialchars($row['document']) ?></td>
+            <td><a href="../uploads/other/<?= htmlspecialchars($row['file_name']) ?>" target="_blank">View PDF</a></td>
+            <td><?= htmlspecialchars($row['uploaded_at']) ?></td>
             <?php if ($isAdmin): ?>
             <td>
-              <button class="btn-update" onclick="openUpdateProgramModal(<?= $row['id'] ?>, '<?= htmlspecialchars($row['file_name'], ENT_QUOTES) ?>')">Update</button>
-              <button class="btn-delete" onclick="openDeleteProgramModal(<?= $row['id'] ?>)">Delete</button>
+              <button class="btn-update" onclick="openUpdateDocuModal(<?= $row['id'] ?>, '<?= htmlspecialchars($row['document'], ENT_QUOTES) ?>')">Update</button>
+              <button class="btn-delete" onclick="openDeleteDocuModal(<?= $row['id'] ?>)">Delete</button>
             </td>
             <?php endif; ?>
           </tr>
@@ -104,28 +106,47 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
 </section>
 
 <script src="../js/script.js"></script>
-<script>
-function filterTable() {
-  const input = document.getElementById("searchInput");
-  const filter = input.value.toLowerCase();
-  const table = document.querySelector("table");
-  const trs = table.getElementsByTagName("tr");
 
-  for (let i = 1; i < trs.length; i++) {
-    const tds = trs[i].getElementsByTagName("td");
-    let visible = false;
+<!-- Delete Confirmation Modal -->
+<?php if ($isAdmin): ?>
+<div id="deleteDocuModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeDeleteDocuModal()">&times;</span>
+    <h1>Confirm Deletion</h1>
+    <p>Are you sure you want to delete this Document?</p>
+    <form method="POST" action="../handlers/delete_docu.php">
+      <input type="hidden" name="id" id="deleteDocuId">
+      <button type="submit" class="btn-delete-confirm">Confirm</button>
+      <button type="button" onclick="closeDeleteDocuModal()" style="background-color: gray; margin-left: 10px;">Cancel</button>
+    </form>
+  </div>
+</div>
+<?php endif; ?>
 
-    for (let j = 0; j < tds.length; j++) {
-      if (tds[j] && tds[j].innerText.toLowerCase().includes(filter)) {
-        visible = true;
-        break;
-      }
-    }
+<!-- Update Modal -->
+<?php if ($isAdmin): ?>
+<div id="updateDocuModal" class="modal">
+  <div class="modal-content"> 
+    <span class="close" onclick="closeUpdateDocuModal()">&times;</span>
+    <h1>Update Document</h1>
+    <form action="../handlers/update_docu.php" method="POST" enctype="multipart/form-data">
+      
+      <!-- Hidden field for ID -->
+      <input type="hidden" name="id" id="updateDocuId">
 
-    trs[i].style.display = visible ? "" : "none";
-  }
-}
-</script>
+      <label for="updateDocuName">Document Name</label>
+      <input type="text" name="document" id="updateDocuName">
+
+      <!-- File Upload -->
+      <label for="updateFile">Replace PDF File (optional)</label>
+      <input type="file" name="file_name" id="updateDocuFile" accept="application/pdf">
+
+      <!-- Submit Button -->
+      <button type="submit">Update</button>
+    </form>
+  </div>
+</div>
+<?php endif; ?>
 
 </body>
 </html>

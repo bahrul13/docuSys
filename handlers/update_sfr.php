@@ -9,40 +9,45 @@ if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
     exit();
 }
 
-// Validate input
-if (isset($_POST['id'], $_POST['program_name']) && !empty(trim($_POST['program_name']))) {
-    $id = intval($_POST['id']);
-    $name = trim($_POST['program_name']);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $id = $_POST['id'];
+    $name = $_POST['program_name'];
+    $survey_type = $_POST['survey_type'];
+    $survey_date = $_POST['survey_date'];
 
-    // Check for duplicate name (excluding current ID)
-    $check_sql = "SELECT * FROM sfr WHERE program_name = ? AND id != ?";
-    $stmt_check = $conn->prepare($check_sql);
-    $stmt_check->bind_param("si", $name, $id);
-    $stmt_check->execute();
-    $check_result = $stmt_check->get_result();
 
-    if ($check_result->num_rows > 0) {
-        $_SESSION['flash'] = "Error: Program name already exists.";
-        header("Location: ../users/sfr.php");
-        exit();
+    if (isset($_FILES['file_name']) && $_FILES['file_name']['error'] === 0) {
+        $fileName = basename($_FILES['file_name']['name']);
+        $targetDir = "../uploads/sfr/";
+        $targetFile = $targetDir . $fileName;
+
+        if (move_uploaded_file($_FILES['file_name']['tmp_name'], $targetFile)) {
+            $stmt = $conn->prepare("UPDATE sfr SET program_name = ?, survey_type = ?, survey_date = ?, file_name = ? WHERE id = ?");
+            $stmt->bind_param("ssssi", $name, $survey_type, $survey_date, $fileName, $id);
+        } else {
+            $_SESSION['flash'] = "❌ File upload failed.";
+            header("Location: ../users/sfr.php");
+            exit();
+        }
+    } else {
+        $stmt = $conn->prepare("UPDATE sfr SET program_name = ?, survey_type = ?, survey_date = ? WHERE id = ?");
+        $stmt->bind_param("sssi", $name, $survey_type, $survey_date, $id);
     }
 
-    // Proceed to update
-    $sql = "UPDATE sfr SET program_name = ? WHERE id = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("si", $name, $id);
-
     if ($stmt->execute()) {
-        $_SESSION['flash'] = "✅ Program Updated successfully.";
+        $_SESSION['flash'] = "✅ SFR record updated successfully.";
     } else {
-        $_SESSION['flash'] = "❌ Failed to update the Program Name.";
+        $_SESSION['flash'] = "❌ Failed to update SFR record.";
     }
 
     $stmt->close();
+    $conn->close();
+    
+    header("Location: ../users/sfr.php");
+    exit();
 } else {
-    $_SESSION['flash'] = "⚠️ All fields are required.";
+    $_SESSION['flash'] = "⚠️ Invalid request method.";
+    header("Location: ../users/sfr.php");
+    exit();
 }
-
-$conn->close();
-header("Location: ../users/sfr.php");
-exit();
+?>

@@ -124,6 +124,7 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
       <input type="hidden" name="id" id="updateProgramId">
       <label for="updateProgramName">Program Name</label>
       <input type="text" name="name" id="updateProgramName" required>
+      
       <button type="submit">Update</button>
     </form>
   </div>

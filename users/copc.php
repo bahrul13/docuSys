@@ -115,7 +115,7 @@ while ($row = $result->fetch_assoc()) {
           <tr>
             <th>Program Name</th>
             <th>Date of Issuance</th>
-            <th>PDF File</th>
+            <th>File</th>
             <th>Date Uploaded</th>
             <?php if ($isAdmin): ?><th>Action</th><?php endif; ?>
           </tr>
