@@ -269,7 +269,10 @@ body {
 #addModal > div > form,
 #updateModal > div > form,
 #updateProgramModal > div > form,
-#updateSfrModal > div> form {
+#updateSfrModal > div > form,
+#updateTrbaModal > div > form,
+#updateDocuModal > div > form,
+#updateUserModal > div > form {
   padding-top: 15px;
   display: flex;
   flex-direction: column;
@@ -286,7 +289,9 @@ body {
 #deleteTrbaModal > div > h1,
 #updateTrbaModal > div > h1,
 #deleteDocuModal > div > h1,
-#updateDocuModal > div > h1  {
+#updateDocuModal > div > h1,
+#updateUserModal > div > h1,
+#deleteUserModal > div > h1  {
   color: #1E5A94;
   margin-bottom: 20px; /* space below the modal heading */
 }
@@ -324,6 +329,8 @@ body {
 
 .modal-content input[type="text"],
 .modal-content input[type="date"],
+.modal-content input[type="role"],
+.modal-content input[type="password"],
 .modal-content input[type="file"] {
   width: 100%;
   padding: 10px;
@@ -584,6 +591,7 @@ body {
 
 .form-box input[type="text"],
 .form-box input[type="date"],
+.form-box input[type="password"],
 .form-box input[type="file"] {
   width: 100%;
   padding: 10px;

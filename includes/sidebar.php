@@ -14,14 +14,12 @@
   <div class="menu-bar">
     <div class="menu">
       <ul class="menu-links">
-        <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
           <li class="nav-link">
             <a href="../users/dashboard.php">
               <i class='bx bx-home icon'></i>
               <span class="text nav-text">Dashboard</span>
             </a>
           </li>
-        <?php endif; ?>
 
         <li class="nav-link">
           <a href="../users/trba.php">
@@ -44,7 +42,7 @@
         <li class="nav-link">
           <a href="../users/other.php">
             <i class='bx bx-award icon'></i>
-            <span class="text nav-text">Accreditation Documents</span>
+            <span class="text nav-text">Accreditation-Related Documents</span>
           </a>
         </li>
         <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
@@ -54,48 +52,23 @@
             <span class="text nav-text">Programs</span>
           </a>
         </li>
+        <li class="nav-link">
+          <a href="../users/user.php">
+            <i class='bx bx-user icon'></i>
+            <span class="text nav-text">User Management</span>
+          </a>
+        </li>
         <?php endif; ?>
-
-        <!-- <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
-          <li class="nav-link dropdown">
-            <a href="" class="dropdown-toggle">
-              <i class='bx bx-dots-horizontal-rounded icon'></i>
-              <span class="text nav-text">Others</span>
-              <i class='bx bx-chevron-down icon dropdown-icon'></i>
-            </a>
-            <ul class="dropdown-menu">
-              <li>
-                <a href="../users/programs.php">
-                  <i class="bx bx-book icon"></i>
-                  <span class="text nav-text">Programs</span>
-                </a>
-              </li>
-            </ul>
-          </li>
-        <?php endif; ?> -->
       </ul>
     </div>
 
     <div class="bottom-content">
-      <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
         <li>
           <a href="../includes/logout.php" id="logoutLink">
             <i class='bx bx-log-out icon'></i>
             <span class="text nav-text">Logout</span>
           </a>
         </li>
-
-        <!-- Modal HTML -->
-        <!-- <div id="logoutModal" class="modal">
-          <div class="modal-content">
-            <p>Are you sure you want to logout?</p>
-            <div class="modal-buttons">
-              <button id="confirmLogout">Yes</button>
-              <button id="cancelLogout">Cancel</button>
-            </div>
-          </div>
-        </div> -->
-      <?php endif; ?>
     </div>
   </div>
 </nav>

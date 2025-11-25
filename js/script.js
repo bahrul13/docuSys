@@ -158,6 +158,27 @@ window.openDeleteTrbaModal = (id) => {
 
 window.closeDeleteTrbaModal = () => hideModal('deleteTrbaModal');
 
+  // ===== User Modals =====
+window.openUserUpdateModal = (id, fullname, email, role) => {
+  document.getElementById('updateUserId').value = id;
+  document.getElementById('updateUserName').value = fullname;
+  document.getElementById('updateUserEmail').value = email;
+  document.getElementById('updateUserPassword').value = '';
+    // Set the role in the dropdown
+  const roleSelect = document.getElementById('updateUserRole');
+  if (roleSelect) roleSelect.value = role;
+  showModal('updateUserModal');
+};
+
+window.closeUserModal = () => hideModal('updateUserModal');
+
+window.userDeleteModal = (id) => {
+  document.getElementById('deleteUserId').value = id;
+  showModal('deleteUserModal');
+};
+
+window.closeUserDeleteModal = () => hideModal('deleteUserModal');
+
 
   // ===== Unified Click Outside Close =====
   window.addEventListener('click', (event) => {
@@ -167,6 +188,7 @@ window.closeDeleteTrbaModal = () => hideModal('deleteTrbaModal');
       'updateProgramModal', 'deleteProgramModal',
       'updateSfrModal', 'deleteSfrModal',
       'updateDocuModal', 'deleteDocuModal',
+      'updateUserModal', 'deleteUserModal',
       'updateTrbaModal', 'deleteTrbaModal'
     ];
 
