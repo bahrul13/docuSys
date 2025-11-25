@@ -71,7 +71,7 @@
       <input type="email" name="email" placeholder="Enter your email" required>
       <input type="submit" value="Reset Password">
     </form>
-    <a href="../login.php">← Back to Login</a>
+    <a href="../index.php">← Back to Login</a>
   </div>
 </body>
 </html>

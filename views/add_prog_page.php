@@ -4,7 +4,7 @@ require '../db/db_conn.php';
 
 // Check if user is admin
 if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
-    header("Location: ../login.php");
+    header("Location: ../index.php");
     exit();
 }
 ?>

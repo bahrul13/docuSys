@@ -159,7 +159,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <?php if ($showModal): ?>
       modal.show();
       okBtn.addEventListener('click', function () {
-        window.location.href = '../login.php';
+        window.location.href = '../index.php';
       });
     <?php endif; ?>
   });

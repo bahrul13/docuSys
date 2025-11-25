@@ -139,7 +139,7 @@ if (!empty($errors)) {
 <div id="successModal" class="modal">
     <div class="modal-content">
         <h3>Password Reset Successful!</h3>
-        <p><a href="../login.php">Click here to Login</a></p>
+        <p><a href="../index.php">Click here to Login</a></p>
     </div>
 </div>
 
