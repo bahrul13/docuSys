@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 14, 2025 at 12:45 AM
+-- Generation Time: Nov 25, 2025 at 02:10 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -40,11 +40,12 @@ CREATE TABLE `copc` (
 --
 
 INSERT INTO `copc` (`id`, `program`, `issuance_date`, `file_name`, `uploaded_at`) VALUES
-(9, 'Master of Information Technology', '2025-08-04', '6892ac446c218-Dumpao_L. 2x2 pic.pdf', '2025-08-06'),
-(10, 'BS in Information Technology', '2025-07-27', '6892b06885009-Dumpao_L. 2x2 pic.pdf', '2025-08-06'),
-(11, 'Master of Science in Information Technology', '2025-08-01', '6892b3cc99abe-Dumpao_L. 2x2 pic.pdf', '2025-08-06'),
-(13, 'Master of Science in Information Technology', '2025-08-14', '68934f3ce15a2-Dumpao_L. 2x2 pic.pdf', '2025-08-06'),
-(14, 'BS in Social Work', '2025-08-13', '68934f5f45e72-Dumpao_L. 2x2 pic.pdf', '2025-08-06');
+(9, 'Master of Information Technology', '2025-08-04', 'AREA X-ADMINISTRATION.pdf', '2025-08-06'),
+(10, 'BS in Information Technology', '2025-07-29', 'DBM-PriceList-as-of-090925.pdf', '2025-08-06'),
+(11, 'Master of Science in Information Technology', '2025-08-01', 'DBM-PriceList-as-of-090925.pdf', '2025-08-06'),
+(13, 'Master of Science in Information Technology', '2025-08-14', 'AREA X-ADMINISTRATION.pdf', '2025-08-06'),
+(14, 'BS in Social Work', '2025-08-13', 'DBM-PriceList-as-of-090925.pdf', '2025-08-06'),
+(16, 'Bachelor of Secondary Education', '2025-11-18', '69258f8a55a32-Graduate School Thesis Dissertation Policy Paper Capstone Format.pdf', '2025-11-25');
 
 -- --------------------------------------------------------
 
@@ -58,6 +59,14 @@ CREATE TABLE `documents` (
   `file_name` varchar(255) NOT NULL,
   `uploaded_at` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `documents`
+--
+
+INSERT INTO `documents` (`id`, `document`, `file_name`, `uploaded_at`) VALUES
+(3, 'MSI Level 1', '68ef085d72be7-AREA X-ADMINISTRATION.pdf', '2025-10-15'),
+(4, 'MSI Level II', 'AREA X-ADMINISTRATION.pdf', '2025-10-15');
 
 -- --------------------------------------------------------
 
@@ -98,6 +107,13 @@ CREATE TABLE `sfr` (
   `date_uploaded` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `sfr`
+--
+
+INSERT INTO `sfr` (`id`, `program_name`, `survey_type`, `survey_date`, `file_name`, `date_uploaded`) VALUES
+(5, 'Bachelor of Secondary Education', 'Level 4', '2025-09-03', 'DBM-PriceList-as-of-090925.pdf', '2025-10-15');
+
 -- --------------------------------------------------------
 
 --
@@ -118,9 +134,7 @@ CREATE TABLE `trba` (
 --
 
 INSERT INTO `trba` (`id`, `program_name`, `survey_type`, `survey_date`, `file_name`, `date_uploaded`) VALUES
-(1, 'BS in Information Technology', 'Level 1', '2025-09-03', '68d36201aa289-TOR Merged.pdf', '2025-09-24'),
-(2, 'BS in Social Work', 'Level 2', '2025-09-02', '68d363c7152b3-TOR Merged.pdf', '2025-09-24'),
-(3, 'Bachelor of Secondary Education', 'Level 2', '2025-09-01', '68d363f6f1408-TOR Merged.pdf', '2025-09-24');
+(3, 'Bachelor of Secondary Education', 'Level 2', '2025-09-01', 'DBM-PriceList-as-of-090925.pdf', '2025-09-24');
 
 -- --------------------------------------------------------
 
@@ -133,17 +147,18 @@ CREATE TABLE `user` (
   `fullname` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `role` varchar(50) NOT NULL,
+  `role` enum('admin','user') NOT NULL DEFAULT 'user',
   `reset_token` varchar(255) DEFAULT NULL,
-  `reset_expiry` datetime DEFAULT NULL
+  `reset_expiry` datetime DEFAULT NULL,
+  `date_created` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`id`, `fullname`, `email`, `password`, `role`, `reset_token`, `reset_expiry`) VALUES
-(6, 'Bahrul', 'ungadbahrul94@gmail.com', '$2y$10$XJvY982okMLUDrW95CG2COpG.Y.Vea32A91gDYdo7YkOIa.x540py', 'admin', NULL, NULL);
+INSERT INTO `user` (`id`, `fullname`, `email`, `password`, `role`, `reset_token`, `reset_expiry`, `date_created`) VALUES
+(7, 'QMSO', 'qmso@cotsu.edu.ph', '$2y$10$4APiI45P4sOtpoA2j21jIuT7eJfTA488oOi0EyvPIUwjyOMKgqDl2', 'admin', NULL, NULL, '2025-11-25');
 
 --
 -- Indexes for dumped tables
@@ -194,37 +209,37 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `copc`
 --
 ALTER TABLE `copc`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `documents`
 --
 ALTER TABLE `documents`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `programs`
 --
 ALTER TABLE `programs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `sfr`
 --
 ALTER TABLE `sfr`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `trba`
 --
 ALTER TABLE `trba`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
