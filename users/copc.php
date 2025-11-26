@@ -53,49 +53,6 @@ while ($row = $result->fetch_assoc()) {
   <?php endif; ?>
 
 <section class="dashboard-content">
-
-<!-- 
-  <div class="cards">
-    <div class="card">
-      <i class='bx bx-file'></i>
-      <div>
-        <?php
-        // Query to count the total number of programs
-        $countQuery = "SELECT COUNT(*) AS total FROM copc";
-        $countResult = $conn->query($countQuery);
-        $totalCopc = 0;
-        if ($countResult && $row = $countResult->fetch_assoc()) {
-            $totalCopc = $row['total'];
-        }
-        ?>
-        <h3><?= $totalCopc ?></h3>
-        <p>Total number of COPC</p>
-      </div>
-    </div>
-    <div class="card">
-      <i class='bx bx-file'></i>
-      <div>
-      <?php
-        // Get current date minus 7 days
-        $sevenDaysAgo = date('Y-m-d H:i:s', strtotime('-7 days'));
-
-        // SQL query to count recent uploads
-        $recentQuery = "SELECT COUNT(*) AS recent_total FROM copc WHERE uploaded_at >= ?";
-        $stmt = $conn->prepare($recentQuery);
-        $stmt->bind_param("s", $sevenDaysAgo);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $recentTotal = 0;
-        if ($result && $row = $result->fetch_assoc()) {
-            $recentTotal = $row['recent_total'];
-        }
-        ?>
-        <h3><?= $recentTotal ?></h3>
-        <p>Files Uploaded in Last 7 Days</p>
-      </div>
-    </div>
-  </div> -->
-
   <section class="table-section">
     <h2>List of Certificate of Program Compliance Files</h2>
 
@@ -115,9 +72,8 @@ while ($row = $result->fetch_assoc()) {
           <tr>
             <th>Program Name</th>
             <th>Date of Issuance</th>
-            <th>File</th>
             <th>Date Uploaded</th>
-            <?php if ($isAdmin): ?><th>Action</th><?php endif; ?>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -131,18 +87,18 @@ while ($row = $result->fetch_assoc()) {
           <tr>
             <td><?= htmlspecialchars($row['program']) ?></td>
             <td><?= htmlspecialchars($row['issuance_date']) ?></td>
-            <td><a href="../uploads/copc/<?= htmlspecialchars($row['file_name']) ?>" target="_blank">View PDF</a></td>
             <td><?= htmlspecialchars($row['uploaded_at']) ?></td>
-            <?php if ($isAdmin): ?>
             <td>
+            <button type="button" class="btn-view" onclick="window.location.href='../views/view_copc_page.php?id=<?= $row['id'] ?>'">View File</button>
+            <?php if ($isAdmin): ?>
               <button class="btn-update" onclick="openUpdateModal(
                 <?= $row['id'] ?>,
                 '<?= htmlspecialchars($row['program'], ENT_QUOTES) ?>',
                 '<?= $row['issuance_date'] ?>'
               )">Update</button>
               <button class="btn-delete" onclick="openDeleteModal(<?= $row['id'] ?>)">Delete</button>
-            </td>
             <?php endif; ?>
+            </td>
           </tr>
         <?php endwhile; else: ?>
           <tr><td colspan="<?= $isAdmin ? 5 : 4 ?>">No documents found.</td></tr>

@@ -1,6 +1,10 @@
 <?php
 session_start();
 require '../db/db_conn.php';
+require '../function/log_handler.php';
+
+// Get logged-in user ID
+$user_id = $_SESSION['user_id'] ?? null;
 
 // Check if admin
 if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
@@ -34,6 +38,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($stmt->execute()) {
         $_SESSION['flash'] = "✅ COPC record updated successfully.";
+
+        // ✅ Log the update action
+        $logMessage = "Updated COPC record: $program.";
+        if (isset($fileName)) {
+            $logMessage .= "";
+        }
+
+        // Safely check if user exists before logging to avoid foreign key errors
+        if ($user_id) {
+            $checkUser = $conn->prepare("SELECT id FROM user WHERE id = ?");
+            $checkUser->bind_param("i", $user_id);
+            $checkUser->execute();
+            $checkResult = $checkUser->get_result();
+            $checkUser->close();
+
+            if ($checkResult->num_rows === 0) {
+                $user_id = null; // fallback if user doesn't exist
+            }
+        }
+
+        logAction($conn, $user_id, 'copc', $id, 'Update COPC', $logMessage);
+
     } else {
         $_SESSION['flash'] = "❌ Failed to update COPC record.";
     }

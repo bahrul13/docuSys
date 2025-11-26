@@ -58,6 +58,12 @@
             <span class="text nav-text">User Management</span>
           </a>
         </li>
+        <li class="nav-link">
+          <a href="../users/logs.php">
+            <i class='bx bx-book icon'></i>
+            <span class="text nav-text">Logs</span>
+          </a>
+        </li>
         <?php endif; ?>
       </ul>
     </div>

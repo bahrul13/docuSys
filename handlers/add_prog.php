@@ -1,6 +1,7 @@
 <?php
 session_start();
-include '../db/db_conn.php';
+require '../db/db_conn.php';
+require "../function/log_handler.php";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $program_name = trim($_POST['program_name']);
@@ -24,6 +25,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($stmt->execute()) {
             $_SESSION['flash'] = "✅ Program added successfully.";
+
+            // ✅ Log the action
+            $newRecordId = $stmt->insert_id;
+            logAction($conn, $user_id, 'programs', $newRecordId, 'Add Program', "Added Program: $program_name");
+
         } else {
             $_SESSION['flash'] = "❌ Error: Could not save the program.";
         }

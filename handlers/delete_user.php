@@ -1,39 +1,67 @@
 <?php
 session_start();
 require '../db/db_conn.php';
+require '../function/log_handler.php';
 
-// Ensure only admin can access this
-if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
-    $_SESSION['flash'] = "Access denied.";
-    header("Location: ../users/user.php");
-    exit();
-}
+// Get logged-in user ID and role
+$user_id = $_SESSION['user_id'] ?? null;
+$user_role = $_SESSION['user_role'] ?? null;
 
 // Check for valid POST request with program ID
-if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['id'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
     $id = intval($_POST['id']);
 
-    // Prepare and execute delete statement
-    $sql = "DELETE FROM user WHERE id = ?";
-    $stmt = $conn->prepare($sql);
+    // Get user name for logging
+    $stmt = $conn->prepare("SELECT fullname FROM user WHERE id = ?");
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-    if ($stmt) {
-        $stmt->bind_param("i", $id);
-        if ($stmt->execute()) {
-            $_SESSION['delete_flash'] = "✅ User deleted successfully.";
+    if ($result && $result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $programName = $row['fullname']; // Use this for logging
+
+        // Delete from database
+        $deleteStmt = $conn->prepare("DELETE FROM user WHERE id = ?");
+        $deleteStmt->bind_param("i", $id);
+
+        if ($deleteStmt->execute()) {
+            // ✅ Prepare log message
+            $logMessage = ($user_role === 'admin') 
+                ? "Deleted User: {$programName}" 
+                : "Deleted a User";
+
+            // Safely log the delete action
+            if ($user_id) {
+                $checkUser = $conn->prepare("SELECT id FROM user WHERE id = ?");
+                $checkUser->bind_param("i", $user_id);
+                $checkUser->execute();
+                $checkResult = $checkUser->get_result();
+                $checkUser->close();
+
+                if ($checkResult->num_rows === 0) {
+                    $user_id = null; // fallback if user doesn't exist
+                }
+            }
+
+            logAction($conn, $user_id, 'user', $id, 'Delete User', $logMessage);
+            $_SESSION['flash'] = "✅ User deleted successfully.";
+
         } else {
-            $_SESSION['delete_flash'] = "❌ Failed to delete the User.";
+            $_SESSION['flash'] = "❌ Failed to User the program from database.";
         }
-        $stmt->close();
+
+        $deleteStmt->close();
     } else {
-        $_SESSION['delete_flash'] = "❌ Failed to prepare delete User.";
+        $_SESSION['flash'] = "⚠️ User not found.";
     }
 
+    $stmt->close();
 } else {
-    $_SESSION['delete_flash'] = "⚠️ Invalid request.";
+    $_SESSION['flash'] = "⚠️ Invalid request.";
 }
 
-// Close the connection and redirect
 $conn->close();
 header("Location: ../users/user.php");
 exit();
+?>

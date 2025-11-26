@@ -1,6 +1,6 @@
 <?php 
 session_start();
-include "../db/db_conn.php";      // your database connection
+require "../db/db_conn.php";      // your database connection
 
 // Check if user is admin
 $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
@@ -87,8 +87,8 @@ $result = $conn->query("SELECT id, fullname, email, role FROM user ORDER BY id D
             <td><?= htmlspecialchars($row['email']) ?></td>
             <td><?= htmlspecialchars($row['role']) ?></td>
             <td><?= htmlspecialchars($row['date_created']) ?></td>
-            <?php if ($isAdmin): ?>
             <td>
+            <?php if ($isAdmin): ?>
               <button class="btn-update" onclick="openUserUpdateModal(
                 <?= $row['id'] ?>,
                 '<?= htmlspecialchars($row['fullname'], ENT_QUOTES) ?>',
@@ -96,8 +96,8 @@ $result = $conn->query("SELECT id, fullname, email, role FROM user ORDER BY id D
                 '<?= htmlspecialchars($row['role'], ENT_QUOTES) ?>'
               )">Update</button>
               <button class="btn-delete" onclick="userDeleteModal(<?= $row['id'] ?>)">Delete</button>
-            </td>
             <?php endif; ?>
+            </td>
           </tr>
         <?php endwhile; else: ?>
           <tr><td colspan="<?= $isAdmin ? 5 : 4 ?>">No Users found.</td></tr>

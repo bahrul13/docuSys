@@ -1,6 +1,7 @@
 <?php
 session_start();
 require '../db/db_conn.php';
+require "../function/log_handler.php"; // ✅ Include log function here
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $fullname = trim($_POST['fullname']);
@@ -28,6 +29,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bind_param("ssss", $fullname, $email, $password, $role);
 
     if ($stmt->execute()) {
+
+        // ==============================
+        // ✅ INSERT LOG HERE
+        // ==============================
+        $newUserId = $stmt->insert_id;
+
+        logAction(
+            $conn,
+            $_SESSION['id'],     // the admin who added the user
+            'user',              // module
+            $newUserId,          // the newly created user ID
+            'Add User',          // action
+            'Added user: ' . $fullname  // description
+        );
+
         $_SESSION['flash'] = "✅ User added successfully!";
     } else {
         $_SESSION['flash'] = "❌ Database error: Failed to add user.";

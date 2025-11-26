@@ -1,6 +1,7 @@
 <?php
 session_start();
 require '../db/db_conn.php';
+require "../function/log_handler.php";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $program = $_POST['documentName'];
@@ -31,6 +32,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($stmt->execute()) {
             $_SESSION['flash'] = "✅ Document uploaded successfully.";
+
+             // ✅ Log the action
+            $newRecordId = $stmt->insert_id;
+            logAction($conn, $user_id, 'documents', $newRecordId, 'Add Accreditation-Related Document', "Uploaded Accreditation-Related documents");
+
         } else {
             $_SESSION['flash'] = "❌ Database error: Failed to save document.";
         }

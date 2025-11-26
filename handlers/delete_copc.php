@@ -1,6 +1,7 @@
 <?php
 session_start();
 require '../db/db_conn.php';
+require '../function/log_handler.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
     $id = intval($_POST['id']);
@@ -24,7 +25,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
             if (file_exists($filePath)) {
                 unlink($filePath);
             }
+            // ✅ Log the delete action
+            logAction($conn, $user_id, 'copc', $id, 'Delete COPC', "Deleted COPC document: {$row['file_name']}");
+
             $_SESSION['flash'] = "✅ Document deleted successfully.";
+            
         } else {
             $_SESSION['flash'] = "❌ Failed to delete the document from database.";
         }

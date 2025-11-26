@@ -81,11 +81,8 @@ while ($row = $result->fetch_assoc()) {
             <th>Program Name</th>
             <th>Survey Type</th>
             <th>Survey Date</th>
-            <th>File</th>
             <th>Date Uploaded</th>
-            <?php if ($isAdmin): ?>
-              <th>Action</th>
-            <?php endif; ?>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -100,10 +97,10 @@ while ($row = $result->fetch_assoc()) {
             <td><?= htmlspecialchars($row['program_name']) ?></td>
             <td><?= htmlspecialchars($row['survey_type']) ?></td>
             <td><?= htmlspecialchars($row['survey_date']) ?></td>
-            <td><a href="../uploads/trba/<?= htmlspecialchars($row['file_name']) ?>" target="_blank">View PDF</a></td>
             <td><?= htmlspecialchars($row['date_uploaded']) ?></td>
-            <?php if ($isAdmin): ?>
             <td>
+            <button type="button" class="btn-view" onclick="window.location.href='../views/view_trba_page.php?id=<?= $row['id'] ?>'">View File</button>
+            <?php if ($isAdmin): ?>
               <button class="btn-update" onclick="openUpdateTrbaModal(
                 <?= $row['id'] ?>,
                 '<?= htmlspecialchars($row['program_name'], ENT_QUOTES) ?>',
@@ -111,8 +108,8 @@ while ($row = $result->fetch_assoc()) {
                 '<?= $row['survey_date'] ?>'
               )">Update</button>
               <button class="btn-delete" onclick="openDeleteTrbaModal(<?= $row['id'] ?>)">Delete</button>
-            </td>
             <?php endif; ?>
+            </td>
           </tr>
         <?php endwhile; else: ?>
           <tr><td colspan="<?= $isAdmin ? 6 : 5 ?>">No documents found.</td></tr>

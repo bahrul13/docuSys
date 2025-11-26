@@ -1,6 +1,7 @@
 <?php
 session_start();
 require '../db/db_conn.php';
+require "../function/log_handler.php";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $programName = $_POST['program_name'];
@@ -33,6 +34,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($stmt->execute()) {
             $_SESSION['flash'] = "✅ Document uploaded successfully.";
+
+            // ✅ Log the action
+            $newRecordId = $stmt->insert_id;
+            logAction($conn, $user_id, 'sfr', $newRecordId, 'Add SFR', "Uploaded SFR document for program: $programName");
+
         } else {
             $_SESSION['flash'] = "❌ Database error: Failed to save document.";
         }

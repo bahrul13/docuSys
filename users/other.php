@@ -71,9 +71,8 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
         <thead>
           <tr>
             <th>Document Name</th>
-            <th>File</th>
             <th>Date Uploaded</th>
-            <?php if ($isAdmin): ?><th>Action</th><?php endif; ?>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -86,14 +85,14 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
           ?>
           <tr>
             <td><?= htmlspecialchars($row['document']) ?></td>
-            <td><a href="../uploads/other/<?= htmlspecialchars($row['file_name']) ?>" target="_blank">View PDF</a></td>
             <td><?= htmlspecialchars($row['uploaded_at']) ?></td>
-            <?php if ($isAdmin): ?>
             <td>
+            <button type="button" class="btn-view" onclick="window.location.href='../views/view_docu_page.php?id=<?= $row['id'] ?>'">View File</button>
+            <?php if ($isAdmin): ?>
               <button class="btn-update" onclick="openUpdateDocuModal(<?= $row['id'] ?>, '<?= htmlspecialchars($row['document'], ENT_QUOTES) ?>')">Update</button>
               <button class="btn-delete" onclick="openDeleteDocuModal(<?= $row['id'] ?>)">Delete</button>
-            </td>
             <?php endif; ?>
+            </td>
           </tr>
           <?php endwhile; else: ?>
           <tr><td colspan="<?= $isAdmin ? 4 : 4 ?>">No documents found.</td></tr>

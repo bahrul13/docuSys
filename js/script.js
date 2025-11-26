@@ -200,3 +200,17 @@ window.closeUserDeleteModal = () => hideModal('deleteUserModal');
     });
   });
 });
+
+function printTable() {
+    const table = document.getElementById('printableTable');
+    const newWin = window.open('', '', 'width=800,height=600');
+    newWin.document.write('<html><head><title>Print Table</title>');
+    newWin.document.write('<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />');
+    newWin.document.write('<style>table { width:100%; border-collapse: collapse; } th, td { border:1px solid #ccc; padding:8px; } th { background:#eee; }</style>');
+    newWin.document.write('</head><body>');
+    newWin.document.write('<h1 id="printHeading">System Transaction Logs</h1>'); // heading in print
+    newWin.document.write(table.outerHTML);
+    newWin.document.write('</body></html>');
+    newWin.document.close();
+    newWin.print();
+};

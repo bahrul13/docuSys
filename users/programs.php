@@ -48,25 +48,6 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
 
 <section class="dashboard-content">
 
-  <!-- <div class="cards">
-    <div class="card">
-      <i class='bx bx-file'></i>
-      <div>
-        <?php
-        $countQuery = "SELECT COUNT(*) AS total FROM programs";
-        $countResult = $conn->query($countQuery);
-
-        $totalPrograms = 0;
-        if ($countResult && $row = $countResult->fetch_assoc()) {
-            $totalPrograms = $row['total'];
-        }
-        ?>
-        <h3><?= $totalPrograms ?></h3>
-        <p>Total number of Programs</p>
-      </div>
-    </div>
-  </div> -->
-
   <section class="table-section">
     <h2>List of Programs</h2>
 
