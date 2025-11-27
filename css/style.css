@@ -857,12 +857,18 @@ body {
     #printHeading { 
         display: block;
         text-align: center;
+        font-family: Arial, sans-serif; /* Arial font for heading */
         font-size: 24px;
         font-weight: bold;
         margin-bottom: 20px;
     }
 
-    #printableTable, #printableTable * { visibility: visible; }
+    #printableTable, #printableTable * { 
+        visibility: visible;
+        font-family: Arial, sans-serif; /* Arial font for table */
+        font-size: 8pt; /* Table font size */
+    }
+
     #printableTable { 
         position: absolute; 
         top: 50px; /* leave space for heading */

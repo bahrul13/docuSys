@@ -16,6 +16,8 @@ if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
   <title>Add Program</title>
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="../css/style.css" />
+    <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/uploads/dms.png">
 
 </head>
 <body>

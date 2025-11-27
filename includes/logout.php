@@ -8,17 +8,27 @@ require "../db/db_conn.php";
 require "../function/log_handler.php";
 
 // Log the logout action if user is logged in
-if (isset($_SESSION['user_id'], $_SESSION['user_email'])) {
+if (isset($_SESSION['user_id'])) {
     $user_id = $_SESSION['user_id'];
-    $user_name = $_SESSION['user_email']; // or $_SESSION['user_name'] if you store full name
-    logAction(
-        $conn,
-        $user_id,
-        'auth',
-        $user_id,
-        'logout',
-        "User logged out: {$user_name}"
-    );
+
+    // Fetch the full name from database
+    $stmt = $conn->prepare("SELECT fullname FROM user WHERE id = ?");
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $user = $result->fetch_assoc(); // $user['fullname'] will be available
+    $stmt->close();
+
+    if ($user) {
+        logAction(
+            $conn, 
+            $user_id, 
+            'auth', 
+            $user_id, 
+            'logout', 
+            "User logged out: {$user['fullname']}"
+        );
+    }
 }
 
 // Destroy session
@@ -34,3 +44,4 @@ header("Pragma: no-cache");
 // Redirect to login page
 header("Location: ../index.php");
 exit();
+?>

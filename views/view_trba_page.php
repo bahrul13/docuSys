@@ -9,6 +9,8 @@ require "../handlers/view_trba.php"; // Include PHP logic for data fetching
 <title>View Document</title>
 <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
 <link rel="stylesheet" href="../css/style.css">
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/uploads/dms.png">
 <style>
 .pdf-container {
     position: relative;
