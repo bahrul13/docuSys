@@ -1,5 +1,21 @@
 <?php
-session_start();
+
+// ==================== SESSION CHECK & CACHE PREVENTION ====================
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Prevent browser caching
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+
+// Redirect to login if not logged in
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../index.php");
+    exit();
+}
+
 require "../db/db_conn.php";
 
 // Check if user is admin

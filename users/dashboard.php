@@ -1,7 +1,23 @@
 <?php
-// Start session
-session_start();
+
+// ==================== SESSION CHECK & CACHE PREVENTION ====================
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Prevent browser caching
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+
+// Redirect to login if not logged in
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../index.php");
+    exit();
+}
+
 include('../db/db_conn.php');
+
 ?>
 
 <!DOCTYPE html>
@@ -115,7 +131,7 @@ include('../db/db_conn.php');
                 }
                 ?>
                 <h3><?= $totalDocu ?></h3>
-                <p>Total Documents</p>
+                <p>Total number of Accreditation-Related Documents</p>
             </div>
         </div>
 
@@ -157,8 +173,57 @@ include('../db/db_conn.php');
                 <p>Total Programs</p>
             </div>
         </div>
-        <?php endif; ?>
 
+        <div class="card" data-href="logs.php">
+            <i class='bx bx-show'></i>
+            <div>
+                <?php
+                // Query: Most viewed document
+                $query = "
+                    SELECT d.document, COUNT(t.id) AS views
+                    FROM transaction_logs t
+                    JOIN documents d ON d.id = t.record_id
+                    WHERE t.action = 'View Document'
+                    AND t.documents = 'documents'
+                    GROUP BY t.record_id
+                    ORDER BY views DESC
+                    LIMIT 1
+                ";
+
+                $result = $conn->query($query);
+
+                $topDocName = "No views yet";
+                $topDocViews = 0;
+
+                if ($result && $row = $result->fetch_assoc()) {
+                    $topDocName = $row['document'];
+                    $topDocViews = $row['views'];
+                }
+                ?>
+                <h3><?= htmlspecialchars($topDocViews) ?></h3>
+                <p>Most Viewed: <?= htmlspecialchars($topDocName) ?></p>
+            </div>
+        </div>
+
+        <div class="card" data-href="user.php">
+            <i class='bx bx-user'></i>
+            <div>
+                <?php
+                // Query: Count all users
+                $userQuery = "SELECT COUNT(*) AS total_users FROM user";
+                $userResult = $conn->query($userQuery);
+
+                $totalUsers = 0;
+                if ($userResult && $row = $userResult->fetch_assoc()) {
+                    $totalUsers = $row['total_users'];
+                }
+                ?>
+                <h3><?= $totalUsers ?></h3>
+                <p>Total Users</p>
+            </div>
+        </div>
+
+        <?php endif; ?>
     </div>
   </section>
 

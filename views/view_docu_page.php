@@ -49,15 +49,13 @@ require "../handlers/view_docu.php"; // Include PHP logic for data fetching
 <?php include('../includes/sidebar.php'); ?>
 
 <section class="dashboard-content">
-  <h1>View Document</h1>
+  <h1>
+    <?= isset($doc['document']) ? htmlspecialchars($doc['document']) : "Document Name Not Available"; ?>
+  </h1>
 
-  <div class="document-details">
-    <p><strong>Document Name:</strong> <?= htmlspecialchars($doc['document']) ?></p>
-    <p><strong>Date Uploaded:</strong> <?= htmlspecialchars($doc['uploaded_at']) ?></p>
-  </div>
 
   <div class="pdf-container">
-    <iframe src="<?= htmlspecialchars($pdfFileUrl) ?>" width="100%" height="600px"></iframe>
+    <iframe src="<?= htmlspecialchars($pdfFileUrl) ?>" width="100%" height="640px"></iframe>
 
     <div class="pdf-buttons">
       

@@ -49,12 +49,9 @@ require "../handlers/view_copc.php"; // Include PHP logic for data fetching
 <?php include('../includes/sidebar.php'); ?>
 
 <section class="dashboard-content">
-  <h1>View Document</h1>
-
-  <div class="document-details">
-    <p><strong>Program Name:</strong> <?= htmlspecialchars($doc['program']) ?></p>
-    <p><strong>Date Issued:</strong> <?= htmlspecialchars($doc['issuance_date']) ?></p>
-  </div>
+  <h1>
+    <?= isset($doc['program']) ? htmlspecialchars($doc['program']) : "Document Name Not Available"; ?>
+  </h1>
 
   <div class="pdf-container">
     <iframe src="<?= htmlspecialchars($pdfFileUrl) ?>" width="100%" height="600px"></iframe>

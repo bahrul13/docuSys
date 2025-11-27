@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 25, 2025 at 02:10 PM
+-- Generation Time: Nov 27, 2025 at 02:15 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -65,7 +65,7 @@ CREATE TABLE `documents` (
 --
 
 INSERT INTO `documents` (`id`, `document`, `file_name`, `uploaded_at`) VALUES
-(3, 'MSI Level 1', '68ef085d72be7-AREA X-ADMINISTRATION.pdf', '2025-10-15'),
+(3, 'MSI Level 1', 'Graduate School Thesis Dissertation Policy Paper Capstone Format.pdf', '2025-10-15'),
 (4, 'MSI Level II', 'AREA X-ADMINISTRATION.pdf', '2025-10-15');
 
 -- --------------------------------------------------------
@@ -117,6 +117,88 @@ INSERT INTO `sfr` (`id`, `program_name`, `survey_type`, `survey_date`, `file_nam
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `transaction_logs`
+--
+
+CREATE TABLE `transaction_logs` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `documents` varchar(255) NOT NULL,
+  `record_id` int(11) NOT NULL,
+  `action` varchar(50) NOT NULL,
+  `description` text DEFAULT NULL,
+  `log_time` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `transaction_logs`
+--
+
+INSERT INTO `transaction_logs` (`id`, `user_id`, `documents`, `record_id`, `action`, `description`, `log_time`) VALUES
+(7, 1, 'user', 15, 'Delete User', 'Deleted User: Bahrul', '2025-11-26 11:22:30'),
+(8, 1, 'documents', 4, 'View Document', 'Viewed Document: MSI Level II', '2025-11-26 11:23:00'),
+(9, 1, 'documents', 4, 'View Document', 'Viewed Document: MSI Level II', '2025-11-26 11:23:43'),
+(10, 14, 'documents', 4, 'View Document', 'Viewed Document: MSI Level II', '2025-11-26 11:24:27'),
+(11, 1, 'documents', 4, 'View Document', 'Viewed Document: MSI Level II', '2025-11-26 11:34:22'),
+(12, 1, 'copc', 16, 'View Document', 'Viewed Document: ', '2025-11-26 11:36:57'),
+(13, 1, 'copc', 16, 'View Document', 'Viewed Document: Bachelor of Secondary Education', '2025-11-26 11:38:08'),
+(14, 1, 'sfr', 5, 'View Document', 'Viewed Document: Bachelor of Secondary Education', '2025-11-26 11:41:47'),
+(15, 1, 'sfr', 5, 'View Document', 'Viewed Document: Bachelor of Secondary Education', '2025-11-26 11:42:13'),
+(16, 1, 'copc', 16, 'View Document', 'Viewed Document: Bachelor of Secondary Education', '2025-11-26 11:42:19'),
+(17, 1, 'trba', 3, 'View Document', 'Viewed Document: Bachelor of Secondary Education', '2025-11-26 11:44:50'),
+(18, 1, 'trba', 3, 'View Document', 'Viewed Document: Bachelor of Secondary Education', '2025-11-26 11:47:10'),
+(19, 1, 'trba', 3, 'View Document', 'Viewed Document: Bachelor of Secondary Education', '2025-11-26 11:49:36'),
+(20, 1, 'trba', 3, 'View Document', 'Viewed Document: Bachelor of Secondary Education', '2025-11-26 11:50:03'),
+(21, 1, 'trba', 3, 'View Document', 'Viewed Document: Bachelor of Secondary Education', '2025-11-26 11:50:21'),
+(22, 1, 'documents', 4, 'View Document', 'Viewed Document: MSI Level II', '2025-11-26 11:50:58'),
+(23, 1, 'documents', 4, 'View Document', 'Viewed Document: MSI Level II', '2025-11-26 11:51:50'),
+(24, 1, 'documents', 4, 'View Document', 'Viewed Document: MSI Level II', '2025-11-26 11:52:30'),
+(25, 1, 'documents', 4, 'View Document', 'Viewed Document: MSI Level II', '2025-11-26 11:52:37'),
+(26, 1, 'documents', 3, 'Update Document', 'Updated Document record: MSI Level 1. ', '2025-11-26 11:52:50'),
+(27, 1, 'documents', 4, 'View Document', 'Viewed Document: MSI Level II', '2025-11-26 11:52:51'),
+(28, 1, 'trba', 3, 'View Document', 'Viewed Document: Bachelor of Secondary Education', '2025-11-26 11:53:27'),
+(29, 1, 'sfr', 5, 'View Document', 'Viewed Document: Bachelor of Secondary Education', '2025-11-26 11:54:30'),
+(30, 1, 'copc', 16, 'View Document', 'Viewed Document: Bachelor of Secondary Education', '2025-11-26 11:55:27'),
+(31, 1, 'copc', 16, 'View Document', 'Viewed Document: Bachelor of Secondary Education', '2025-11-26 11:55:50'),
+(32, 1, 'documents', 3, 'View Document', 'Viewed Document: MSI Level 1', '2025-11-26 12:10:58'),
+(33, 14, 'trba', 3, 'View Document', 'Viewed Document: Bachelor of Secondary Education', '2025-11-26 12:11:37'),
+(34, 14, 'copc', 16, 'View Document', 'Viewed Document: Bachelor of Secondary Education', '2025-11-26 12:11:55'),
+(35, 14, 'copc', 13, 'View Document', 'Viewed Document: Master of Science in Information Technology', '2025-11-26 12:11:59'),
+(36, 14, 'documents', 3, 'View Document', 'Viewed Document: MSI Level 1', '2025-11-26 12:12:05'),
+(37, 14, 'documents', 3, 'View Document', 'Viewed Document: MSI Level 1', '2025-11-26 12:13:21'),
+(38, 14, 'documents', 3, 'View Document', 'Viewed Document: MSI Level 1', '2025-11-26 12:13:37'),
+(39, 14, 'documents', 3, 'View Document', 'Viewed Document: MSI Level 1', '2025-11-26 12:13:46'),
+(40, 14, 'documents', 3, 'View Document', 'Viewed Document: MSI Level 1', '2025-11-26 12:13:51'),
+(41, 14, 'documents', 3, 'View Document', 'Viewed Document: MSI Level 1', '2025-11-26 12:13:55'),
+(42, 14, 'documents', 3, 'View Document', 'Viewed Document: MSI Level 1', '2025-11-26 12:14:12'),
+(43, 14, 'documents', 3, 'View Document', 'Viewed Document: MSI Level 1', '2025-11-26 12:14:19'),
+(44, 14, 'documents', 3, 'View Document', 'Viewed Document: MSI Level 1', '2025-11-26 12:14:31'),
+(45, 14, 'documents', 3, 'View Document', 'Viewed Document: MSI Level 1', '2025-11-26 12:15:20'),
+(46, 1, 'documents', 3, 'View Document', 'Viewed Document: MSI Level 1', '2025-11-26 12:15:54'),
+(47, 1, 'sfr', 5, 'View Document', 'Viewed Document: Bachelor of Secondary Education', '2025-11-27 00:19:44'),
+(48, 1, 'trba', 3, 'View Document', 'Viewed Document: Bachelor of Secondary Education', '2025-11-27 00:19:55'),
+(49, 1, 'documents', 3, 'View Document', 'Viewed Document: MSI Level 1', '2025-11-27 00:20:00'),
+(50, 1, 'documents', 3, 'View Document', 'Viewed Document: MSI Level 1', '2025-11-27 00:24:50'),
+(51, 1, 'documents', 3, 'View Document', 'Viewed Document: MSI Level 1', '2025-11-27 00:26:17'),
+(52, 1, 'documents', 3, 'View Document', 'Viewed Document: MSI Level 1', '2025-11-27 00:28:08'),
+(53, 1, 'documents', 3, 'View Document', 'Viewed Document: MSI Level 1', '2025-11-27 00:28:19'),
+(54, 1, 'documents', 4, 'View Document', 'Viewed Document: MSI Level II', '2025-11-27 00:28:32'),
+(55, 1, 'copc', 16, 'View Document', 'Viewed Document: Bachelor of Secondary Education', '2025-11-27 00:29:18'),
+(56, 1, 'sfr', 5, 'View Document', 'Viewed Document: Bachelor of Secondary Education', '2025-11-27 00:29:56'),
+(57, 1, 'trba', 3, 'View Document', 'Viewed Document: Bachelor of Secondary Education', '2025-11-27 00:31:04'),
+(58, 1, 'auth', 1, 'logout', 'User logged out', '2025-11-27 00:59:05'),
+(59, 14, 'auth', 14, 'login', 'User logged in', '2025-11-27 01:02:11'),
+(60, 14, 'auth', 14, 'logout', 'User logged out', '2025-11-27 01:02:13'),
+(61, 1, 'auth', 1, 'login', 'User logged in', '2025-11-27 01:02:24'),
+(62, 1, 'auth', 1, 'logout', 'User logged out: ', '2025-11-27 01:06:58'),
+(63, 1, 'auth', 1, 'login', 'User logged in: QMSO', '2025-11-27 01:07:43'),
+(64, 1, 'auth', 1, 'logout', 'User logged out: QMSO', '2025-11-27 01:07:47'),
+(65, 1, 'auth', 1, 'login', 'User logged in: QMSO', '2025-11-27 01:13:52'),
+(66, 1, 'auth', 1, 'logout', 'User logged out: qmso@cotsu.edu.ph', '2025-11-27 01:13:56');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `trba`
 --
 
@@ -158,7 +240,8 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `fullname`, `email`, `password`, `role`, `reset_token`, `reset_expiry`, `date_created`) VALUES
-(7, 'QMSO', 'qmso@cotsu.edu.ph', '$2y$10$4APiI45P4sOtpoA2j21jIuT7eJfTA488oOi0EyvPIUwjyOMKgqDl2', 'admin', NULL, NULL, '2025-11-25');
+(1, 'QMSO', 'qmso@cotsu.edu.ph', '$2y$10$DvYD.6ITv63S.r252yZY7utP9MWorcYOpJ0cLD5eO.3VG/NgXS/Re', 'admin', NULL, NULL, '2025-11-26'),
+(14, 'mamako', 'sad@email.com', '$2y$10$VRpoGJo4QEs.ZgziIy6TAuW2UuFCpeK4uEA138lbkDYtKErHE7lRi', 'user', NULL, NULL, '2025-11-26');
 
 --
 -- Indexes for dumped tables
@@ -188,6 +271,13 @@ ALTER TABLE `programs`
 --
 ALTER TABLE `sfr`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `transaction_logs`
+--
+ALTER TABLE `transaction_logs`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `trba`
@@ -230,6 +320,12 @@ ALTER TABLE `sfr`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
+-- AUTO_INCREMENT for table `transaction_logs`
+--
+ALTER TABLE `transaction_logs`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
+
+--
 -- AUTO_INCREMENT for table `trba`
 --
 ALTER TABLE `trba`
@@ -239,7 +335,17 @@ ALTER TABLE `trba`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `transaction_logs`
+--
+ALTER TABLE `transaction_logs`
+  ADD CONSTRAINT `transaction_logs_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
