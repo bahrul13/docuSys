@@ -162,10 +162,14 @@ while ($row = $result->fetch_assoc()) {
         <label for="updateTrbaSurveyType">Type of Survey</label>
         <select name="survey_type" id="updateTrbaSurveyType" required>
           <option value="">Select Type of Survey</option>
+          <option value="PSV">PSV</option>
           <option value="Level 1">Level 1</option>
           <option value="Level 2">Level 2</option>
+          <option value="Revisit Level 2">Revisit Level 2</option>
           <option value="Level 3">Level 3</option>
+          <option value="Revisit Level 3">Revisit Level 3</option>
           <option value="Level 4">Level 4</option>
+          <option value="Revisit Level 4">Revisit Level 4</option>
         </select>
         <i class="bx bx-chevron-down select-icon"></i>
       </div>

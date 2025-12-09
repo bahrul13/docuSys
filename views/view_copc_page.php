@@ -1,6 +1,10 @@
 <?php
-require "../handlers/view_copc.php"; // Include PHP logic for data fetching
+require "../handlers/view_copc.php"; // Fetch document data from DB
+
+// Make sure $doc exists and has file_name
+$pdfFileUrl = isset($doc['file_name']) ? "../uploads/copc/" . $doc['file_name'] : null;
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,9 +14,7 @@ require "../handlers/view_copc.php"; // Include PHP logic for data fetching
 <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
 <link rel="stylesheet" href="../css/style.css">
 <link rel="stylesheet" href="../css/pdf.css">
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="/uploads/dms.png">
-
+<link rel="icon" type="image/png" href="/uploads/dms.png">
 </head>
 <body>
 
@@ -23,12 +25,13 @@ require "../handlers/view_copc.php"; // Include PHP logic for data fetching
     <?= isset($doc['program']) ? htmlspecialchars($doc['program']) : "Document Name Not Available"; ?>
   </h1>
 
+  <?php if ($pdfFileUrl && file_exists($pdfFileUrl)): ?>
   <div class="pdf-container">
     <iframe src="<?= htmlspecialchars($pdfFileUrl) ?>" width="100%" height="600px"></iframe>
 
     <div class="pdf-buttons">
-      
-      <a href="<?= htmlspecialchars($pdfFileUrl) ?>" class="download-btn" download>
+      <!-- Download button triggers download.php safely -->
+      <a href="../handlers/download.php?folder=copc&file=<?= urlencode($doc['file_name']) ?>" class="download-btn">
         <i class='bx bx-download'></i> Download
       </a>
 
@@ -37,6 +40,10 @@ require "../handlers/view_copc.php"; // Include PHP logic for data fetching
       </a>
     </div>
   </div>
+  <?php else: ?>
+    <p class="error-msg">❌ File not found.</p>
+  <?php endif; ?>
+
 </section>
 
 </body>

@@ -1,7 +1,6 @@
 <?php
-// =============================
-// 🔥 Main logAction Function
-// =============================
+
+// Main logAction Function
 function logAction($conn, $user_id, $module, $record_id, $action, $description) {
 
     // If user is NULL (tab close with expired session), default to admin
@@ -18,10 +17,7 @@ function logAction($conn, $user_id, $module, $record_id, $action, $description) 
     $stmt->execute();
 }
 
-
-// =============================
-// 🔍 Check if user ID exists
-// =============================
+// Check if user ID exists
 function user_id_exists_in_db($id) {
     global $conn;
     if (!$id) return false;
@@ -35,10 +31,7 @@ function user_id_exists_in_db($id) {
     return $result->num_rows > 0;
 }
 
-
-// ===========================================================
-// 🚀 NEW: Background "tab close/logout" logging function
-// ===========================================================
+// NEW: Background "tab close/logout" logging function
 function logTabCloseLogout($conn) {
 
     // Session may or may not exist during tab close
