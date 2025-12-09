@@ -851,27 +851,30 @@ body {
 /* Logs Print Button */
 /* Print only the table + heading */
 @media print {
-    body * { visibility: hidden; } /* Hide everything else */
-    
+    body * { 
+        visibility: hidden; /* Hide everything else */
+    }
+
     /* Heading for print */
     #printHeading { 
         display: block;
         text-align: center;
-        font-family: Arial, sans-serif; /* Arial font for heading */
-        font-size: 24px;
+        font-family: Arial, sans-serif; 
+        font-size: 10pt; /* Slightly smaller for print */
         font-weight: bold;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
     }
 
+    /* Table and its contents */
     #printableTable, #printableTable * { 
         visibility: visible;
-        font-family: Arial, sans-serif; /* Arial font for table */
-        font-size: 8pt; /* Table font size */
+        font-family: Arial, sans-serif; 
+        font-size: 8pt; /* Small font like Word size 8 */
     }
 
     #printableTable { 
         position: absolute; 
-        top: 50px; /* leave space for heading */
+        top: 50px; /* space for heading */
         left: 0; 
         width: 100%; 
     }
@@ -901,4 +904,24 @@ body {
 
 #printTableBtn:hover {
     background-color: #45a049;
+}
+
+.input-wrapper {
+  position: relative;
+  display: block; /* allows full-width input */
+  width: 100%;    /* wrapper takes full width */
+}
+
+.input-wrapper input {
+  width: 100%;    /* input fills the wrapper */
+  padding-right: 30px; /* space for the icon */
+  box-sizing: border-box; /* includes padding in width */
+}
+
+.input-wrapper i {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
 }

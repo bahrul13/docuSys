@@ -36,18 +36,23 @@ if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
       <label for="email">Email Address</label>
       <input type="text" name="email" id="email" required>
 
-      <label for="password">Password</label>
-      <input type="password" name="password" id="password" required>
+      <div class="input-wrapper">
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password" required>
+        <i class='bx bx-show' id="togglePassword"></i>
+      </div>
+
 
       <label for="role">Role</label>
       <div class="select-wrapper">
         <select name="role" id="role" required>
-          <option value="" disabled selected>Select Role</option>
+          <option value="" disabled>Select Role</option>
           <option value="admin">Administrator</option>
-          <option value="user">User</option>
+          <option value="user" selected>User</option>
         </select>
         <i class="bx bx-chevron-down select-icon"></i>
       </div>
+
 
       <div class="form-buttons">
         <button type="submit" class="btn-add">Add User</button>
@@ -56,5 +61,6 @@ if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
     </form>
   </div>
 </section>
+<script src="../js/adduser.js"></script>
 </body>
 </html>

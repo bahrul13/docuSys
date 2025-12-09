@@ -214,3 +214,10 @@ function printTable() {
     newWin.document.close();
     newWin.print();
 };
+
+//Log handler
+
+window.addEventListener("beforeunload", 
+  function () { 
+    navigator.sendBeacon('../handlers/logout_handler.php');
+   });
