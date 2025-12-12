@@ -44,12 +44,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $mail->isSMTP();
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
-        $mail->Username = 'noreply.cotsu.qmso@gmail.com';
-        $mail->Password = 'ebmr qpoq efic byyl';
+        $mail->Username = 'noreplyqmso@gmail.com';
+        $mail->Password = 'xkeh ywcw vxcv akml';
         $mail->SMTPSecure = 'tls';
         $mail->Port = 587;
 
-        $mail->setFrom('noreply.cotsu.qmso@gmail.com', 'DocuSys Support');
+        $mail->setFrom('noreplyqmso@gmail.com', 'DocuSys Support');
         $mail->addAddress($email);
 
         $mail->isHTML(true);
