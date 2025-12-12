@@ -40,10 +40,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <title>Reset Password</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="/uploads/dms.png">
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #800000;
+            background-color: #1E5A94;
             padding: 50px;
             text-align: center;
             color: white;
@@ -66,12 +67,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             border: 1px solid #ccc;
         }
         input[type="submit"] {
-            background-color: #800000;
+            background-color: #1E5A94;
             color: white;
             cursor: pointer;
         }
         input[type="submit"]:hover {
-            background-color: #a00000;
+            background-color: #1E5A94;
         }
         .error {
             color: yellow;
@@ -103,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             color: black;
         }
         .modal-content a {
-            color: #800000;
+            color: #1E5A94;
             font-weight: bold;
             text-decoration: none;
         }

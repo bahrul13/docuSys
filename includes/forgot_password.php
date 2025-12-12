@@ -4,9 +4,10 @@
   <meta charset="UTF-8">
   <title>Forgot Password</title>
   <link rel="stylesheet" href="../css/style.css">
+  <link rel="icon" type="image/png" href="/uploads/dms.png">
   <style>
     body {
-      background-color: #800000;
+      background-color: #1E5A94;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -24,7 +25,7 @@
 
     .forgot-container h2 {
       margin-bottom: 20px;
-      color: #800000;
+      color: #1E5A94;
     }
 
     .forgot-container input[type="email"] {
@@ -40,7 +41,7 @@
       width: 100%;
       padding: 12px;
       border: none;
-      background-color: #800000;
+      background-color: #1E5A94;
       color: white;
       border-radius: 6px;
       cursor: pointer;
@@ -48,13 +49,13 @@
     }
 
     .forgot-container input[type="submit"]:hover {
-      background-color: #a00000;
+      background-color: #1E5A94;
     }
 
     .forgot-container a {
       display: inline-block;
       margin-top: 15px;
-      color: #800000;
+      color: #1E5A94;
       text-decoration: none;
       font-size: 14px;
     }
