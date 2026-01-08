@@ -239,10 +239,12 @@ body {
   flex: 1 1 calc(33.333% - 40px);
   max-width: calc(33.333% - 40px);
   display: flex;
+  flex-direction: column; /* stack chart & title vertically */
   align-items: center;
   gap: 15px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
   transition: var(--tran-03);
+  text-align: center; /* center text for chart card */
 }
 
 .card:hover {
@@ -256,14 +258,26 @@ body {
 }
 
 .card h3 {
-  font-size: 22px;
+  font-size: 18px; /* smaller for chart card */
   color: var(--primary-color);
+  margin-bottom: 10px;
 }
 
 .card p {
   font-size: 14px;
   color: var(--text-color);
+  margin-top: 5px;
 }
+
+.card canvas {
+    width: 100% !important;   /* responsive full width */
+    max-width: 200px;         /* maximum width */
+    max-height: 250px !important; /* max height */
+    margin: auto;             /* center horizontally */
+    display: block;           /* ensure block display for centering */
+}
+
+
 
 /* ====== Modals ====== */
 #addModal > div > form,
@@ -924,4 +938,62 @@ body {
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
+}
+
+
+/* ====== Approve / Reject Buttons ====== */
+.btn-approve {
+  background-color: #28a745;
+  color: #fff;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-approve:hover {
+  background-color: #218838;
+}
+
+.btn-reject {
+  background-color: #dc3545;
+  color: #fff;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-reject:hover {
+  background-color: #c82333;
+}
+
+/* ===== User Approval Confirmation Modal ===== */
+.user-confirm-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.user-confirm-content {
+  background: #fff;
+  padding: 25px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 420px;
+  text-align: center;
+  animation: userPop 0.25s ease;
+}
+
+@keyframes userPop {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }

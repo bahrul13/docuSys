@@ -52,11 +52,33 @@
             <span class="text nav-text">Programs</span>
           </a>
         </li>
-        <li class="nav-link">
+        <!-- <li class="nav-link">
           <a href="../users/user.php">
             <i class='bx bx-user icon'></i>
             <span class="text nav-text">User Management</span>
           </a>
+        </li> -->
+        <li class="nav-link dropdown">
+          <a href="javascript:void(0);" class="dropdown-toggle">
+            <i class='bx bx-user icon'></i>
+            <span class="text nav-text">User Management</span>
+            <i class='bx bx-chevron-down arrow'></i>
+          </a>
+
+          <ul class="dropdown-menu">
+            <li>
+              <a href="../users/user.php">
+                <i class='bx bx-group icon'></i>
+                <span class="text nav-text">Users</span>
+              </a>
+            </li>
+            <li>
+              <a href="../admin/pending_user.php">
+                <i class='bx bx-time-five icon'></i>
+                <span class="text nav-text">Pending Users</span>
+              </a>
+            </li>
+          </ul>
         </li>
         <li class="nav-link">
           <a href="../users/logs.php">

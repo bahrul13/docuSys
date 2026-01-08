@@ -9,40 +9,65 @@ require "function/log_handler.php";
 $error = "";
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
+
+    // Trim inputs
     $email = trim($_POST['email']);
     $password = trim($_POST['password']);
 
-    // Secure SQL query using prepared statements
-    $stmt = $conn->prepare("SELECT * FROM user WHERE email = ?");
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
+    // 1️⃣ Basic validation: empty fields
+    if (empty($email) || empty($password)) {
+        $error = "Please enter both email and password.";
+    }
+    // 2️⃣ Validate email format
+    elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error = "Invalid email format.";
+    }
+    else {
+        // 3️⃣ Secure SQL query
+        $stmt = $conn->prepare("SELECT * FROM user WHERE email = ?");
+        if (!$stmt) {
+            $error = "Database error. Try again.";
+        } else {
+            $stmt->bind_param("s", $email);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $user = $result->fetch_assoc();
 
-    $result = $stmt->get_result();
-    $user = $result->fetch_assoc();
+            // 4️⃣ User does not exist
+            if (!$user) {
+                $error = "Invalid email or password.";
+            }
+            // 5️⃣ User exists but not approved
+            elseif ($user['status'] !== 'approved') {
+                $error = "Your account is pending admin approval.";
+            }
+            // 6️⃣ Password check
+            elseif (!password_verify($password, $user['password'])) {
+                $error = "Invalid email or password.";
+            }
+            // 7️⃣ Successful login
+            else {
+                // Set session variables
+                $_SESSION['user_id']    = $user['id'];
+                $_SESSION['user_email'] = $user['email'];
+                $_SESSION['user_role']  = $user['role'];
+                $_SESSION['user_name']  = $user['fullname'];
 
-    if ($user && password_verify($password, $user['password'])) {
+                // Log login action
+                logAction(
+                    $conn,
+                    $user['id'],       // user performing the action
+                    'auth',            // module
+                    $user['id'],       // record ID
+                    'login',           // action
+                    "User logged in: {$user['fullname']}"
+                );
 
-        // Set session variables
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['user_email'] = $user['email'];
-        $_SESSION['user_role'] = $user['role'];
-        $_SESSION['user_name'] = $user['fullname']; // ✅ Store full name for logging
-
-        // Log login action
-        logAction(
-            $conn,
-            $user['id'],       // user performing the action
-            'auth',            // module
-            $user['id'],       // record ID (same as user ID for auth)
-            'login',           // action
-            "User logged in: {$user['fullname']}" // description
-        );
-
-        // Redirect based on role
-        header("Location: ../users/dashboard.php");
-        exit();
-
-    } else {
-        $error = "Invalid email or password.";
+                // Redirect to dashboard
+                header("Location: ../users/dashboard.php");
+                exit();
+            }
+        }
     }
 }
+?>

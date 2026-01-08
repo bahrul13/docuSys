@@ -5,6 +5,7 @@ require "../function/log_handler.php"; // ✅ Include log function here
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $fullname = trim($_POST['fullname']);
+    $dept = trim($_POST['department']);
     $email = trim($_POST['email']);
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
     $role = $_POST['role']; // "admin" or "user"
@@ -25,8 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $check->close();
 
     // Insert user into database
-    $stmt = $conn->prepare("INSERT INTO user (fullname, email, password, role) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("ssss", $fullname, $email, $password, $role);
+    $stmt = $conn->prepare("INSERT INTO user (fullname, dept, email, password, role) VALUES (?, ?, ?, ?, ?)");
+    $stmt->bind_param("sssss", $fullname, $dept,  $email, $password, $role);
 
     if ($stmt->execute()) {
 

@@ -36,6 +36,21 @@ if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
       <label for="email">Email Address</label>
       <input type="text" name="email" id="email" required>
 
+      <label for="department">Department</label>
+      <div class="select-wrapper">
+        <select name="department" id="department" required>
+          <option value="" disabled selected hidden>Select Department</option>
+          <option value="CETC">College of Engineering, Technology and Computing</option>
+          <option value="CTED">College of Teacher Education</option>
+          <option value="CBPA">College of Business and Public Administration</option>
+          <option value="CAS">College of Arts and Science</option>
+          <option value="CIS">College of Islamic Studies</option>
+          <option value="CAFi">College of Agriculture and Fisheries</option>
+          <option value="GS">Graduate School</option>
+        </select>
+        <i class="bx bx-chevron-down select-icon"></i>
+      </div>
+
       <div class="input-wrapper">
         <label for="password">Password</label>
         <input type="password" name="password" id="password" required>

@@ -22,7 +22,7 @@ require "../db/db_conn.php";      // your database connection
 $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
 
 // Fetch updated user list
-$result = $conn->query("SELECT id, fullname, email, role FROM user ORDER BY id DESC");
+$result = $conn->query("SELECT id, fullname, dept, email, role FROM user ORDER BY id DESC");
 ?>
 
 <!DOCTYPE html>
@@ -83,7 +83,8 @@ $result = $conn->query("SELECT id, fullname, email, role FROM user ORDER BY id D
       <table>
         <thead>
           <tr>
-            <th>Office Name</th>
+            <th>User Name</th>
+            <th>Department</th>
             <th>Email Address</th>
             <th>Role</th>
             <th>Date Created</th>
@@ -100,6 +101,7 @@ $result = $conn->query("SELECT id, fullname, email, role FROM user ORDER BY id D
         ?>
           <tr>
             <td><?= htmlspecialchars($row['fullname']) ?></td>
+            <td><?= htmlspecialchars($row['dept']) ?> </td>
             <td><?= htmlspecialchars($row['email']) ?></td>
             <td><?= htmlspecialchars($row['role']) ?></td>
             <td><?= htmlspecialchars($row['date_created']) ?></td>
@@ -108,6 +110,7 @@ $result = $conn->query("SELECT id, fullname, email, role FROM user ORDER BY id D
               <button class="btn-update" onclick="openUserUpdateModal(
                 <?= $row['id'] ?>,
                 '<?= htmlspecialchars($row['fullname'], ENT_QUOTES) ?>',
+                '<?= htmlspecialchars($row['dept']), ENT_QUOTES ?>',
                 '<?= htmlspecialchars($row['email'], ENT_QUOTES) ?>',
                 '<?= htmlspecialchars($row['role'], ENT_QUOTES) ?>'
               )">Update</button>

@@ -3,7 +3,12 @@ session_start();
 include 'db/db_conn.php';
 include 'includes/login.php';
 
+
+if (!empty($error)) {
+    $_SESSION['login_error_shown'] = true;
+}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -28,10 +33,6 @@ include 'includes/login.php';
                 </div>
                 <span class="title">Login</span>
 
-                <?php if ($error): ?>
-                    <p style="color: red; text-align: center;"><?= $error ?></p>
-                <?php endif; ?>
-
                 <form method="POST" action="index.php">
                     <div class="input-field">
                         <input type="email" name="email" placeholder="Enter email" required>
@@ -53,10 +54,31 @@ include 'includes/login.php';
                         <input type="submit" value="Login">
                     </div>
                 </form>
+                <div style="text-align: center; margin-top: 15px;">
+                    <span class="text">Don't have an account?</span>
+                    <a href="registration_form.php" style="color: #4070f4; font-weight: 500;">
+                        Create an account
+                    </a>
+                </div>
             </div>
         </div>
     </div>
+    <?php if (!empty($error)): ?>
+        <div id="popupModal" class="modal">
+            <div class="modal-content error">
+                <h3>❌ Login Failed</h3>
+                <p><?= htmlspecialchars($error) ?></p>
+                <button onclick="closePopup()">OK</button>
+            </div>
+        </div>
+    <?php endif; ?>
+    <script>
+        function closePopup() {
+            document.getElementById("popupModal").style.display = "none";
+        }
+    </script>
 
     <script src="../js/login.js"></script>
+
 </body>
 </html>
