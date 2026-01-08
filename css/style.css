@@ -230,6 +230,7 @@ body {
   flex-wrap: wrap;
   gap: 20px;
   justify-content: center;
+  margin-bottom: 40px;
 }
 
 .card {
@@ -271,7 +272,7 @@ body {
 
 .card canvas {
     width: 100% !important;   /* responsive full width */
-    max-width: 200px;         /* maximum width */
+    max-width: 250px;         /* maximum width */
     max-height: 250px !important; /* max height */
     margin: auto;             /* center horizontally */
     display: block;           /* ensure block display for centering */
