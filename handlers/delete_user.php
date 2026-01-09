@@ -4,34 +4,39 @@ require '../db/db_conn.php';
 require '../function/log_handler.php';
 
 // Get logged-in user ID and role
-$user_id = $_SESSION['user_id'] ?? null;
+$user_id   = $_SESSION['user_id'] ?? null;
 $user_role = $_SESSION['user_role'] ?? null;
 
-// Check for valid POST request with program ID
+// Validate request
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
+
     $id = intval($_POST['id']);
 
-    // Get user name for logging
+    // Get user fullname for logging
     $stmt = $conn->prepare("SELECT fullname FROM user WHERE id = ?");
     $stmt->bind_param("i", $id);
     $stmt->execute();
     $result = $stmt->get_result();
 
     if ($result && $result->num_rows > 0) {
+
         $row = $result->fetch_assoc();
-        $programName = $row['fullname']; // Use this for logging
+        $fullname = $row['fullname'];
 
-        // Delete from database
-        $deleteStmt = $conn->prepare("DELETE FROM user WHERE id = ?");
-        $deleteStmt->bind_param("i", $id);
+        // ✅ Deactivate instead of delete
+        $updateStmt = $conn->prepare(
+            "UPDATE user SET status = 'inactive' WHERE id = ?"
+        );
+        $updateStmt->bind_param("i", $id);
 
-        if ($deleteStmt->execute()) {
-            // ✅ Prepare log message
-            $logMessage = ($user_role === 'admin') 
-                ? "Deleted User: {$programName}" 
-                : "Deleted a User";
+        if ($updateStmt->execute()) {
 
-            // Safely log the delete action
+            // Prepare log message
+            $logMessage = ($user_role === 'admin')
+                ? "Deactivated user: {$fullname}"
+                : "Deactivated a user";
+
+            // Validate actor user ID
             if ($user_id) {
                 $checkUser = $conn->prepare("SELECT id FROM user WHERE id = ?");
                 $checkUser->bind_param("i", $user_id);
@@ -40,23 +45,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
                 $checkUser->close();
 
                 if ($checkResult->num_rows === 0) {
-                    $user_id = null; // fallback if user doesn't exist
+                    $user_id = null;
                 }
             }
 
-            logAction($conn, $user_id, 'user', $id, 'Delete User', $logMessage);
-            $_SESSION['flash'] = "✅ User deleted successfully.";
+            // Log action
+            logAction(
+                $conn,
+                $user_id,
+                'user',
+                $id,
+                'Deactivate User',
+                $logMessage
+            );
+
+            $_SESSION['flash'] = "✅ User has been deactivated successfully.";
 
         } else {
-            $_SESSION['flash'] = "❌ Failed to User the program from database.";
+            $_SESSION['flash'] = "❌ Failed to deactivate the user.";
         }
 
-        $deleteStmt->close();
+        $updateStmt->close();
+
     } else {
         $_SESSION['flash'] = "⚠️ User not found.";
     }
 
     $stmt->close();
+
 } else {
     $_SESSION['flash'] = "⚠️ Invalid request.";
 }

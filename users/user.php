@@ -30,7 +30,7 @@ $result = $conn->query("SELECT id, fullname, dept, email, role FROM user ORDER B
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>User Management</title>
+  <title>Active User</title>
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="../css/style.css" />
   <!-- Favicon -->
@@ -67,7 +67,7 @@ $result = $conn->query("SELECT id, fullname, dept, email, role FROM user ORDER B
 <section class="dashboard-content">
 
 <section class="table-section">
-    <h2>User Management</h2>
+    <h2>Active User</h2>
 
     <div class="search-bar">
       <input type="text" id="searchInput" placeholder="Search User..." onkeyup="filterTable()" />
@@ -93,7 +93,14 @@ $result = $conn->query("SELECT id, fullname, dept, email, role FROM user ORDER B
         </thead>
         <tbody>
         <?php
-        $sql = "SELECT * FROM user ORDER BY date_created DESC";
+        $sql = "
+            SELECT *
+            FROM user
+            WHERE status = 'approved'
+              AND role != 'admin'
+            ORDER BY date_created DESC
+        ";
+
         $result = $conn->query($sql);
 
         if ($result && $result->num_rows > 0):
@@ -114,7 +121,7 @@ $result = $conn->query("SELECT id, fullname, dept, email, role FROM user ORDER B
                 '<?= htmlspecialchars($row['email'], ENT_QUOTES) ?>',
                 '<?= htmlspecialchars($row['role'], ENT_QUOTES) ?>'
               )">Update</button>
-              <button class="btn-delete" onclick="userDeleteModal(<?= $row['id'] ?>)">Delete</button>
+              <button class="btn-delete" onclick="userDeleteModal(<?= $row['id'] ?>)">Deactivate</button>
             <?php endif; ?>
             </td>
           </tr>
@@ -169,8 +176,8 @@ $result = $conn->query("SELECT id, fullname, dept, email, role FROM user ORDER B
 <div id="deleteUserModal" class="modal">
   <div class="modal-content">
     <span class="close" onclick="closeUserDeleteModal()">&times;</span>
-    <h1>Confirm Deletion</h1>
-    <p>Are you sure you want to delete this User?</p>
+    <h1>Confirm Deactivation</h1>
+    <p>Are you sure you want to deactivate this User?</p><br>
     <form method="POST" action="../handlers/delete_user.php">
       <input type="hidden" name="id" id="deleteUserId">
       <button type="submit" class="btn-delete-confirm">Confirm</button>

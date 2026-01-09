@@ -69,13 +69,19 @@
             <li>
               <a href="../users/user.php">
                 <i class='bx bx-group icon'></i>
-                <span class="text nav-text">Users</span>
+                <span class="text nav-text">Active Users</span>
               </a>
             </li>
             <li>
               <a href="../admin/pending_user.php">
                 <i class='bx bx-time-five icon'></i>
                 <span class="text nav-text">Pending Users</span>
+              </a>
+            </li>
+            <li>
+              <a href="../admin/inactive_user.php">
+                <i class="bx bx-user-x icon"></i>
+                <span class="text nav-text">Inactive Users</span>
               </a>
             </li>
           </ul>

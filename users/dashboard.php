@@ -116,8 +116,11 @@ include('../db/db_conn.php');
             <i class='bx bx-user'></i>
             <div>
                 <?php
-                // Query: Count all users
-                $userQuery = "SELECT COUNT(*) AS total_users FROM user";
+                // Query: Count active users excluding admins
+                $userQuery = "SELECT COUNT(*) AS total_users 
+                            FROM user 
+                            WHERE status = 'approved' AND role != 'admin'";
+
                 $userResult = $conn->query($userQuery);
 
                 $totalUsers = 0;
@@ -125,8 +128,9 @@ include('../db/db_conn.php');
                     $totalUsers = $row['total_users'];
                 }
                 ?>
+
                 <h3><?= $totalUsers ?></h3>
-                <p>Total Users</p>
+                <p>Total Active Users</p>
             </div>
         </div>
 

@@ -38,36 +38,37 @@ if ($result && $result->num_rows > 0) {
 
     // 4️⃣ Send email notification
     $mail = new PHPMailer(true);
+
     try {
-        // Server settings
+        $mail->SMTPDebug = 0; // set to 2 for debugging
         $mail->isSMTP();
-        $mail->Host       = 'smtp.gmail.com';        // Your SMTP server
+        $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'noreply.cotsu.qmso@gmail.com';  // Your SMTP email
-        $mail->Password   = 'ebmr qpoq efic byyl';   // App password if Gmail
-        $mail->SMTPSecure = 'tls';
+        $mail->Username   = 'noreply.qmso2026@gmail.com';
+        $mail->Password   = 'kpvubjlvhwtpxyvt'; // NO SPACES
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port       = 587;
 
-        // Recipients
-        $mail->setFrom('noreply.cotsu.qmso@gmail.com', 'DocuSys Support');
+        $mail->setFrom('noreply.qmso2026@gmail.com', 'DocuSys Support');
         $mail->addAddress($email, $fullname);
 
-        // Content
         $mail->isHTML(true);
         $mail->Subject = 'Registration Approved';
-        $mail->Body    = "
+        $mail->Body = "
             <p>Hi <b>{$fullname}</b>,</p>
-            <p>Congratulations! Your registration has been <b>approved</b> by the admin.</p>
-            <p>You can now log in using your registered email and password.</p>
+            <p>Your registration has been <b>approved</b>.</p>
+            <p>You may now log in.</p>
             <br>
-            <p>Best regards,<br>DocuSys Support</p>
+            <p>DocuSys Support</p>
         ";
 
         $mail->send();
         $_SESSION['message'] = "User approved and email sent successfully.";
+
     } catch (Exception $e) {
-        $_SESSION['message'] = "User approved but email could not be sent. Mailer Error: {$mail->ErrorInfo}";
+        $_SESSION['message'] = "Email failed: " . $mail->ErrorInfo;
     }
+
 }
 
 header("Location: ../admin/pending_user.php");

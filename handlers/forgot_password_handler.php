@@ -40,16 +40,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Send email via PHPMailer
     $mail = new PHPMailer(true);
-    try {
-        $mail->isSMTP();
-        $mail->Host = 'smtp.gmail.com';
-        $mail->SMTPAuth = true;
-        $mail->Username = 'noreply.cotsu.qmso@gmail.com';
-        $mail->Password = 'ebmr qpoq efic byyl';
-        $mail->SMTPSecure = 'tls';
-        $mail->Port = 587;
 
-        $mail->setFrom('noreply.cotsu.qmso@gmail.com', 'DocuSys Support');
+    try {
+        $mail->SMTPDebug = 0; // set to 2 if debugging
+        $mail->isSMTP();
+        $mail->Host       = 'smtp.gmail.com';
+        $mail->SMTPAuth   = true;
+        $mail->Username   = 'noreply.qmso2026@gmail.com';
+        $mail->Password   = 'kpvubjlvhwtpxyvt'; // ✅ NO SPACES
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port       = 587;
+
+        $mail->setFrom('noreply.qmso2026@gmail.com', 'DocuSys Support');
         $mail->addAddress($email);
 
         $mail->isHTML(true);
@@ -57,18 +59,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $mail->Body = "
             <p>Hello,</p>
             <p>We received a request to reset your password.</p>
-            <p><a href='$resetLink'>Click the here to proceed.</a></p>
-            <p>This link will expire in 1 day.</p>
-            <br><p>- DocuSys Team</p>";
+            <p><a href='{$resetLink}'>Click here to reset your password</a></p>
+            <p>This link will expire in 24 hours.</p>
+            <br>
+            <p>- DocuSys Team</p>
+        ";
 
         $mail->send();
-
-        // Trigger modal on success
         $showModal = true;
 
     } catch (Exception $e) {
-        echo "Failed to send email. Mailer Error: {$mail->ErrorInfo}";
+        error_log($mail->ErrorInfo);
     }
+
 
     $stmt->close();
     $update->close();
