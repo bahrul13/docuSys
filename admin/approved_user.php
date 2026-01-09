@@ -45,7 +45,7 @@ if ($result && $result->num_rows > 0) {
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
         $mail->Username   = 'noreply.qmso2026@gmail.com';
-        $mail->Password   = 'kpvubjlvhwtpxyvt'; // NO SPACES
+        $mail->Password   = 'kpvubjlvhwtpxyvt';
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port       = 587;
 

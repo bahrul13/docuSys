@@ -74,7 +74,7 @@ $result = $conn->query($query);
         <thead>
           <tr>
             <th>Date & Time</th>
-            <th>User</th>
+            <th>Full Name</th>
             <th>Module</th>
             <th>Action</th>
             <th>Description</th>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 09, 2026 at 02:14 AM
+-- Generation Time: Jan 09, 2026 at 06:59 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -35,18 +35,6 @@ CREATE TABLE `copc` (
   `uploaded_at` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `copc`
---
-
-INSERT INTO `copc` (`id`, `program`, `issuance_date`, `file_name`, `uploaded_at`) VALUES
-(9, 'Master of Information Technology', '2025-08-04', 'AREA X-ADMINISTRATION.pdf', '2025-08-06'),
-(10, 'BS in Information Technology', '2025-07-29', 'DBM-PriceList-as-of-090925.pdf', '2025-08-06'),
-(11, 'Master of Science in Information Technology', '2025-08-01', 'DBM-PriceList-as-of-090925.pdf', '2025-08-06'),
-(13, 'Master of Science in Information Technology', '2025-08-14', 'AREA X-ADMINISTRATION.pdf', '2025-08-06'),
-(14, 'BS in Social Work', '2025-08-13', 'DBM-PriceList-as-of-090925.pdf', '2025-08-06'),
-(16, 'Bachelor of Secondary Education', '2025-11-18', '69258f8a55a32-Graduate School Thesis Dissertation Policy Paper Capstone Format.pdf', '2025-11-25');
-
 -- --------------------------------------------------------
 
 --
@@ -59,14 +47,6 @@ CREATE TABLE `documents` (
   `file_name` varchar(255) NOT NULL,
   `uploaded_at` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `documents`
---
-
-INSERT INTO `documents` (`id`, `document`, `file_name`, `uploaded_at`) VALUES
-(3, 'MSI Level 1', 'Graduate School Thesis Dissertation Policy Paper Capstone Format.pdf', '2025-10-15'),
-(4, 'MSI Level II', 'AREA X-ADMINISTRATION.pdf', '2025-10-15');
 
 -- --------------------------------------------------------
 
@@ -107,13 +87,6 @@ CREATE TABLE `sfr` (
   `date_uploaded` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `sfr`
---
-
-INSERT INTO `sfr` (`id`, `program_name`, `survey_type`, `survey_date`, `file_name`, `date_uploaded`) VALUES
-(5, 'Bachelor of Secondary Education', 'Level 4', '2025-09-03', 'DBM-PriceList-as-of-090925.pdf', '2025-10-15');
-
 -- --------------------------------------------------------
 
 --
@@ -135,116 +108,7 @@ CREATE TABLE `transaction_logs` (
 --
 
 INSERT INTO `transaction_logs` (`id`, `user_id`, `documents`, `record_id`, `action`, `description`, `log_time`) VALUES
-(8, 1, 'documents', 4, 'View Document', 'Viewed Document: MSI Level II', '2025-11-26 11:23:00'),
-(9, 1, 'documents', 4, 'View Document', 'Viewed Document: MSI Level II', '2025-11-26 11:23:43'),
-(10, 14, 'documents', 4, 'View Document', 'Viewed Document: MSI Level II', '2025-11-26 11:24:27'),
-(11, 1, 'documents', 4, 'View Document', 'Viewed Document: MSI Level II', '2025-11-26 11:34:22'),
-(12, 1, 'copc', 16, 'View Document', 'Viewed Document: ', '2025-11-26 11:36:57'),
-(13, 1, 'copc', 16, 'View Document', 'Viewed Document: Bachelor of Secondary Education', '2025-11-26 11:38:08'),
-(14, 1, 'sfr', 5, 'View Document', 'Viewed Document: Bachelor of Secondary Education', '2025-11-26 11:41:47'),
-(15, 1, 'sfr', 5, 'View Document', 'Viewed Document: Bachelor of Secondary Education', '2025-11-26 11:42:13'),
-(16, 1, 'copc', 16, 'View Document', 'Viewed Document: Bachelor of Secondary Education', '2025-11-26 11:42:19'),
-(17, 1, 'trba', 3, 'View Document', 'Viewed Document: Bachelor of Secondary Education', '2025-11-26 11:44:50'),
-(18, 1, 'trba', 3, 'View Document', 'Viewed Document: Bachelor of Secondary Education', '2025-11-26 11:47:10'),
-(19, 1, 'trba', 3, 'View Document', 'Viewed Document: Bachelor of Secondary Education', '2025-11-26 11:49:36'),
-(20, 1, 'trba', 3, 'View Document', 'Viewed Document: Bachelor of Secondary Education', '2025-11-26 11:50:03'),
-(21, 1, 'trba', 3, 'View Document', 'Viewed Document: Bachelor of Secondary Education', '2025-11-26 11:50:21'),
-(22, 1, 'documents', 4, 'View Document', 'Viewed Document: MSI Level II', '2025-11-26 11:50:58'),
-(23, 1, 'documents', 4, 'View Document', 'Viewed Document: MSI Level II', '2025-11-26 11:51:50'),
-(24, 1, 'documents', 4, 'View Document', 'Viewed Document: MSI Level II', '2025-11-26 11:52:30'),
-(25, 1, 'documents', 4, 'View Document', 'Viewed Document: MSI Level II', '2025-11-26 11:52:37'),
-(26, 1, 'documents', 3, 'Update Document', 'Updated Document record: MSI Level 1. ', '2025-11-26 11:52:50'),
-(27, 1, 'documents', 4, 'View Document', 'Viewed Document: MSI Level II', '2025-11-26 11:52:51'),
-(28, 1, 'trba', 3, 'View Document', 'Viewed Document: Bachelor of Secondary Education', '2025-11-26 11:53:27'),
-(29, 1, 'sfr', 5, 'View Document', 'Viewed Document: Bachelor of Secondary Education', '2025-11-26 11:54:30'),
-(30, 1, 'copc', 16, 'View Document', 'Viewed Document: Bachelor of Secondary Education', '2025-11-26 11:55:27'),
-(31, 1, 'copc', 16, 'View Document', 'Viewed Document: Bachelor of Secondary Education', '2025-11-26 11:55:50'),
-(32, 1, 'documents', 3, 'View Document', 'Viewed Document: MSI Level 1', '2025-11-26 12:10:58'),
-(33, 14, 'trba', 3, 'View Document', 'Viewed Document: Bachelor of Secondary Education', '2025-11-26 12:11:37'),
-(34, 14, 'copc', 16, 'View Document', 'Viewed Document: Bachelor of Secondary Education', '2025-11-26 12:11:55'),
-(35, 14, 'copc', 13, 'View Document', 'Viewed Document: Master of Science in Information Technology', '2025-11-26 12:11:59'),
-(36, 14, 'documents', 3, 'View Document', 'Viewed Document: MSI Level 1', '2025-11-26 12:12:05'),
-(37, 14, 'documents', 3, 'View Document', 'Viewed Document: MSI Level 1', '2025-11-26 12:13:21'),
-(38, 14, 'documents', 3, 'View Document', 'Viewed Document: MSI Level 1', '2025-11-26 12:13:37'),
-(39, 14, 'documents', 3, 'View Document', 'Viewed Document: MSI Level 1', '2025-11-26 12:13:46'),
-(40, 14, 'documents', 3, 'View Document', 'Viewed Document: MSI Level 1', '2025-11-26 12:13:51'),
-(41, 14, 'documents', 3, 'View Document', 'Viewed Document: MSI Level 1', '2025-11-26 12:13:55'),
-(42, 14, 'documents', 3, 'View Document', 'Viewed Document: MSI Level 1', '2025-11-26 12:14:12'),
-(43, 14, 'documents', 3, 'View Document', 'Viewed Document: MSI Level 1', '2025-11-26 12:14:19'),
-(44, 14, 'documents', 3, 'View Document', 'Viewed Document: MSI Level 1', '2025-11-26 12:14:31'),
-(45, 14, 'documents', 3, 'View Document', 'Viewed Document: MSI Level 1', '2025-11-26 12:15:20'),
-(46, 1, 'documents', 3, 'View Document', 'Viewed Document: MSI Level 1', '2025-11-26 12:15:54'),
-(47, 1, 'sfr', 5, 'View Document', 'Viewed Document: Bachelor of Secondary Education', '2025-11-27 00:19:44'),
-(48, 1, 'trba', 3, 'View Document', 'Viewed Document: Bachelor of Secondary Education', '2025-11-27 00:19:55'),
-(49, 1, 'documents', 3, 'View Document', 'Viewed Document: MSI Level 1', '2025-11-27 00:20:00'),
-(50, 1, 'documents', 3, 'View Document', 'Viewed Document: MSI Level 1', '2025-11-27 00:24:50'),
-(51, 1, 'documents', 3, 'View Document', 'Viewed Document: MSI Level 1', '2025-11-27 00:26:17'),
-(52, 1, 'documents', 3, 'View Document', 'Viewed Document: MSI Level 1', '2025-11-27 00:28:08'),
-(53, 1, 'documents', 3, 'View Document', 'Viewed Document: MSI Level 1', '2025-11-27 00:28:19'),
-(54, 1, 'documents', 4, 'View Document', 'Viewed Document: MSI Level II', '2025-11-27 00:28:32'),
-(55, 1, 'copc', 16, 'View Document', 'Viewed Document: Bachelor of Secondary Education', '2025-11-27 00:29:18'),
-(56, 1, 'sfr', 5, 'View Document', 'Viewed Document: Bachelor of Secondary Education', '2025-11-27 00:29:56'),
-(57, 1, 'trba', 3, 'View Document', 'Viewed Document: Bachelor of Secondary Education', '2025-11-27 00:31:04'),
-(58, 1, 'auth', 1, 'logout', 'User logged out', '2025-11-27 00:59:05'),
-(59, 14, 'auth', 14, 'login', 'User logged in', '2025-11-27 01:02:11'),
-(60, 14, 'auth', 14, 'logout', 'User logged out', '2025-11-27 01:02:13'),
-(61, 1, 'auth', 1, 'login', 'User logged in', '2025-11-27 01:02:24'),
-(62, 1, 'auth', 1, 'logout', 'User logged out: ', '2025-11-27 01:06:58'),
-(63, 1, 'auth', 1, 'login', 'User logged in: QMSO', '2025-11-27 01:07:43'),
-(64, 1, 'auth', 1, 'logout', 'User logged out: QMSO', '2025-11-27 01:07:47'),
-(65, 1, 'auth', 1, 'login', 'User logged in: QMSO', '2025-11-27 01:13:52'),
-(66, 1, 'auth', 1, 'logout', 'User logged out: qmso@cotsu.edu.ph', '2025-11-27 01:13:56'),
-(67, 1, 'auth', 1, 'login', 'User logged in: QMSO', '2026-01-05 01:05:31'),
-(68, 1, 'auth', 1, 'logout', 'User logged out: QMSO', '2026-01-05 01:07:57'),
-(69, 1, 'auth', 1, 'login', 'User logged in: QMSO', '2026-01-05 07:28:26'),
-(70, 1, 'auth', 1, 'logout', 'User logged out: QMSO', '2026-01-05 07:28:28'),
-(71, 14, 'auth', 14, 'login', 'User logged in: mamako', '2026-01-05 07:28:48'),
-(72, 14, 'auth', 14, 'logout', 'User logged out: mamako', '2026-01-05 07:35:19'),
-(73, 1, 'auth', 1, 'login', 'User logged in: QMSO', '2026-01-05 07:44:35'),
-(74, 1, 'auth', 1, 'logout', 'User logged out: QMSO', '2026-01-05 07:44:36'),
-(75, 1, 'auth', 1, 'login', 'User logged in: QMSO', '2026-01-08 00:18:59'),
-(76, 1, 'auth', 1, 'logout', 'User logged out: QMSO', '2026-01-08 00:19:03'),
-(77, 1, 'auth', 1, 'login', 'User logged in: QMSO', '2026-01-08 00:30:02'),
-(78, 1, 'user', 16, 'approve', 'Admin approved user registration', '2026-01-08 00:32:20'),
-(79, 1, 'auth', 1, 'logout', 'User logged out: QMSO', '2026-01-08 01:16:24'),
-(80, 1, 'auth', 1, 'login', 'User logged in: QMSO', '2026-01-08 03:50:18'),
-(81, 1, 'user', 18, 'Add User', 'Added user: dodo2', '2026-01-08 03:56:53'),
-(82, 1, 'auth', 1, 'logout', 'User logged out: QMSO', '2026-01-08 06:03:53'),
-(83, 1, 'auth', 1, 'login', 'User logged in: QMSO', '2026-01-08 06:04:52'),
-(84, 1, 'auth', 1, 'logout', 'User logged out: QMSO', '2026-01-08 06:08:29'),
-(85, 1, 'auth', 1, 'login', 'User logged in: QMSO', '2026-01-08 06:19:32'),
-(86, 1, 'user', 17, 'reject', 'Admin rejected user registration', '2026-01-08 06:20:16'),
-(87, 1, 'auth', 1, 'logout', 'User logged out: QMSO', '2026-01-08 06:33:55'),
-(88, 1, 'auth', 1, 'login', 'User logged in: QMSO', '2026-01-08 06:34:26'),
-(89, 1, 'user', 20, 'approve', 'Admin approved user registration', '2026-01-08 06:34:32'),
-(90, 1, 'auth', 1, 'logout', 'User logged out: QMSO', '2026-01-08 07:03:02'),
-(91, 1, 'auth', 1, 'login', 'User logged in: QMSO', '2026-01-08 07:03:13'),
-(92, 1, 'auth', 1, 'logout', 'User logged out: QMSO', '2026-01-08 07:03:20'),
-(93, 14, 'auth', 14, 'login', 'User logged in: mamako', '2026-01-08 07:03:31'),
-(94, 14, 'auth', 14, 'logout', 'User logged out: mamako', '2026-01-08 07:05:27'),
-(95, 1, 'auth', 1, 'login', 'User logged in: QMSO', '2026-01-08 07:05:37'),
-(96, 1, 'auth', 1, 'logout', 'User logged out: QMSO', '2026-01-08 07:08:54'),
-(97, 14, 'auth', 14, 'login', 'User logged in: mamako', '2026-01-08 07:09:02'),
-(98, 14, 'auth', 14, 'logout', 'User logged out: mamako', '2026-01-08 07:10:01'),
-(99, 1, 'auth', 1, 'login', 'User logged in: QMSO', '2026-01-08 07:19:01'),
-(100, 1, 'auth', 1, 'logout', 'User logged out: QMSO', '2026-01-08 07:30:33'),
-(101, 14, 'auth', 14, 'login', 'User logged in: mamako', '2026-01-08 07:30:41'),
-(102, 14, 'auth', 14, 'logout', 'User logged out: mamako', '2026-01-08 07:30:58'),
-(103, 1, 'auth', 1, 'login', 'User logged in: QMSO', '2026-01-09 00:22:38'),
-(104, 1, 'auth', 1, 'logout', 'User logged out: QMSO', '2026-01-09 00:26:34'),
-(107, 1, 'auth', 1, 'login', 'User logged in: QMSO', '2026-01-09 00:42:35'),
-(108, 1, 'user', 16, 'Delete User', 'Deleted User: wakakawakeke', '2026-01-09 00:47:46'),
-(109, 1, 'user', 14, 'Delete User', 'Deleted User: mamako', '2026-01-09 00:48:01'),
-(110, 1, 'auth', 1, 'login', 'User logged in: QMSO', '2026-01-09 00:49:19'),
-(111, 1, 'user', 21, 'approve', 'Admin approved user registration', '2026-01-09 00:49:24'),
-(112, 1, 'user', 21, 'Deactivate User', 'Deactivated user: Bahrul Olom A Ungad', '2026-01-09 00:54:34'),
-(113, 1, 'auth', 1, 'logout', 'User logged out: QMSO', '2026-01-09 00:54:45'),
-(114, 1, 'auth', 1, 'login', 'User logged in: QMSO', '2026-01-09 00:55:26'),
-(115, 1, 'user', 21, 'Reactivate User', 'Reactivated user: Bahrul Olom A Ungad', '2026-01-09 01:01:07'),
-(116, 1, 'user', 21, 'Deactivate User', 'Deactivated user: Bahrul Olom A Ungad', '2026-01-09 01:04:18'),
-(117, 1, 'user', 21, 'Reactivate User', 'Reactivated user: Bahrul Olom A Ungad', '2026-01-09 01:04:22'),
-(118, 1, 'user', 21, 'Deactivate User', 'Deactivated user: Bahrul Olom A Ungad', '2026-01-09 01:08:47'),
-(119, 1, 'user', 21, 'Reactivate User', 'Reactivated user: Bahrul Olom A Ungad', '2026-01-09 01:08:55');
+(139, 1, 'auth', 1, 'logout', 'User logged out: QMSO', '2026-01-09 05:58:34');
 
 -- --------------------------------------------------------
 
@@ -260,13 +124,6 @@ CREATE TABLE `trba` (
   `file_name` varchar(255) NOT NULL,
   `date_uploaded` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `trba`
---
-
-INSERT INTO `trba` (`id`, `program_name`, `survey_type`, `survey_date`, `file_name`, `date_uploaded`) VALUES
-(3, 'Bachelor of Secondary Education', 'Level 2', '2025-09-01', 'DBM-PriceList-as-of-090925.pdf', '2025-09-24');
 
 -- --------------------------------------------------------
 
@@ -292,11 +149,7 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `fullname`, `dept`, `email`, `password`, `role`, `reset_token`, `reset_expiry`, `date_created`, `status`) VALUES
-(1, 'QMSO', '', 'qmso@cotsu.edu.ph', '$2y$10$DvYD.6ITv63S.r252yZY7utP9MWorcYOpJ0cLD5eO.3VG/NgXS/Re', 'admin', NULL, NULL, '2025-11-26', 'approved'),
-(17, 'macarena', 'CBPA', 'email@email.com', '$2y$10$CQDHOffPcVgYtJEBPb8.hevhRDT1NukbrnHrmbZcPf.lkuYkjBOQW', 'user', NULL, NULL, '2026-01-08', 'rejected'),
-(18, 'dodo2', 'CIS', 'dodo2@email.com', '$2y$10$jXYRowz8ccnWPoZ73d.WIeAcIkbUoSpign2RWs0CrgN1BoS3kSEdy', 'user', NULL, NULL, '2026-01-08', 'pending'),
-(19, 'wakekekoko', 'CETC', 'wakeke@email.com', '$2y$10$WQTwR3TlY/Pr7xLDjZMcgumRQnRZ9FNUA2FCST6adrwFPldnW4G8m', 'user', NULL, NULL, '2026-01-08', 'pending'),
-(21, 'Bahrul Olom A Ungad', 'CETC', 'ungadbahrul94@gmail.com', '$2y$10$WQrKwLTdBZHjvhV/6.r.RO6PLN/V7uFoBdAwyTxmoAFp.bH21TqYS', 'user', NULL, NULL, '2026-01-09', 'approved');
+(1, 'QMSO', '', 'qmso@cotsu.edu.ph', '$2y$10$DvYD.6ITv63S.r252yZY7utP9MWorcYOpJ0cLD5eO.3VG/NgXS/Re', 'admin', NULL, NULL, '2025-11-26', 'approved');
 
 --
 -- Indexes for dumped tables
@@ -378,7 +231,7 @@ ALTER TABLE `sfr`
 -- AUTO_INCREMENT for table `transaction_logs`
 --
 ALTER TABLE `transaction_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=120;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=140;
 
 --
 -- AUTO_INCREMENT for table `trba`
