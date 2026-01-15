@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         type="password"
         id="password"
         name="password"
-        placeholder="8–12 chars (letters, numbers & special characters)"
+        placeholder="8–20 chars (letters, numbers & special characters)"
         required
     >
 
@@ -90,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <span></span><span></span><span></span><span></span>
         </div>
         <div id="strengthText" class="strength-text">
-            8–12 characters, letters & numbers only
+            8–20 characters, letters & numbers only
         </div>
     </div>
 
@@ -133,11 +133,11 @@ passwordInput.addEventListener("input", () => {
     text.style.color = "#444";
 
     if (pwd.length === 0) {
-        text.textContent = "8–12 chars, letters, numbers & special characters";
+        text.textContent = "8–20 chars, letters, numbers & special characters";
         return;
     }
 
-    const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,12}$/;
+    const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,20}$/;
 
     if (!regex.test(pwd)) {
         bars.classList.add("weak");

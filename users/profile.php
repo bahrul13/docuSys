@@ -44,6 +44,30 @@ $stmt->close();
 
 <?php include('../includes/sidebar.php'); ?>
 
+<!-- FLASH MESSAGE -->
+  <?php if (isset($_SESSION['flash'])): ?>
+    <div class="alert" id="flashMessage"><?= $_SESSION['flash']; unset($_SESSION['flash']); ?></div>
+    <script>
+      setTimeout(() => {
+        const alert = document.getElementById('flashMessage');
+        if (alert) alert.remove();
+      }, 3000);
+    </script>
+  <?php endif; ?>
+
+<!-- DELETE FLASH MESSAGE -->
+  <?php if (isset($_SESSION['delete_flash'])): ?>
+    <div class="delete-alert" id="deleteFlash">
+      <?= $_SESSION['delete_flash']; unset($_SESSION['delete_flash']); ?>
+    </div>
+    <script>
+      setTimeout(() => {
+        const alert = document.getElementById('deleteFlash');
+        if (alert) alert.remove();
+      }, 3000);
+    </script>
+  <?php endif; ?>
+
 <section class="dashboard-content">
   <section class="table-section">
     <h2>Profile Settings</h2>
@@ -94,6 +118,10 @@ $stmt->close();
                 <option value="GS" <?= $user['dept'] === 'GS' ? 'selected' : '' ?>>
                 Graduate School
                 </option>
+
+                <option value="Administration" <?= $user['dept'] === 'Administration' ? 'selected' : '' ?>>
+                Office
+                </option>
             </select>
             <i class="bx bx-chevron-down select-icon"></i>
         </div>
@@ -113,7 +141,7 @@ $stmt->close();
             type="password"
             name="password"
             id="password"
-            placeholder="8–12 characters (letters, numbers & symbols)"
+            placeholder="8–20 characters (letters, numbers & symbols)"
             autocomplete="new-password"
         >
 
@@ -125,7 +153,7 @@ $stmt->close();
         </div>
 
         <small id="passwordMessage" class="password-message">
-            Must be 8–12 characters and include letters, numbers, and symbols
+            Must be 8–20 characters and include letters, numbers, and symbols
         </small>
 
         <!-- Buttons -->
@@ -180,60 +208,7 @@ $stmt->close();
             }
         };
     </script>
-    <script>
-        const passwordInput = document.getElementById("password");
-        const strengthBoxes = document.querySelectorAll(".strength-box");
-        const message = document.getElementById("passwordMessage");
-
-        // 8–12 chars, letter, number, special char, no spaces
-        const strongRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9])[^\s]{8,12}$/;
-
-        passwordInput.addEventListener("input", () => {
-        const value = passwordInput.value;
-
-        // Reset UI
-        strengthBoxes.forEach(box => box.className = "strength-box");
-        message.style.color = "#555";
-
-        if (value.length === 0) {
-            message.textContent = "Must be 8–12 characters and include letters, numbers, and symbols";
-            return;
-        }
-
-        const hasLetter = /[A-Za-z]/.test(value);
-        const hasNumber = /\d/.test(value);
-        const hasSymbol = /[^A-Za-z0-9]/.test(value);
-
-        // Weak
-        if (value.length < 8 || !hasLetter) {
-            strengthBoxes[0].classList.add("active", "weak");
-            message.textContent = "❌ Weak password";
-            message.style.color = "#e74c3c";
-            return;
-        }
-
-        // Medium
-        if (hasLetter && hasNumber && !hasSymbol) {
-            strengthBoxes[0].classList.add("active", "medium");
-            strengthBoxes[1].classList.add("active", "medium");
-            message.textContent = "⚠️ Medium password (add a symbol)";
-            message.style.color = "#f1c40f";
-            return;
-        }
-
-        // Strong
-        if (strongRegex.test(value)) {
-            strengthBoxes.forEach(box => box.classList.add("active", "strong"));
-            message.textContent = "✅ Strong password";
-            message.style.color = "#2ecc71";
-        } else {
-            strengthBoxes[0].classList.add("active", "weak");
-            message.textContent = "❌ Invalid format (8–12 chars, no spaces)";
-            message.style.color = "#e74c3c";
-        }
-        });
-    </script>
-
+<script src="../js/profile.js"></script>
 
 </body>
 </html>

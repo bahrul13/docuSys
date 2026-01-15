@@ -56,7 +56,7 @@ if ($stmt->execute()) {
         'user',
         (int)$newUserId,
         'Add User',
-        "Added user: $fullname (Role: $role, Email: $email)"
+        "Added user: $fullname"
     );
 
     $_SESSION['flash'] = "✅ User added successfully!";

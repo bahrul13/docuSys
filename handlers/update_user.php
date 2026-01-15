@@ -68,7 +68,7 @@ if ($stmt->execute()) {
         'user',
         $id,
         'Update User',
-        "Updated User: $fullname (Email: $email, Role: $role)"
+        "Updated User: $fullname"
     );
 
 } else {

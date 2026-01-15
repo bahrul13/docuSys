@@ -50,7 +50,8 @@ while ($row = $res->fetch_assoc()) {
 <?php include('../includes/sidebar.php'); ?>
 
 <section class="dashboard-content">
-  <h1>Update Document</h1>
+  <section class="table-section">
+  <h2>Update Document</h2>
 
   <div class="form-container">
     <form action="../handlers/update_docu.php" method="POST" enctype="multipart/form-data" class="form-box">
@@ -78,6 +79,7 @@ while ($row = $res->fetch_assoc()) {
       </div>
     </form>
   </div>
+  </section>
 </section>
   <div id="otherUpdateConfirmModal" class="modal">
     <div class="modal-content">

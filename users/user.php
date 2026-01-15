@@ -83,7 +83,7 @@ $result = $conn->query("SELECT id, fullname, dept, email, role FROM user ORDER B
       <table>
         <thead>
           <tr>
-            <th>User Name</th>
+            <th>Full Name</th>
             <th>Department</th>
             <th>Email Address</th>
             <th>Role</th>
@@ -114,13 +114,12 @@ $result = $conn->query("SELECT id, fullname, dept, email, role FROM user ORDER B
             <td><?= htmlspecialchars($row['date_created']) ?></td>
             <td>
             <?php if ($isAdmin): ?>
-              <button class="btn-update" onclick="openUserUpdateModal(
-                <?= $row['id'] ?>,
-                '<?= htmlspecialchars($row['fullname'], ENT_QUOTES) ?>',
-                '<?= htmlspecialchars($row['dept']), ENT_QUOTES ?>',
-                '<?= htmlspecialchars($row['email'], ENT_QUOTES) ?>',
-                '<?= htmlspecialchars($row['role'], ENT_QUOTES) ?>'
-              )">Update</button>
+              <button
+                type="button"
+                class="btn-update"
+                onclick="window.location.href='../views/update_user_page.php?id=<?= $row['id'] ?>'">
+                Update
+              </button>
               <button class="btn-delete" onclick="userDeleteModal(<?= $row['id'] ?>)">Deactivate</button>
             <?php endif; ?>
             </td>
@@ -136,41 +135,7 @@ $result = $conn->query("SELECT id, fullname, dept, email, role FROM user ORDER B
 
 <script src="../js/script.js"></script>
 
-<!-- Update Modal -->
 <?php if ($isAdmin): ?>
-<div id="updateUserModal" class="modal">
-  <div class="modal-content"> 
-    <span class="close" onclick="closeUserModal()">&times;</span>
-    <h1>Update User</h1>
-    <form action="../handlers/update_user.php" method="POST" enctype="multipart/form-data">
-      
-      <!-- Hidden field for ID -->
-      <input type="hidden" name="id" id="updateUserId">
-
-      <label for="updateUserName">Office Name</label>
-      <input type="text" name="fullname" id="updateUserName">
-
-      <label for="updateUserEmail">Email</label>
-      <input type="text" name="email" id="updateUserEmail">
-
-      <label for="updateUserPassword">Password</label>
-      <input type="text" name="password" id="updateUserPassword">
-
-      <div class="select-wrapper">
-        <label for="updateUserRole">Role</label>
-        <select name="role" id="updateUserRole">
-          <option value="">Select Role</option>
-          <option value="admin">Administrator</option>
-          <option value="user">User</option>
-        </select>
-        <i class="bx bx-chevron-down select-icon"></i>
-      </div>
-
-      <!-- Submit Button -->
-      <button type="submit">Update</button>
-    </form>
-  </div>
-</div>
 
 <!-- Delete Confirmation Modal -->
 <div id="deleteUserModal" class="modal">

@@ -60,7 +60,7 @@ if ($password !== '') {
 }
 
 if ($stmt->execute()) {
-    logAction($conn, $user_id, 'user', $user_id, 'Update Profile', 'User updated profile settings');
+    logAction($conn, $user_id, 'user', $user_id, 'Update Profile', 'User updated profile settings: '. $fullname);
     $_SESSION['flash'] = "✅ Profile updated successfully.";
 } else {
     $_SESSION['flash'] = "❌ Failed to update profile.";

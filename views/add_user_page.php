@@ -48,6 +48,7 @@ if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
             <option value="CIS">College of Islamic Studies</option>
             <option value="CAFi">College of Agriculture and Fisheries</option>
             <option value="GS">Graduate School</option>
+            <option value="Administration">Offices</option>
           </select>
           <i class="bx bx-chevron-down select-icon"></i>
         </div>
