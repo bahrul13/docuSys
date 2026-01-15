@@ -4,28 +4,44 @@ date_default_timezone_set('Asia/Manila');
 
 $token = $_GET['token'] ?? '';
 $errors = [];
-$success = false; // Flag for modal display
+$success = false;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $token = $_POST['token'];
     $password = $_POST['password'];
-    $confirm = $_POST['confirm'];
+    $confirm  = $_POST['confirm'];
 
+    // ✅ Backend validation (8–12 alphanumeric ONLY)
     if (empty($password) || empty($confirm)) {
         $errors[] = "Please fill in both password fields.";
-    } elseif ($password !== $confirm) {
+    } 
+    elseif ($password !== $confirm) {
         $errors[] = "Passwords do not match.";
-    } else {
-        $stmt = $conn->prepare("SELECT * FROM user WHERE reset_token = ? AND reset_expiry >= NOW()");
+    } 
+    elseif (!preg_match(
+    '/^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9])[A-Za-z\d^$*.[]{}()?"!@#%&\/\\\\,><\':;|_~`+=-]{8,12}$/', $password)) {
+    $errors[] = "Password must be 8–12 characters and include letters, numbers, and special characters.";
+    } 
+    else {
+        $stmt = $conn->prepare(
+            "SELECT id FROM user 
+             WHERE reset_token = ? 
+             AND reset_expiry >= NOW()"
+        );
         $stmt->bind_param("s", $token);
         $stmt->execute();
         $result = $stmt->get_result();
 
         if ($result->num_rows === 0) {
-            $errors[] = "Invalid or expired token.";
+            $errors[] = "Invalid or expired reset link.";
         } else {
             $hashed = password_hash($password, PASSWORD_DEFAULT);
-            $update = $conn->prepare("UPDATE user SET password = ?, reset_token = NULL, reset_expiry = NULL WHERE reset_token = ?");
+
+            $update = $conn->prepare(
+                "UPDATE user 
+                 SET password = ?, reset_token = NULL, reset_expiry = NULL 
+                 WHERE reset_token = ?"
+            );
             $update->bind_param("ss", $hashed, $token);
             $update->execute();
 
@@ -36,107 +52,60 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Reset Password</title>
+
     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="/uploads/dms.png">
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #1E5A94;
-            padding: 50px;
-            text-align: center;
-            color: white;
-        }
-        form {
-            background: white;
-            padding: 30px;
-            max-width: 400px;
-            margin: auto;
-            border-radius: 8px;
-            box-shadow: 0px 2px 8px rgba(0,0,0,0.2);
-            color: black;
-        }
-        input[type="password"], input[type="submit"] {
-            font-family: 'Poppins', sans-serif;
-            padding: 10px;
-            width: 90%;
-            margin: 10px 0;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-        }
-        input[type="submit"] {
-            background-color: #1E5A94;
-            color: white;
-            cursor: pointer;
-        }
-        input[type="submit"]:hover {
-            background-color: #1E5A94;
-        }
-        .error {
-            color: yellow;
-        }
-        .time-display {
-            margin-top: 20px;
-        }
-
-        /* Modal styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 999;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.5);
-        }
-        .modal-content {
-            background-color: #fff;
-            margin: 15% auto;
-            padding: 20px;
-            border-radius: 8px;
-            width: 80%;
-            max-width: 400px;
-            text-align: center;
-            color: black;
-        }
-        .modal-content a {
-            color: #1E5A94;
-            font-weight: bold;
-            text-decoration: none;
-        }
-    </style>
+    <link rel="stylesheet" href="../css/resetpass.css">
 </head>
 <body>
 
+<?php if (!empty($errors)): ?>
+    <?php foreach ($errors as $error): ?>
+        <div class="error"><?= htmlspecialchars($error) ?></div>
+    <?php endforeach; ?>
+<?php endif; ?>
 
-
-<?php
-if (!empty($errors)) {
-    foreach ($errors as $error) {
-        echo "<div class='error'>{$error}</div>";
-    }
-}
-?>
-
-<form method="POST" action="">
+<form method="POST">
     <h2>Reset Your Password</h2>
-    <br>
-    <input type="hidden" name="token" value="<?php echo htmlspecialchars($token); ?>">
-    <input type="password" name="password" placeholder="New Password" required>
-    <input type="password" name="confirm" placeholder="Confirm Password" required>
+
+    <input type="hidden" name="token" value="<?= htmlspecialchars($token) ?>">
+
+    <!-- Password -->
+    <input
+        type="password"
+        id="password"
+        name="password"
+        placeholder="8–12 chars (letters, numbers & special characters)"
+        required
+    >
+
+
+    <!-- Strength Indicator -->
+    <div class="password-strength">
+        <div id="strengthBars" class="strength-bars">
+            <span></span><span></span><span></span><span></span>
+        </div>
+        <div id="strengthText" class="strength-text">
+            8–12 characters, letters & numbers only
+        </div>
+    </div>
+
+    <!-- Confirm -->
+    <input
+        type="password"
+        name="confirm"
+        placeholder="Confirm Password"
+        required
+    >
+
     <input type="submit" value="Reset Password">
 </form>
 
-<!-- <div class="time-display">
-    <p>Server Time (Asia/Manila): <strong><?php echo date("Y-m-d H:i:s"); ?></strong></p>
-</div> -->
-
 <?php if ($success): ?>
-<!-- Modal HTML -->
 <div id="successModal" class="modal">
     <div class="modal-content">
         <h3>Password Reset Successful!</h3>
@@ -144,13 +113,56 @@ if (!empty($errors)) {
     </div>
 </div>
 
-<!-- Modal Script -->
 <script>
-    window.onload = function () {
+    window.onload = () => {
         document.getElementById("successModal").style.display = "block";
     };
 </script>
 <?php endif; ?>
+
+<!-- ✅ Password Strength Script -->
+<script>
+const passwordInput = document.getElementById("password");
+const bars = document.getElementById("strengthBars");
+const text = document.getElementById("strengthText");
+
+passwordInput.addEventListener("input", () => {
+    const pwd = passwordInput.value;
+
+    bars.className = "strength-bars";
+    text.style.color = "#444";
+
+    if (pwd.length === 0) {
+        text.textContent = "8–12 chars, letters, numbers & special characters";
+        return;
+    }
+
+    const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,12}$/;
+
+    if (!regex.test(pwd)) {
+        bars.classList.add("weak");
+        text.textContent = "❌ Must include letters, numbers & special characters";
+        text.style.color = "#e74c3c";
+        return;
+    }
+
+    let strength = 0;
+    if (/[A-Z]/.test(pwd)) strength++;
+    if (/\d/.test(pwd)) strength++;
+    if (/[^A-Za-z0-9]/.test(pwd)) strength++;
+    if (pwd.length >= 10) strength++;
+
+    if (strength <= 2) {
+        bars.classList.add("medium");
+        text.textContent = "Medium password";
+        text.style.color = "#f39c12";
+    } else {
+        bars.classList.add("strong");
+        text.textContent = "Strong password";
+        text.style.color = "#2ecc71";
+    }
+});
+</script>
 
 </body>
 </html>

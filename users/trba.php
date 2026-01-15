@@ -117,12 +117,12 @@ while ($row = $result->fetch_assoc()) {
             <td>
             <button type="button" class="btn-view" onclick="window.location.href='../views/view_trba_page.php?id=<?= $row['id'] ?>'">View File</button>
             <?php if ($isAdmin): ?>
-              <button class="btn-update" onclick="openUpdateTrbaModal(
-                <?= $row['id'] ?>,
-                '<?= htmlspecialchars($row['program_name'], ENT_QUOTES) ?>',
-                '<?= htmlspecialchars($row['survey_type'], ENT_QUOTES) ?>',
-                '<?= $row['survey_date'] ?>'
-              )">Update</button>
+              <button
+              type="button"
+              class="btn-update"
+              onclick="window.location.href='../views/update_trba_page.php?id=<?= $row['id'] ?>'">
+              Update
+            </button>
               <button class="btn-delete" onclick="openDeleteTrbaModal(<?= $row['id'] ?>)">Delete</button>
             <?php endif; ?>
             </td>
@@ -139,51 +139,6 @@ while ($row = $result->fetch_assoc()) {
 <script src="../js/script.js"></script>
 
 <?php if ($isAdmin): ?>
-<!-- Update Modal -->
-<div id="updateTrbaModal" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeUpdateTrbaModal()">&times;</span>
-    <h1>Update TRBA</h1>
-    <form action="../handlers/update_trba.php" method="POST" enctype="multipart/form-data">
-      <input type="hidden" name="id" id="updateTrbaId">
-
-      <label for="updateTrbaProgram">Program Name</label>
-      <div class="select-wrapper">
-        <select name="program_name" id="updateTrbaProgram" required>
-          <option value="" disabled selected>Select Program Name</option>
-          <?php foreach ($programs as $prog): ?>
-            <option value="<?= htmlspecialchars($prog) ?>"><?= htmlspecialchars($prog) ?></option>
-          <?php endforeach; ?>
-        </select>
-        <i class="bx bx-chevron-down select-icon"></i>
-      </div>
-
-      <div class="select-wrapper">
-        <label for="updateTrbaSurveyType">Type of Survey</label>
-        <select name="survey_type" id="updateTrbaSurveyType" required>
-          <option value="">Select Type of Survey</option>
-          <option value="PSV">PSV</option>
-          <option value="Level 1">Level 1</option>
-          <option value="Level 2">Level 2</option>
-          <option value="Revisit Level 2">Revisit Level 2</option>
-          <option value="Level 3">Level 3</option>
-          <option value="Revisit Level 3">Revisit Level 3</option>
-          <option value="Level 4">Level 4</option>
-          <option value="Revisit Level 4">Revisit Level 4</option>
-        </select>
-        <i class="bx bx-chevron-down select-icon"></i>
-      </div>
-
-      <label for="updateTrbaSurveyDate">Survey Date</label>
-      <input type="date" name="survey_date" id="updateTrbaSurveyDate" required>
-
-      <label for="updateTrbaFile">Upload New PDF (optional)</label>
-      <input type="file" name="file_name" id="updateTrbaFile" accept="application/pdf">
-
-      <button type="submit">Update</button>
-    </form>
-  </div>
-</div>
 
 <!-- Delete Confirmation Modal -->
 <div id="deleteTrbaModal" class="modal">

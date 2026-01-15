@@ -32,22 +32,24 @@ while ($row = $result->fetch_assoc()) {
 <?php include('../includes/sidebar.php'); ?>
 
 <section class="dashboard-content">
-  <h1>Add Accreditation Document</h1>
+  <section class="table-section">
+    <h2>Add Accreditation Document</h2>
 
-  <div class="form-container">
-    <form action="../handlers/add_docu.php" method="POST" enctype="multipart/form-data" class="form-box">
-      <label for="document">Document Name</label>
-      <input type="text" name="documentName" id="documentID" required>
+    <div class="form-container">
+      <form action="../handlers/add_docu.php" method="POST" enctype="multipart/form-data" class="form-box">
+        <label for="document">Document Name</label>
+        <input type="text" name="documentName" id="documentID" required>
 
-      <label for="file_name">PDF File</label>
-      <input type="file" name="file_name" id="file_name" accept="application/pdf" required>
+        <label for="file_name">PDF File</label>
+        <input type="file" name="file_name" id="file_name" accept="application/pdf" required>
 
-      <div class="form-buttons">
-        <button type="submit" class="btn-add">Add Document</button>
-        <a href="../users/other.php" class="btn-cancel">Cancel</a>
-      </div>
-    </form>
-  </div>
+        <div class="form-buttons">
+          <button type="submit" class="btn-add">Add Document</button>
+          <a href="../users/other.php" class="btn-cancel">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </section>
 </section>
 </body>
 </html>

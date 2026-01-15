@@ -99,7 +99,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['flash'] = "❌ File upload failed.";
     }
 
-    $conn->close();
     header("Location: ../users/sfr.php");
     exit();
 

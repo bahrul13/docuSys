@@ -13,59 +13,58 @@ if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
     exit();
 }
 
-// Validate input
-if (isset($_POST['id'], $_POST['name']) && !empty(trim($_POST['name']))) {
-    $id = intval($_POST['id']);
-    $name = trim($_POST['name']);
-
-    // Check for duplicate program name (excluding current ID)
-    $check_sql = "SELECT * FROM programs WHERE name = ? AND id != ?";
-    $stmt_check = $conn->prepare($check_sql);
-    $stmt_check->bind_param("si", $name, $id);
-    $stmt_check->execute();
-    $check_result = $stmt_check->get_result();
-
-    if ($check_result->num_rows > 0) {
-        $_SESSION['flash'] = "Error: Program name already exists.";
-        header("Location: ../users/programs.php");
-        exit();
-    }
-
-    // Proceed to update
-    $sql = "UPDATE programs SET name = ? WHERE id = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("si", $name, $id);
-
-    if ($stmt->execute()) {
-        $_SESSION['flash'] = "✅ Program Updated successfully.";
-
-        // ✅ Log the update action
-        $logMessage = "Updated Program Name to: $name";
-
-        // Safely check if user exists before logging to avoid foreign key errors
-        if ($user_id) {
-            $checkUser = $conn->prepare("SELECT id FROM user WHERE id = ?");
-            $checkUser->bind_param("i", $user_id);
-            $checkUser->execute();
-            $checkResult = $checkUser->get_result();
-            $checkUser->close();
-
-            if ($checkResult->num_rows === 0) {
-                $user_id = null; // fallback if user doesn't exist
-            }
-        }
-
-        logAction($conn, $user_id, 'programs', $id, 'Update Program', $logMessage);
-
-    } else {
-        $_SESSION['flash'] = "❌ Failed to update the Program Name.";
-    }
-
-    $stmt->close();
-} else {
-    $_SESSION['flash'] = "⚠️ All fields are required.";
+// ✅ Only allow POST
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    $_SESSION['flash'] = "⚠️ Invalid request method.";
+    header("Location: ../users/programs.php");
+    exit();
 }
 
-$conn->close();
+// Validate input
+$id   = isset($_POST['id']) ? (int)$_POST['id'] : 0;
+$name = trim($_POST['name'] ?? '');
+
+if ($id <= 0 || $name === '') {
+    $_SESSION['flash'] = "⚠️ All fields are required.";
+    header("Location: ../users/programs.php");
+    exit();
+}
+
+// ✅ Check duplicate program name (excluding current ID)
+$stmt_check = $conn->prepare("SELECT id FROM programs WHERE name = ? AND id != ? LIMIT 1");
+$stmt_check->bind_param("si", $name, $id);
+$stmt_check->execute();
+$check_result = $stmt_check->get_result();
+
+if ($check_result && $check_result->num_rows > 0) {
+    $stmt_check->close();
+    $_SESSION['flash'] = "❌ Program name already exists.";
+    header("Location: ../users/programs.php");
+    exit();
+}
+$stmt_check->close();
+
+// ✅ Update program
+$stmt = $conn->prepare("UPDATE programs SET name = ? WHERE id = ?");
+$stmt->bind_param("si", $name, $id);
+
+if ($stmt->execute()) {
+
+    $_SESSION['flash'] = "✅ Program updated successfully.";
+
+    // ✅ Log the update action
+    $logMessage = "Updated Program Name to: $name";
+    logAction($conn, $user_id, 'programs', $id, 'Update Program', $logMessage);
+
+} else {
+    $_SESSION['flash'] = "❌ Failed to update the Program Name.";
+}
+
+$stmt->close();
+
+// ❌ REMOVE this — PHP auto closes DB connection
+// $conn->close();
+
 header("Location: ../users/programs.php");
 exit();
+?>

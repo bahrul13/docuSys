@@ -1,0 +1,127 @@
+/* ===============================
+   Reset Password Page Styles
+   =============================== */
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #1E5A94;
+  padding: 50px;
+  text-align: center;
+  color: white;
+}
+
+form {
+  background: white;
+  padding: 30px;
+  max-width: 400px;
+  margin: auto;
+  border-radius: 8px;
+  box-shadow: 0px 2px 8px rgba(0,0,0,0.2);
+  color: black;
+}
+
+input[type="password"],
+input[type="submit"] {
+  font-family: 'Poppins', sans-serif;
+  padding: 10px;
+  width: 90%;
+  margin: 10px 0;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+input[type="submit"] {
+  background-color: #1E5A94;
+  color: white;
+  cursor: pointer;
+}
+
+input[type="submit"]:hover {
+  background-color: #16497a;
+}
+
+.error {
+  color: yellow;
+  margin-bottom: 10px;
+}
+
+/* ===============================
+   Password Strength Indicator
+   =============================== */
+
+.password-strength {
+  width: 90%;
+  margin: 0 auto 10px;
+  text-align: left;
+}
+
+.strength-bars {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
+.strength-bars span {
+  flex: 1;
+  height: 7px;
+  background: #ddd;
+  border-radius: 6px;
+  transition: background 0.25s ease, transform 0.25s ease;
+}
+
+.strength-text {
+  font-size: 12px;
+  font-weight: 500;
+  color: #444;
+}
+
+/* Weak */
+.strength-bars.weak span:nth-child(1) {
+  background: #e74c3c;
+}
+
+/* Medium */
+.strength-bars.medium span:nth-child(1),
+.strength-bars.medium span:nth-child(2),
+.strength-bars.medium span:nth-child(3) {
+  background: #f39c12;
+}
+
+/* Strong */
+.strength-bars.strong span {
+  background: #2ecc71;
+  transform: scaleY(1.15);
+}
+
+/* ===============================
+   Modal Styles
+   =============================== */
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+  background-color: #fff;
+  margin: 15% auto;
+  padding: 20px;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 400px;
+  text-align: center;
+  color: black;
+}
+
+.modal-content a {
+  color: #1E5A94;
+  font-weight: bold;
+  text-decoration: none;
+}

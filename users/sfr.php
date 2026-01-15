@@ -117,12 +117,12 @@ while ($row = $result->fetch_assoc()) {
             <td>
             <button type="button" class="btn-view" onclick="window.location.href='../views/view_sfr_page.php?id=<?= $row['id'] ?>'">View File</button>
             <?php if ($isAdmin): ?>
-              <button class="btn-update" onclick="openUpdateSfrModal(
-                <?= $row['id'] ?>,
-                '<?= htmlspecialchars($row['program_name'], ENT_QUOTES) ?>',
-                '<?= htmlspecialchars($row['survey_type'], ENT_QUOTES) ?>',
-                '<?= $row['survey_date'] ?>'
-              )">Update</button>
+            <button
+              type="button"
+              class="btn-update"
+              onclick="window.location.href='../views/update_sfr_page.php?id=<?= $row['id'] ?>'">
+              Update
+            </button>
               <button class="btn-delete" onclick="openDeleteSfrModal(<?= $row['id'] ?>)">Delete</button>
             <?php endif; ?>
             </td>

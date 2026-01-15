@@ -32,34 +32,36 @@ while ($row = $result->fetch_assoc()) {
 <?php include('../includes/sidebar.php'); ?>
 
 <section class="dashboard-content">
-  <h1>Add Certificate of Program Compliance (COPC)</h1>
+  <section class="table-section">
+    <h2>Add Certificate of Program Compliance (COPC)</h2>
 
-  <div class="form-container">
-    <form action="../handlers/add_copc.php" method="POST" enctype="multipart/form-data" class="form-box">
-      <label for="program">Program Name</label>
-      <div class="select-wrapper">
-        
-        <select name="program" id="program" required>
-          <option value="" disabled selected>Select Program Name</option>
-          <?php foreach ($programs as $prog): ?>
-            <option value="<?= htmlspecialchars($prog) ?>"><?= htmlspecialchars($prog) ?></option>
-          <?php endforeach; ?>
-        </select>
-        <i class="bx bx-chevron-down select-icon"></i>
-      </div>
+    <div class="form-container">
+      <form action="../handlers/add_copc.php" method="POST" enctype="multipart/form-data" class="form-box">
+        <label for="program">Program Name</label>
+        <div class="select-wrapper">
+          
+          <select name="program" id="program" required>
+            <option value="" disabled selected>Select Program Name</option>
+            <?php foreach ($programs as $prog): ?>
+              <option value="<?= htmlspecialchars($prog) ?>"><?= htmlspecialchars($prog) ?></option>
+            <?php endforeach; ?>
+          </select>
+          <i class="bx bx-chevron-down select-icon"></i>
+        </div>
 
-      <label for="issuance_date">Date of Issuance</label>
-      <input type="date" name="issuance_date" id="issuance_date" required>
+        <label for="issuance_date">Date of Issuance</label>
+        <input type="date" name="issuance_date" id="issuance_date" required>
 
-      <label for="file_name">PDF File</label>
-      <input type="file" name="file_name" id="file_name" accept="application/pdf" required>
+        <label for="file_name">PDF File</label>
+        <input type="file" name="file_name" id="file_name" accept="application/pdf" required>
 
-      <div class="form-buttons">
-        <button type="submit" class="btn-add">Add COPC</button>
-        <a href="../users/copc.php" class="btn-cancel">Cancel</a>
-      </div>
-    </form>
-  </div>
+        <div class="form-buttons">
+          <button type="submit" class="btn-add">Add COPC</button>
+          <a href="../users/copc.php" class="btn-cancel">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </section>
 </section>
 </body>
 </html>

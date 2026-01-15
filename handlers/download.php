@@ -1,51 +1,39 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+session_start();
+require '../db/db_conn.php';
+require '../function/log_handler.php';
 
-require_once '../db/db_conn.php';
-require_once '../function/log_handler.php';
+$user_id = $_SESSION['user_id'] ?? null;
 
-$user_id = $_SESSION['user_id'] ?? 1;
-
-$file = basename($_GET['file'] ?? '');
-$folder = $_GET['folder'] ?? 'other';
+$file   = basename($_GET['file'] ?? '');
+$folder = $_GET['folder'] ?? '';
+$doc_id = isset($_GET['doc_id']) ? (int)$_GET['doc_id'] : 0;
 
 // Whitelist folders
-$allowedFolders = ['other', 'copc', 'sfr', 'trba'];
+$allowedFolders = ['sfr', 'trba', 'copc', 'other'];
 if (!in_array($folder, $allowedFolders)) {
-    die("❌ Invalid folder.");
+    die("Invalid folder.");
 }
 
 $filePath = "../uploads/$folder/$file";
 
-if ($file && file_exists($filePath)) {
-
-    // Log download
-    logAction(
-        $conn,
-        $user_id,
-        'documents',
-        0,
-        'Download',
-        "Downloaded file: $file from folder: " . strtoupper($folder)
-    );
-
-    // Serve file
-    $finfo = finfo_open(FILEINFO_MIME_TYPE);
-    $mime = finfo_file($finfo, $filePath);
-    finfo_close($finfo);
-
-    header('Content-Description: File Transfer');
-    header('Content-Type: ' . $mime);
-    header('Content-Disposition: attachment; filename="' . basename($file) . '"');
-    header('Expires: 0');
-    header('Cache-Control: must-revalidate');
-    header('Pragma: public');
-    header('Content-Length: ' . filesize($filePath));
-    readfile($filePath);
-    exit;
-} else {
-    echo "❌ File not found: $filePath";
+if (!file_exists($filePath)) {
+    die("File not found.");
 }
-?>
+
+// ✅ LOG DOWNLOAD
+logAction(
+    $conn,
+    $user_id,
+    $folder,
+    $doc_id,
+    'Download Document',
+    "Downloaded file: $file"
+);
+
+// Force download
+header('Content-Type: application/pdf');
+header('Content-Disposition: attachment; filename="' . $file . '"');
+header('Content-Length: ' . filesize($filePath));
+readfile($filePath);
+exit;

@@ -107,12 +107,13 @@ while ($row = $result->fetch_assoc()) {
             <td>
             <button type="button" class="btn-view" onclick="window.location.href='../views/view_copc_page.php?id=<?= $row['id'] ?>'">View File</button>
             <?php if ($isAdmin): ?>
-              <button class="btn-update" onclick="openUpdateModal(
-                <?= $row['id'] ?>,
-                '<?= htmlspecialchars($row['program'], ENT_QUOTES) ?>',
-                '<?= $row['issuance_date'] ?>'
-              )">Update</button>
-              <button class="btn-delete" onclick="openDeleteModal(<?= $row['id'] ?>)">Delete</button>
+            <button
+              type="button"
+              class="btn-update"
+              onclick="window.location.href='../views/update_copc_page.php?id=<?= $row['id'] ?>'">
+              Update
+            </button>
+            <button class="btn-delete" onclick="openDeleteModal(<?= $row['id'] ?>)">Delete</button>
             <?php endif; ?>
             </td>
           </tr>

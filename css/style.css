@@ -616,7 +616,8 @@ body {
 .form-box input[type="text"],
 .form-box input[type="date"],
 .form-box input[type="password"],
-.form-box input[type="file"] {
+.form-box input[type="file"],
+.form-box input[type="email"] {
   width: 100%;
   padding: 10px;
   margin-top: 5px;
@@ -997,4 +998,52 @@ body {
 @keyframes userPop {
   from { transform: scale(0.9); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
+}
+
+/* PASSWORD STRENGTH */
+.password-strength {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.strength-box {
+  flex: 1;
+  height: 6px;
+  background: #ddd;
+  border-radius: 5px;
+  transition: background 0.3s ease;
+}
+
+.strength-box.active.weak {
+  background: #e74c3c;
+}
+
+.strength-box.active.medium {
+  background: #f1c40f;
+}
+
+.strength-box.active.strong {
+  background: #2ecc71;
+}
+
+.password-message {
+  font-size: 12px;
+  margin-top: 5px;
+  display: block;
+  color: #555;
+}
+
+.notif-badge {
+  background-color: #dc3545;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 12px;
+  margin-left: 6px;
+  min-width: 18px;
+  text-align: center;
+  display: inline-block;
+  line-height: 1.2;
 }

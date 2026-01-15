@@ -10,7 +10,7 @@ $user_role = $_SESSION['user_role'] ?? null;
 // Validate request
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
 
-    $id = intval($_POST['id']);
+    $id = (int)$_POST['id'];
 
     // Get user fullname for logging
     $stmt = $conn->prepare("SELECT fullname FROM user WHERE id = ?");
@@ -24,32 +24,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
         $fullname = $row['fullname'];
 
         // ✅ Deactivate instead of delete
-        $updateStmt = $conn->prepare(
-            "UPDATE user SET status = 'inactive' WHERE id = ?"
-        );
+        $updateStmt = $conn->prepare("UPDATE user SET status = 'inactive' WHERE id = ?");
         $updateStmt->bind_param("i", $id);
 
         if ($updateStmt->execute()) {
 
-            // Prepare log message
             $logMessage = ($user_role === 'admin')
                 ? "Deactivated user: {$fullname}"
                 : "Deactivated a user";
 
-            // Validate actor user ID
-            if ($user_id) {
-                $checkUser = $conn->prepare("SELECT id FROM user WHERE id = ?");
-                $checkUser->bind_param("i", $user_id);
-                $checkUser->execute();
-                $checkResult = $checkUser->get_result();
-                $checkUser->close();
-
-                if ($checkResult->num_rows === 0) {
-                    $user_id = null;
-                }
-            }
-
-            // Log action
+            // ✅ Log action (logAction will fallback if user_id is invalid/null)
             logAction(
                 $conn,
                 $user_id,
@@ -77,7 +61,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
     $_SESSION['flash'] = "⚠️ Invalid request.";
 }
 
-$conn->close();
+// ❌ REMOVE this — PHP auto closes the connection
+// $conn->close();
+
 header("Location: ../users/user.php");
 exit();
 ?>

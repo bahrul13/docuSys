@@ -26,10 +26,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "Full name can only contain letters, spaces, apostrophes, and dashes.";
     } 
     
-    // 4️⃣ Password strength: min 8 chars, at least one letter and one number
-    elseif (!preg_match("/^(?=.*[A-Za-z])(?=.*\d).{8,}$/", $password)) {
-        $error = "Password must be at least 8 characters and include at least one letter and one number.";
-    } 
+    // 4️⃣ Password rule: 8–12 chars, must contain letter, number, special char, no spaces
+elseif (!preg_match('/^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9])[^\s]{8,12}$/', $password)) {
+    $error = "Password must be 8–12 characters and include at least one letter, one number, and one special character (no spaces).";
+}
+
     else {
 
         // Sanitize fullname for DB
@@ -55,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt = $conn->prepare("
                     INSERT INTO user (fullname, dept, email, password, role, status)
                     VALUES (?, ?,  ?, ?, 'user', 'pending')
-                ");
+                "); 
 
                 if (!$stmt) {
                     $error = "Database error. Try again.";

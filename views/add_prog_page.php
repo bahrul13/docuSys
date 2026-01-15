@@ -25,21 +25,21 @@ if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
 <?php include('../includes/sidebar.php'); ?>
 
 <section class="dashboard-content">
+  <section class="table-section">
+    <h2>Add Program</h2>
 
-  <h1>Add Program</h1>
+    <div class="form-container">
+      <form action="../handlers/add_prog.php" method="POST" enctype="multipart/form-data" class="form-box">
+        <label for="program_name">Program Name</label>
+        <input type="text" name="program_name" id="program_name" required>
 
-  <div class="form-container">
-    <form action="../handlers/add_prog.php" method="POST" enctype="multipart/form-data" class="form-box">
-      <label for="program_name">Program Name</label>
-      <input type="text" name="program_name" id="program_name" required>
-
-      <div class="form-buttons">
-        <button type="submit" class="btn-add">Add Program</button>
-        <a href="../users/programs.php" class="btn-cancel">Cancel</a>
-      </div>
-    </form>
-  </div>
-  
+        <div class="form-buttons">
+          <button type="submit" class="btn-add">Add Program</button>
+          <a href="../users/programs.php" class="btn-cancel">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </section>
 </section>
 </body>
 </html>

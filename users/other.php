@@ -105,7 +105,12 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
             <td>
             <button type="button" class="btn-view" onclick="window.location.href='../views/view_docu_page.php?id=<?= $row['id'] ?>'">View File</button>
             <?php if ($isAdmin): ?>
-              <button class="btn-update" onclick="openUpdateDocuModal(<?= $row['id'] ?>, '<?= htmlspecialchars($row['document'], ENT_QUOTES) ?>')">Update</button>
+              <button
+              type="button"
+              class="btn-update"
+              onclick="window.location.href='../views/update_docu_page.php?id=<?= $row['id'] ?>'">
+              Update
+            </button>
               <button class="btn-delete" onclick="openDeleteDocuModal(<?= $row['id'] ?>)">Delete</button>
             <?php endif; ?>
             </td>
