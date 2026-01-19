@@ -93,7 +93,7 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
         </thead>
         <tbody>
           <?php
-          $sql = "SELECT * FROM documents ORDER BY file_name DESC";
+          $sql = "SELECT * FROM documents WHERE is_archived = 0 ORDER BY uploaded_at DESC";
           $result = $conn->query($sql);
 
           if ($result && $result->num_rows > 0):
@@ -111,7 +111,12 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
               onclick="window.location.href='../views/update_docu_page.php?id=<?= $row['id'] ?>'">
               Update
             </button>
-              <button class="btn-delete" onclick="openDeleteDocuModal(<?= $row['id'] ?>)">Delete</button>
+              <button
+                type="button"
+                class="btn-delete"
+                onclick="openArchiveModal(<?= $row['id'] ?>, 'documents')">
+                Archive
+              </button>
             <?php endif; ?>
             </td>
           </tr>
@@ -127,46 +132,52 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
 
 <script src="../js/script.js"></script>
 
-<!-- Delete Confirmation Modal -->
 <?php if ($isAdmin): ?>
-<div id="deleteDocuModal" class="modal">
+
+<div id="archiveModal" class="modal">
   <div class="modal-content">
-    <span class="close" onclick="closeDeleteDocuModal()">&times;</span>
-    <h1>Confirm Deletion</h1>
-    <p>Are you sure you want to delete this Document?</p>
-    <form method="POST" action="../handlers/delete_docu.php">
-      <input type="hidden" name="id" id="deleteDocuId">
-      <button type="submit" class="btn-delete-confirm">Confirm</button>
-      <button type="button" onclick="closeDeleteDocuModal()" style="background-color: gray; margin-left: 10px;">Cancel</button>
+    <h1>Archive Document</h1>
+    <p>Are you sure you want to archive this document?</p>
+
+    <form method="POST" action="../handlers/archive.php">
+      <input type="hidden" name="id" id="archiveId">
+      <input type="hidden" name="table" id="archiveTable">
+      <input type="hidden" name="redirect" value="<?= $_SERVER['PHP_SELF'] ?>">
+
+      <div class="modal-actions">
+        <button type="submit" class="btn-delete-confirm">
+          Yes, Archive
+        </button>
+        <button type="button" class="btn-cancel" onclick="closeArchiveModal()">
+          Cancel
+        </button>
+      </div>
     </form>
   </div>
 </div>
+
 <?php endif; ?>
 
-<!-- Update Modal -->
-<?php if ($isAdmin): ?>
-<div id="updateDocuModal" class="modal">
-  <div class="modal-content"> 
-    <span class="close" onclick="closeUpdateDocuModal()">&times;</span>
-    <h1>Update Document</h1>
-    <form action="../handlers/update_docu.php" method="POST" enctype="multipart/form-data">
-      
-      <!-- Hidden field for ID -->
-      <input type="hidden" name="id" id="updateDocuId">
+<script>
+  const archiveModal = document.getElementById('archiveModal');
+  const archiveIdInput = document.getElementById('archiveId');
+  const archiveTableInput = document.getElementById('archiveTable');
 
-      <label for="updateDocuName">Document Name</label>
-      <input type="text" name="document" id="updateDocuName">
+  function openArchiveModal(id, table) {
+    archiveIdInput.value = id;
+    archiveTableInput.value = table;
+    archiveModal.style.display = 'block';
+  }
 
-      <!-- File Upload -->
-      <label for="updateFile">Replace PDF File (optional)</label>
-      <input type="file" name="file_name" id="updateDocuFile" accept="application/pdf">
+  function closeArchiveModal() {
+    archiveModal.style.display = 'none';
+  }
 
-      <!-- Submit Button -->
-      <button type="submit">Update</button>
-    </form>
-  </div>
-</div>
-<?php endif; ?>
-
+  window.onclick = function (e) {
+    if (e.target === archiveModal) {
+      archiveModal.style.display = 'none';
+    }
+  };
+</script>
 </body>
 </html>

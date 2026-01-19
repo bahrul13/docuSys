@@ -103,7 +103,7 @@ while ($row = $result->fetch_assoc()) {
         </thead>
         <tbody>
         <?php
-        $sql = "SELECT * FROM sfr ORDER BY date_uploaded DESC";
+        $sql = "SELECT * FROM sfr WHERE is_archived = 0 ORDER BY uploaded_at DESC";
         $result = $conn->query($sql);
 
         if ($result && $result->num_rows > 0):
@@ -113,7 +113,7 @@ while ($row = $result->fetch_assoc()) {
             <td><?= htmlspecialchars($row['program_name']) ?></td>
             <td><?= htmlspecialchars($row['survey_type']) ?></td>
             <td><?= htmlspecialchars($row['survey_date']) ?></td>
-            <td><?= htmlspecialchars($row['date_uploaded']) ?></td>
+            <td><?= htmlspecialchars($row['uploaded_at']) ?></td>
             <td>
             <button type="button" class="btn-view" onclick="window.location.href='../views/view_sfr_page.php?id=<?= $row['id'] ?>'">View File</button>
             <?php if ($isAdmin): ?>
@@ -123,7 +123,13 @@ while ($row = $result->fetch_assoc()) {
               onclick="window.location.href='../views/update_sfr_page.php?id=<?= $row['id'] ?>'">
               Update
             </button>
-              <button class="btn-delete" onclick="openDeleteSfrModal(<?= $row['id'] ?>)">Delete</button>
+             <button
+              type="button"
+              class="btn-delete"
+              onclick="openArchiveModal(<?= $row['id'] ?>, 'sfr')">
+              Archive
+            </button>
+
             <?php endif; ?>
             </td>
           </tr>
@@ -139,66 +145,52 @@ while ($row = $result->fetch_assoc()) {
 <script src="../js/script.js"></script>
 
 <?php if ($isAdmin): ?>
-<!-- UPDATE SFR MODAL -->
-<div id="updateSfrModal" class="modal">
+
+<div id="archiveModal" class="modal">
   <div class="modal-content">
-    <span class="close" onclick="closeUpdateSfrModal()">&times;</span>
-    <h1>Update SFR</h1>
-    <form action="../handlers/update_sfr.php" method="POST" enctype="multipart/form-data">
-      <input type="hidden" name="id" id="updateSfrId">
+    <h1>Archive Document</h1>
+    <p>Are you sure you want to archive this document?</p>
 
-      <label for="updateSfrProgramName">Program Name</label>
-      <div class="select-wrapper">
-        <select name="program_name" id="updateSfrProgramName" required>
-          <option value="" disabled selected>Select Program</option>
-          <?php foreach ($programs as $prog): ?>
-            <option value="<?= htmlspecialchars($prog) ?>"><?= htmlspecialchars($prog) ?></option>
-          <?php endforeach; ?>
-        </select>
-        <i class="bx bx-chevron-down select-icon"></i>
+    <form method="POST" action="../handlers/archive.php">
+      <input type="hidden" name="id" id="archiveId">
+      <input type="hidden" name="table" id="archiveTable">
+      <input type="hidden" name="redirect" value="<?= $_SERVER['PHP_SELF'] ?>">
+
+      <div class="modal-actions">
+        <button type="submit" class="btn-delete-confirm">
+          Yes, Archive
+        </button>
+        <button type="button" class="btn-cancel" onclick="closeArchiveModal()">
+          Cancel
+        </button>
       </div>
-
-      <div class="select-wrapper">
-        <label for="updateSfrSurveyType">Type of Survey</label>
-        <select name="survey_type" id="updateSfrSurveyType" required>
-          <option value="">Select Type of Survey</option>
-          <option value="PSV">PSV</option>
-          <option value="Level 1">Level 1</option>
-          <option value="Level 2">Level 2</option>
-          <option value="Revisit Level 2">Revisit Level 2</option>
-          <option value="Level 3">Level 3</option>
-          <option value="Revisit Level 3">Revisit Level 3</option>
-          <option value="Level 4">Level 4</option>
-          <option value="Revisit Level 4">Revisit Level 4</option>
-        </select>
-        <i class="bx bx-chevron-down select-icon"></i>
-      </div>
-
-      <label for="updateSfrSurveyDate">Survey Date</label>
-      <input type="date" name="survey_date" id="updateSfrSurveyDate" required>
-
-      <label for="updateSfrFile">Upload New PDF (optional)</label>
-      <input type="file" name="file_name" id="updateSfrFile" accept="application/pdf">
-
-      <button type="submit">Update</button>
     </form>
   </div>
 </div>
 
-<!-- DELETE SFR MODAL -->
-<div id="deleteSfrModal" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeDeleteSfrModal()">&times;</span>
-    <h1>Delete SFR</h1>
-    <p>Are you sure you want to delete this SFR record?</p>
-    <form action="../handlers/delete_sfr.php" method="POST">
-      <input type="hidden" name="id" id="deleteSfrId">
-      <button type="submit" class="btn-delete-confirm">Confirm</button>
-      <button type="button" onclick="closeDeleteSfrModal()" style="background-color: gray; margin-left: 10px;">Cancel</button>
-    </form>
-  </div>
-</div>
 <?php endif; ?>
+
+<script>
+  const archiveModal = document.getElementById('archiveModal');
+  const archiveIdInput = document.getElementById('archiveId');
+  const archiveTableInput = document.getElementById('archiveTable');
+
+  function openArchiveModal(id, table) {
+    archiveIdInput.value = id;
+    archiveTableInput.value = table;
+    archiveModal.style.display = 'block';
+  }
+
+  function closeArchiveModal() {
+    archiveModal.style.display = 'none';
+  }
+
+  window.onclick = function (e) {
+    if (e.target === archiveModal) {
+      archiveModal.style.display = 'none';
+    }
+  };
+</script>
 
 </body>
 </html>

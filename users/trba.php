@@ -103,7 +103,7 @@ while ($row = $result->fetch_assoc()) {
         </thead>
         <tbody>
         <?php
-        $sql = "SELECT * FROM trba ORDER BY date_uploaded DESC";
+        $sql = "SELECT * FROM trba WHERE is_archived = 0 ORDER BY uploaded_at DESC";
         $result = $conn->query($sql);
 
         if ($result && $result->num_rows > 0):
@@ -113,7 +113,7 @@ while ($row = $result->fetch_assoc()) {
             <td><?= htmlspecialchars($row['program_name']) ?></td>
             <td><?= htmlspecialchars($row['survey_type']) ?></td>
             <td><?= htmlspecialchars($row['survey_date']) ?></td>
-            <td><?= htmlspecialchars($row['date_uploaded']) ?></td>
+            <td><?= htmlspecialchars($row['uploaded_at']) ?></td>
             <td>
             <button type="button" class="btn-view" onclick="window.location.href='../views/view_trba_page.php?id=<?= $row['id'] ?>'">View File</button>
             <?php if ($isAdmin): ?>
@@ -123,7 +123,12 @@ while ($row = $result->fetch_assoc()) {
               onclick="window.location.href='../views/update_trba_page.php?id=<?= $row['id'] ?>'">
               Update
             </button>
-              <button class="btn-delete" onclick="openDeleteTrbaModal(<?= $row['id'] ?>)">Delete</button>
+              <button
+                type="button"
+                class="btn-delete"
+                onclick="openArchiveModal(<?= $row['id'] ?>, 'trba')">
+                Archive
+              </button>
             <?php endif; ?>
             </td>
           </tr>
@@ -140,20 +145,48 @@ while ($row = $result->fetch_assoc()) {
 
 <?php if ($isAdmin): ?>
 
-<!-- Delete Confirmation Modal -->
-<div id="deleteTrbaModal" class="modal">
+<div id="archiveModal" class="modal">
   <div class="modal-content">
-    <span class="close" onclick="closeDeleteTrbaModal()">&times;</span>
-    <h1>Confirm Deletion</h1>
-    <p>Are you sure you want to delete this TRBA?</p>
-    <form id="deleteTrbaForm" method="POST" action="../handlers/delete_trba.php">
-      <input type="hidden" name="id" id="deleteTrbaId">
-      <button type="submit" class="btn-delete-confirm">Confirm</button>
-      <button type="button" onclick="closeDeleteTrbaModal()" style="background-color: gray; margin-left: 10px;">Cancel</button>
+    <h1>Archive Document</h1>
+    <p>Are you sure you want to archive this document?</p>
+
+    <form method="POST" action="../handlers/archive.php">
+      <input type="hidden" name="id" id="archiveId">
+      <input type="hidden" name="table" id="archiveTable">
+      <input type="hidden" name="redirect" value="<?= $_SERVER['PHP_SELF'] ?>">
+
+      <div class="modal-actions">
+        <button type="submit" class="btn-delete-confirm">
+          Yes, Archive
+        </button>
+        <button type="button" class="btn-cancel" onclick="closeArchiveModal()">
+          Cancel
+        </button>
+      </div>
     </form>
   </div>
 </div>
 <?php endif; ?>
+<script>
+  const archiveModal = document.getElementById('archiveModal');
+  const archiveIdInput = document.getElementById('archiveId');
+  const archiveTableInput = document.getElementById('archiveTable');
 
+  function openArchiveModal(id, table) {
+    archiveIdInput.value = id;
+    archiveTableInput.value = table;
+    archiveModal.style.display = 'block';
+  }
+
+  function closeArchiveModal() {
+    archiveModal.style.display = 'none';
+  }
+
+  window.onclick = function (e) {
+    if (e.target === archiveModal) {
+      archiveModal.style.display = 'none';
+    }
+  };
+</script>
 </body>
 </html>

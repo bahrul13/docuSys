@@ -94,7 +94,7 @@ while ($row = $result->fetch_assoc()) {
         </thead>
         <tbody>
         <?php
-        $sql = "SELECT * FROM copc ORDER BY uploaded_at DESC";
+        $sql = "SELECT * FROM copc WHERE is_archived = 0 ORDER BY uploaded_at DESC";
         $result = $conn->query($sql);
 
         if ($result && $result->num_rows > 0):
@@ -113,7 +113,12 @@ while ($row = $result->fetch_assoc()) {
               onclick="window.location.href='../views/update_copc_page.php?id=<?= $row['id'] ?>'">
               Update
             </button>
-            <button class="btn-delete" onclick="openDeleteModal(<?= $row['id'] ?>)">Delete</button>
+            <button
+                type="button"
+                class="btn-delete"
+                onclick="openArchiveModal(<?= $row['id'] ?>, 'copc')">
+                Archive
+            </button>
             <?php endif; ?>
             </td>
           </tr>
@@ -128,60 +133,51 @@ while ($row = $result->fetch_assoc()) {
 
 <script src="../js/script.js"></script>
 
-<!-- Delete Confirmation Modal -->
 <?php if ($isAdmin): ?>
-<div id="deleteModal" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeDeleteModal()">&times;</span>
-    <h1>Confirm Deletion</h1>
-    <p>Are you sure you want to delete this COPC?</p>
-    <form id="deleteForm" method="POST" action="../handlers/delete_copc.php">
-      <input type="hidden" name="id" id="deleteId">
-      <button type="submit" class="btn-delete-confirm">Confirm</button>
-      <button type="button" onclick="closeDeleteModal()" style="background-color: gray; margin-left: 10px;">Cancel</button>
-    </form>
-  </div>
-</div>
-<?php endif; ?>
 
-<!-- Update Modal -->
-<?php if ($isAdmin): ?>
-<div id="updateModal" class="modal">
+<div id="archiveModal" class="modal">
   <div class="modal-content">
-    <span class="close" onclick="closeUpdateModal()">&times;</span>
-    <h1>Update COPC</h1>
-    <form action="../handlers/update_copc.php" method="POST" enctype="multipart/form-data">
-      
-      <!-- Hidden field for ID -->
-      <input type="hidden" name="id" id="updateId">
+    <h1>Archive Document</h1>
+    <p>Are you sure you want to archive this document?</p>
 
-      <!-- Program Dropdown -->
-      <label for="updateProgram">Program Name</label>
-      <div class="select-wrapper">
-        <select name="program" id="updateProgram" required>
-          <option value="" disabled selected>Select Program Name</option>
-          <?php foreach ($programs as $prog): ?>
-            <option value="<?= htmlspecialchars($prog) ?>"><?= htmlspecialchars($prog) ?></option>
-          <?php endforeach; ?>
-        </select>
-        <i class="bx bx-chevron-down select-icon"></i>
+    <form method="POST" action="../handlers/archive.php">
+      <input type="hidden" name="id" id="archiveId">
+      <input type="hidden" name="table" id="archiveTable">
+      <input type="hidden" name="redirect" value="<?= $_SERVER['PHP_SELF'] ?>">
+
+      <div class="modal-actions">
+        <button type="submit" class="btn-delete-confirm">
+          Yes, Archive
+        </button>
+        <button type="button" class="btn-cancel" onclick="closeArchiveModal()">
+          Cancel
+        </button>
       </div>
-
-      <!-- Date Picker -->
-      <label for="updateDate">Date of Issuance</label>
-      <input type="date" name="issuance_date" id="updateDate" required>
-
-      <!-- File Upload -->
-      <label for="updateFile">Replace PDF File (optional)</label>
-      <input type="file" name="file_name" id="updateFile" accept="application/pdf">
-
-      <!-- Submit Button -->
-      <button type="submit">Update</button>
     </form>
   </div>
 </div>
+
 <?php endif; ?>
+<script>
+  const archiveModal = document.getElementById('archiveModal');
+  const archiveIdInput = document.getElementById('archiveId');
+  const archiveTableInput = document.getElementById('archiveTable');
 
+  function openArchiveModal(id, table) {
+    archiveIdInput.value = id;
+    archiveTableInput.value = table;
+    archiveModal.style.display = 'block';
+  }
 
+  function closeArchiveModal() {
+    archiveModal.style.display = 'none';
+  }
+
+  window.onclick = function (e) {
+    if (e.target === archiveModal) {
+      archiveModal.style.display = 'none';
+    }
+  };
+</script>
 </body>
 </html>

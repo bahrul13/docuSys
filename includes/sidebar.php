@@ -71,6 +71,13 @@ if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') {
         </li>
 
         <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
+        <li>
+          <a href="../admin/archived_documents.php">
+            <i class='bx bx-archive icon'></i>
+            <span class="text nav-text">Archived Documents</span>
+          </a>
+        </li>
+
         <li class="nav-link">
           <a href="../users/programs.php">
             <i class='bx bx-book icon'></i>
