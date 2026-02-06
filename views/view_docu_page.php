@@ -35,7 +35,7 @@ $fileExists = ($pdfFileUrl && file_exists($pdfFileUrl));
     <?php if ($fileExists): ?>
       <div class="pdf-container">
         <iframe 
-          src="<?= htmlspecialchars($pdfFileUrl) ?>" 
+          src="<?= htmlspecialchars($iframeSrc) ?>" 
           width="100%" 
           height="600px">
         </iframe>

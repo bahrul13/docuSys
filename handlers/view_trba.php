@@ -27,7 +27,7 @@ $doc = $result->fetch_assoc();
 $stmt->close();
 
 if (!$doc) {
-    $_SESSION['flash'] = "Document not found.";
+    $_SESSION['flash'] = "File not found.";
     header("Location: ../users/trba.php");
     exit();
 }

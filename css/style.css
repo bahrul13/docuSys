@@ -1047,3 +1047,17 @@ body {
   display: inline-block;
   line-height: 1.2;
 }
+
+.password-message {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.85rem;
+}
+
+.password-message.match {
+    color: #2e7d32; /* green */
+}
+
+.password-message.mismatch {
+    color: #c62828; /* red */
+}

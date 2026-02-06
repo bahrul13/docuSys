@@ -1,6 +1,7 @@
 <?php
 session_start();
 require "../db/db_conn.php";
+require_once __DIR__ . '/../function/csrf.php';
 
 if ($_SESSION['user_role'] !== 'admin') {
     die("Access denied");
@@ -64,20 +65,19 @@ $result = $conn->query("
                 <button class="btn-approve"
                   onclick="openUserConfirm(
                     'approve',
-                    'approved_user.php?id=<?= $row['id'] ?>'
+                    '../admin/approved_user.php',
+                    <?= (int)$row['id'] ?>
                   )">
                   Approve
                 </button>
-
                 <button class="btn-reject"
                   onclick="openUserConfirm(
                     'reject',
-                    'reject_user.php?id=<?= $row['id'] ?>'
+                    '../admin/reject_user.php',
+                    <?= (int)$row['id'] ?>
                   )">
                   Reject
                 </button>
-
-
               </td>
             </tr>
           <?php endwhile; ?>
@@ -98,6 +98,10 @@ $result = $conn->query("
     <h3 id="userConfirmTitle">Confirm Action</h3>
     <p id="userConfirmMessage"></p>
 
+    <form id="userConfirmForm" method="POST" action="">
+    <?= csrf_field(); ?>
+    <input type="hidden" name="id" id="userConfirmId" value="">
+
     <div style="margin-top: 20px;">
       <button id="userConfirmBtn" class="btn-approve">Confirm</button>
       <button onclick="closeUserConfirm()" class="btn-reject">Cancel</button>
@@ -107,14 +111,16 @@ $result = $conn->query("
 
 
 <script>
-let userActionUrl = '';
-
-function openUserConfirm(type, url) {
-  userActionUrl = url;
-
+function openUserConfirm(type, actionUrl, userId) {
   const title = document.getElementById('userConfirmTitle');
   const message = document.getElementById('userConfirmMessage');
   const confirmBtn = document.getElementById('userConfirmBtn');
+  const form = document.getElementById('userConfirmForm');
+  const idInput = document.getElementById('userConfirmId');
+
+  // set form action + user id
+  form.action = actionUrl;
+  idInput.value = userId;
 
   if (type === 'approve') {
     title.textContent = 'Approve User';
@@ -125,10 +131,6 @@ function openUserConfirm(type, url) {
     message.textContent = 'Are you sure you want to reject this user? This action cannot be undone.';
     confirmBtn.className = 'btn-reject';
   }
-
-  confirmBtn.onclick = function () {
-    window.location.href = userActionUrl;
-  };
 
   document.getElementById('userConfirmModal').style.display = 'flex';
 }

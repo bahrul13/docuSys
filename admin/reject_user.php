@@ -2,24 +2,50 @@
 session_start();
 require "../db/db_conn.php";
 require "../function/log_handler.php";
+require "../function/csrf.php";
 
-// Admin only
-if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
-    die("Access denied");
+// ✅ Must be logged in
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../index.php");
+    exit();
 }
+
+// ✅ Admin only
+if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
+    $_SESSION['flash'] = "Access denied.";
+    header("Location: ../admin/pending_user.php");
+    exit();
+}
+
+// ✅ POST only (reject deletes user)
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    $_SESSION['flash'] = "⚠️ Invalid request.";
+    header("Location: ../admin/pending_user.php");
+    exit();
+}
+
+// ✅ CSRF verify
+csrf_verify();
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 require '../vendor/autoload.php';
 
-$admin_id = $_SESSION['user_id'] ?? null;
-$id = intval($_GET['id'] ?? 0);
+$admin_id = (int)$_SESSION['user_id'];
+$id = (int)($_POST['id'] ?? 0);
+
+if ($id <= 0) {
+    $_SESSION['flash'] = "⚠️ Invalid user ID.";
+    header("Location: ../admin/pending_user.php");
+    exit();
+}
 
 // 1️⃣ Get user info (ONLY if still pending)
 $stmt = $conn->prepare("
-    SELECT fullname, email 
-    FROM user 
+    SELECT fullname, email
+    FROM user
     WHERE id = ? AND status = 'pending'
+    LIMIT 1
 ");
 $stmt->bind_param("i", $id);
 $stmt->execute();
@@ -27,23 +53,21 @@ $result = $stmt->get_result();
 
 if (!$result || $result->num_rows === 0) {
     $_SESSION['flash'] = "⚠️ User not found or already processed.";
+    $stmt->close();
     header("Location: ../admin/pending_user.php");
     exit();
 }
 
 $user = $result->fetch_assoc();
-$fullname = $user['fullname'];
-$email = $user['email'];
+$fullname = $user['fullname'] ?? 'Unknown';
+$email = $user['email'] ?? '';
 $stmt->close();
 
 /* ================= EMAIL FIRST ================= */
 $mail = new PHPMailer(true);
 
 try {
-    // 🔍 Debugging (set to 2 only if needed)
     $mail->SMTPDebug = 0;
-
-    // 📧 SMTP settings
     $mail->isSMTP();
     $mail->Host       = 'smtp.gmail.com';
     $mail->SMTPAuth   = true;
@@ -52,11 +76,9 @@ try {
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
     $mail->Port       = 587;
 
-    // 👤 Sender & Recipient
     $mail->setFrom('noreply.qmso2026@gmail.com', 'DocuSys Support');
     $mail->addAddress($email, $fullname);
 
-    // ✉️ Email Content
     $mail->isHTML(true);
     $mail->Subject = 'Registration Rejected';
     $mail->Body = "
@@ -67,9 +89,7 @@ try {
         <p>DocuSys Support</p>
     ";
 
-    // 🚀 Send Email
     $mail->send();
-
     $_SESSION['message'] = "User rejected and email sent successfully.";
 
 } catch (Exception $e) {

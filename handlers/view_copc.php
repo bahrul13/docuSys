@@ -39,7 +39,7 @@ $pdfFilePath = __DIR__ . "/../uploads/copc/" . $doc['file_name'];
 $pdfFileUrl  = "../uploads/copc/" . $doc['file_name'];
 
 if (!file_exists($pdfFilePath)) {
-    $_SESSION['flash'] = "PDF file not found.";
+    $_SESSION['flash'] = "File not found.";
     header("Location: ../users/copc.php");
     exit();
 }

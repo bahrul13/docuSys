@@ -104,7 +104,7 @@ if ($stmt->execute()) {
         'trba',
         (int)$newRecordId,
         'Add TRBA',
-        "Added TRBA document for program: $programName (File: $originalFileName)"
+        "Added TRBA document for program: $programName"
     );
 
     $_SESSION['flash'] = "✅ Document uploaded successfully.";

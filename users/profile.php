@@ -75,6 +75,9 @@ $stmt->close();
     <div class="form-container">
         <form action="../handlers/update_profile.php" method="POST" class="form-box">
 
+        <?php require_once __DIR__ . '/../function/csrf.php'; ?>
+        <?= csrf_field(); ?>
+
         <!-- Full Name -->
         <label for="fullname">Full Name</label>
         <input
@@ -136,6 +139,7 @@ $stmt->close();
             readonly
         >
 
+        <label for="password">New Password</label>
         <!-- New Password -->
         <input
             type="password"
@@ -155,6 +159,20 @@ $stmt->close();
         <small id="passwordMessage" class="password-message">
             Must be 8–20 characters and include letters, numbers, and symbols
         </small>
+
+        <br>
+
+        <!-- Confirm New Password -->
+        <label for="confirm_password">Confirm Password</label>
+        <input
+            type="password"
+            name="confirm_password"
+            id="confirm_password"
+            placeholder="Confirm new password"
+            autocomplete="new-password"
+        >
+        <small id="confirmPasswordIndicator" class="password-message"></small>
+
 
         <!-- Buttons -->
         <div class="form-buttons">

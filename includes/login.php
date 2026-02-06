@@ -5,25 +5,28 @@ if (session_status() === PHP_SESSION_NONE) {
 
 require "db/db_conn.php";
 require "function/log_handler.php";
+require "function/csrf.php";
 
 $error = "";
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
+    csrf_verify();
+
     // Trim inputs
     $email = trim($_POST['email']);
     $password = trim($_POST['password']);
 
-    // 1️⃣ Basic validation: empty fields
+    // Basic validation: empty fields
     if (empty($email) || empty($password)) {
         $error = "Please enter both email and password.";
     }
-    // 2️⃣ Validate email format
+    // Validate email format
     elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = "Invalid email format.";
     }
     else {
-        // 3️⃣ Secure SQL query
+        // Secure SQL query
         $stmt = $conn->prepare("SELECT * FROM user WHERE email = ?");
         if (!$stmt) {
             $error = "Database error. Try again.";
@@ -33,19 +36,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $result = $stmt->get_result();
             $user = $result->fetch_assoc();
 
-            // 4️⃣ User does not exist
+            //  User does not exist
             if (!$user) {
                 $error = "Invalid email or password.";
             }
-            // 5️⃣ User exists but not approved
+            // User exists but not approved
             elseif ($user['status'] !== 'approved') {
                 $error = "Your account is pending admin approval.";
             }
-            // 6️⃣ Password check
+            // Password check
             elseif (!password_verify($password, $user['password'])) {
                 $error = "Invalid email or password.";
             }
-            // 7️⃣ Successful login
+            // Successful login
             else {
                 // Set session variables
                 $_SESSION['user_id']    = $user['id'];

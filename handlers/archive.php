@@ -3,6 +3,7 @@ if (session_status() === PHP_SESSION_NONE) session_start();
 
 require "../db/db_conn.php";
 require "../function/log_handler.php";
+require "../function/csrf.php";
 
 // 🔐 Security checks
 if (!isset($_SESSION['user_id'])) {
@@ -21,6 +22,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 
+csrf_verify();
+
 $id    = (int)($_POST['id'] ?? 0);
 $table = $_POST['table'] ?? '';
 $redirect = $_POST['redirect'] ?? '../users/dashboard.php';
@@ -30,14 +33,36 @@ $allowedTables = [
     'sfr' => 'SFR',
     'copc' => 'COPC',
     'trba' => 'TRBA',
-    'documents' => 'Document'
+    'documents' => 'Accreditation'
 ];
+
+// ✅ Map table -> module alias (for logs / archived module name)
+$tableToModule = [
+    'sfr'       => 'sfr',
+    'copc'      => 'copc',
+    'trba'      => 'trba',
+    'documents' => 'accreditation' // ✅ change this to your desired module name
+];
+
 
 if (!$id || !array_key_exists($table, $allowedTables)) {
     $_SESSION['flash'] = "⚠️ Invalid archive request.";
     header("Location: $redirect");
     exit();
 }
+
+$getStmt = $conn->prepare("SELECT * FROM `$table` WHERE id = ? LIMIT 1");
+$getStmt->bind_param("i", $id);
+$getStmt->execute();
+$getRes = $getStmt->get_result();
+$row = $getRes->fetch_assoc();
+$getStmt->close();
+
+$programName =
+    $row['program']
+    ?? $row['program_name']
+    ?? $row['document']
+    ?? 'Unknown';
 
 // ✅ Archive query
 $sql = "UPDATE `$table` 
@@ -53,11 +78,13 @@ if ($stmt->execute()) {
     logAction(
         $conn,
         $_SESSION['user_id'],
-        $table,
+        ($tableToModule[$table] ?? $table), // ✅ module saved in logs becomes "accreditation"
         $id,
         'Archive',
-        "Archived {$allowedTables[$table]} record"
+        "Archived " . ($tableToModule[$table] ?? $table) . " record: {$programName}"
     );
+
+
 
     $_SESSION['flash'] = "✅ {$allowedTables[$table]} archived successfully.";
 } else {

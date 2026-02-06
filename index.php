@@ -34,6 +34,8 @@ if (!empty($error)) {
                 <span class="title">Login</span>
 
                 <form method="POST" action="index.php">
+                    <?php require_once __DIR__ . '/function/csrf.php'; ?>
+                    <?= csrf_field(); ?>
                     <div class="input-field">
                         <input type="email" name="email" placeholder="Enter email" required>
                         <i class="uil uil-envelope"></i>

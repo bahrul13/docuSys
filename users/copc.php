@@ -17,6 +17,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 require '../db/db_conn.php';
+require_once __DIR__ . '/../function/csrf.php';
 
 // Check if user is admin
 $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
@@ -141,9 +142,10 @@ while ($row = $result->fetch_assoc()) {
     <p>Are you sure you want to archive this document?</p>
 
     <form method="POST" action="../handlers/archive.php">
+      <?= csrf_field(); ?>
       <input type="hidden" name="id" id="archiveId">
       <input type="hidden" name="table" id="archiveTable">
-      <input type="hidden" name="redirect" value="<?= $_SERVER['PHP_SELF'] ?>">
+      <input type="hidden" name="redirect" value="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>">
 
       <div class="modal-actions">
         <button type="submit" class="btn-delete-confirm">

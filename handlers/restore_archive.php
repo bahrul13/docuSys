@@ -2,6 +2,7 @@
 session_start();
 require "../db/db_conn.php";
 require "../function/log_handler.php";
+require "../function/csrf.php";
 
 if (!isset($_SESSION['user_id'])) {
   header("Location: ../index.php");
@@ -17,6 +18,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
   exit();
 }
 
+csrf_verify();
+
 $module = $_POST['module'] ?? '';
 $id = isset($_POST['id']) ? (int)$_POST['id'] : 0;
 
@@ -25,7 +28,7 @@ $tables = [
   'copc'  => 'copc',
   'trba'  => 'trba',
   'sfr'   => 'sfr',
-  'other' => 'documents',
+  'accreditation' => 'documents',
 ];
 
 if (!isset($tables[$module]) || $id <= 0) {
@@ -36,13 +39,46 @@ if (!isset($tables[$module]) || $id <= 0) {
 
 $table = $tables[$module];
 
+$titleColMap = [
+  'copc'  => 'program',
+  'trba'  => 'program_name',
+  'sfr'   => 'program_name',
+  'accreditation' => 'document',
+];
+
+$titleCol = $titleColMap[$module];
+
+$getStmt = $conn->prepare("SELECT `$titleCol` AS title FROM `$table` WHERE id = ? LIMIT 1");
+$getStmt->bind_param("i", $id);
+$getStmt->execute();
+$getRes = $getStmt->get_result();
+$row = $getRes->fetch_assoc();
+$getStmt->close();
+
+if (!$row) {
+  $_SESSION['flash'] = "⚠️ Record not found.";
+  header("Location: ../admin/archived_documents.php");
+  exit();
+}
+
+$programName = $row['title'] ?? 'Unknown';
+
 // Restore (set is_archived = 0)
 $sql = "UPDATE `$table` SET is_archived = 0 WHERE id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $id);
 
+
 if ($stmt->execute()) {
-  logAction($conn, $_SESSION['user_id'], $module, $id, 'restore', "Restored archived {$module} record");
+   logAction(
+    $conn,
+    $_SESSION['user_id'],
+    $module,
+    $id,
+    'restore',
+    "Restored archived " . strtoupper($module) . " record: {$programName}"
+  );
+
   $_SESSION['flash'] = "✅ Document restored successfully.";
 } else {
   $_SESSION['flash'] = "❌ Restore failed.";

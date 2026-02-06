@@ -2,16 +2,44 @@
 session_start();
 require "../db/db_conn.php";
 require "../function/log_handler.php";
+require "../function/csrf.php";
 
 // Include PHPMailer
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-require '../vendor/autoload.php'; // Make sure PHPMailer is installed via Composer
+require '../vendor/autoload.php';
 
-$id = $_GET['id'];
+// ✅ must be logged in + admin (recommended)
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../index.php");
+    exit();
+}
+if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
+    $_SESSION['flash'] = "Access denied.";
+    header("Location: ../admin/pending_user.php");
+    exit();
+}
+
+// ✅ POST only (approve changes DB)
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    $_SESSION['flash'] = "⚠️ Invalid request.";
+    header("Location: ../admin/pending_user.php");
+    exit();
+}
+
+// ✅ CSRF verify
+csrf_verify();
+
+// ✅ Get id from POST, not GET
+$id = (int)($_POST['id'] ?? 0);
+if ($id <= 0) {
+    $_SESSION['flash'] = "⚠️ Invalid user ID.";
+    header("Location: ../admin/pending_user.php");
+    exit();
+}
 
 // 1️⃣ Get user's email and fullname first
-$stmt = $conn->prepare("SELECT fullname, email FROM user WHERE id = ?");
+$stmt = $conn->prepare("SELECT fullname, email FROM user WHERE id = ? LIMIT 1");
 $stmt->bind_param("i", $id);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -25,22 +53,23 @@ if ($result && $result->num_rows > 0) {
     $updateStmt = $conn->prepare("UPDATE user SET status = 'approved' WHERE id = ?");
     $updateStmt->bind_param("i", $id);
     $updateStmt->execute();
+    $updateStmt->close();
 
     // 3️⃣ Log action
     logAction(
         $conn,
-        $_SESSION['id'],
+        $_SESSION['user_id'], // ✅ fix: use user_id
         'user',
         $id,
         'approve',
-        'Admin approved user registration'
+        "Admin approved user registration: {$fullname}"
     );
 
     // 4️⃣ Send email notification
     $mail = new PHPMailer(true);
 
     try {
-        $mail->SMTPDebug = 0; // set to 2 for debugging
+        $mail->SMTPDebug = 0;
         $mail->isSMTP();
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
@@ -69,7 +98,11 @@ if ($result && $result->num_rows > 0) {
         $_SESSION['message'] = "Email failed: " . $mail->ErrorInfo;
     }
 
+} else {
+    $_SESSION['flash'] = "⚠️ User not found.";
 }
+
+$stmt->close();
 
 header("Location: ../admin/pending_user.php");
 exit();

@@ -39,13 +39,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $newRecordId = $stmt->insert_id;
 
         // ✅ Log the action
+        
         logAction(
             $conn,
             $user_id,
             'programs',
             (int)$newRecordId,
             'Add Program',
-            "Added Program: $program_name"
+            "Added Program document for program: $program_name"
         );
 
         $_SESSION['flash'] = "✅ Program added successfully.";

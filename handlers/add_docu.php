@@ -34,8 +34,37 @@ $finfo = finfo_open(FILEINFO_MIME_TYPE);
 $mime  = finfo_file($finfo, $file['tmp_name']);
 finfo_close($finfo);
 
-if ($mime !== 'application/pdf') {
-    $_SESSION['flash'] = "❌ Only PDF files are allowed.";
+$allowedMimes = [
+    // PDF
+    'application/pdf',
+
+    // Word
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+
+    // Excel
+    'application/vnd.ms-excel',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+
+    // PowerPoint
+    'application/vnd.ms-powerpoint',
+    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+
+    // Images
+    'image/jpeg',
+    'image/png',
+    'image/gif',
+
+    // Text
+    'text/plain',
+
+    // ZIP / RAR
+    'application/zip',
+    'application/x-rar-compressed'
+];
+
+if (!in_array($mime, $allowedMimes)) {
+    $_SESSION['flash'] = "❌ File type not allowed.";
     header("Location: ../users/other.php");
     exit();
 }
@@ -99,10 +128,10 @@ if ($stmt->execute()) {
     logAction(
         $conn,
         $user_id,
-        'documents',
+        'accreditation',
         (int)$newRecordId,
         'Add Accreditation-Related Document',
-        "Uploaded Accreditation-Related document: $program (File: $originalFileName)"
+        "Added Accreditation-Related document: $program"
     );
 
     $_SESSION['flash'] = "✅ Document uploaded successfully.";

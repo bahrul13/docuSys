@@ -46,6 +46,10 @@ include 'includes/register.php';
         margin-bottom: 10px;
         color: #555;
       }
+
+      .password-message.match { color: #2ecc71; }
+      .password-message.mismatch { color: #e74c3c; }
+
     </style>
 </head>
 <body>
@@ -59,6 +63,8 @@ include 'includes/register.php';
             <span class="title">Create Account</span>
 
             <form method="POST">
+                <?php require_once __DIR__ . '/function/csrf.php'; ?>
+                <?= csrf_field(); ?>
                 <div class="input-field">
                     <input type="text" name="fullname" placeholder="Full Name" required>
                     <i class="uil uil-user"></i>
@@ -83,14 +89,14 @@ include 'includes/register.php';
                     <input type="email" name="email" placeholder="Email Address" required>
                     <i class="uil uil-envelope"></i>
                 </div>
-
+                
                 <!-- ✅ Password -->
                 <div class="input-field">
                     <input
                       type="password"
                       name="password"
                       id="reg_password"
-                      placeholder="8–20 characters (letters, numbers & symbols)"
+                      placeholder="Password"
                       required
                       autocomplete="new-password"
                     >
@@ -106,6 +112,22 @@ include 'includes/register.php';
                 <small id="regPasswordMessage" class="password-message">
                   Must be 8–20 characters and include letters, numbers, and symbols
                 </small>
+
+                <!-- ✅ Confirm Password -->
+                <div class="input-field">
+                <input
+                    type="password"
+                    name="confirm_password"
+                    id="reg_confirm_password"
+                    placeholder="Confirm Password"
+                    required
+                    autocomplete="new-password"
+                >
+                <i class="uil uil-lock icon"></i>
+                </div>
+
+                <!-- ✅ Confirm Password Indicator -->
+                <small id="regConfirmMessage" class="password-message"></small>
 
                 <div class="input-field button">
                     <input type="submit" value="Create Account">

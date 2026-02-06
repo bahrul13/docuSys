@@ -1,6 +1,7 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) session_start();
 require "../db/db_conn.php";
+require_once __DIR__ . '/../function/csrf.php';
 
 // login check
 if (!isset($_SESSION['user_id'])) {
@@ -47,7 +48,7 @@ $sql = "
 
   UNION ALL
 
-  SELECT 'other' AS module,
+  SELECT 'accreditation' AS module,
          id,
          document AS title,
          NULL AS doc_date,
@@ -107,6 +108,7 @@ function viewLink($module, $id) {
         <thead>
           <tr>
             <th>Title</th>
+            <th>File Type</th>
             <th>Date (Issuance/Survey)</th>
             <th>Uploaded At</th>
             <th>Action</th>
@@ -117,7 +119,12 @@ function viewLink($module, $id) {
           <?php while ($row = $result->fetch_assoc()): ?>
             <tr>
               <td><?= htmlspecialchars($row['title'] ?? '') ?></td>
-              <td><?= htmlspecialchars($row['doc_date'] ?? '-') ?></td>
+              <td><?= htmlspecialchars(strtoupper($row['module'])) ?></td>
+              <td>
+                <?= ($row['module'] === 'accreditation')
+                    ? 'No date'
+                    : htmlspecialchars($row['doc_date'] ?? '-') ?>
+              </td>
               <td><?= htmlspecialchars($row['uploaded_at'] ?? '-') ?></td>
               <td>
                 <button type="button" class="btn-view"
@@ -128,6 +135,12 @@ function viewLink($module, $id) {
                 <button type="button" class="btn-update"
                   onclick="openRestoreConfirm('<?= htmlspecialchars($row['module'], ENT_QUOTES) ?>', <?= (int)$row['id'] ?>)">
                   Restore
+                </button>
+
+                <!-- ✅ ADD THIS DELETE BUTTON -->
+                <button type="button" class="btn-delete"
+                  onclick="openDeleteConfirm('<?= htmlspecialchars($row['module'], ENT_QUOTES) ?>', <?= (int)$row['id'] ?>)">
+                  Delete
                 </button>
               </td>
             </tr>
@@ -148,6 +161,7 @@ function viewLink($module, $id) {
     <p>Restore this archived document?</p>
 
     <form id="restoreForm" method="POST" action="../handlers/restore_archive.php">
+      <?= csrf_field(); ?>
       <input type="hidden" name="module" id="restoreModule">
       <input type="hidden" name="id" id="restoreId">
 
@@ -159,7 +173,47 @@ function viewLink($module, $id) {
   </div>
 </div>
 
+<!-- ❌ Permanent Delete Confirmation Modal -->
+<div id="archiveDeleteConfirmModal" class="modal">
+  <div class="modal-content">
+    <h1>Confirm Delete</h1>
+    <p style="color:red;">
+      ⚠️ This action is permanent. The file will be deleted and cannot be recovered.
+    </p>
+
+    <form id="deleteForm" method="POST" action="../handlers/delete_archive.php">
+      <?= csrf_field(); ?>
+      <input type="hidden" name="module" id="deleteModule">
+      <input type="hidden" name="id" id="deleteId">
+
+      <div class="modal-buttons">
+        <button type="submit" class="btn-delete">Yes, Delete</button>
+        <button type="button" class="btn-cancel" onclick="closeDeleteConfirm()">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
 <script>
+
+  // Delete confirm modal
+  const deleteModal = document.getElementById("archiveDeleteConfirmModal");
+
+  function openDeleteConfirm(module, id) {
+    document.getElementById("deleteModule").value = module;
+    document.getElementById("deleteId").value = id;
+    deleteModal.style.display = "block";
+  }
+
+  function closeDeleteConfirm() {
+    deleteModal.style.display = "none";
+  }
+
+  window.addEventListener("click", function(e) {
+    if (e.target === deleteModal) deleteModal.style.display = "none";
+  });
+  
   // Search filter
   function filterTable() {
     const input = document.getElementById("searchInput").value.toLowerCase();

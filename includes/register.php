@@ -1,42 +1,49 @@
 <?php
-// No session_start() here, already started in main file
-// No db_conn include here, already included in main file
 
 $error = '';
 $success = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
+    require_once 'function/csrf.php';
+    csrf_verify();
+
     // Trim inputs
     $fullname = trim($_POST['fullname']);
     $dept = trim($_POST['department']);
     $email    = trim($_POST['email']);
     $password = $_POST['password'];
+    $confirm_password = $_POST['confirm_password'] ?? '';
 
-    // 1️⃣ Basic empty check
-    if (empty($fullname) || empty($dept) || empty($email) || empty($password)) {
-        $error = "All fields are required.";
-    } 
-    // 2️⃣ Email format
+    // Empty check
+    if (empty($fullname) || empty($dept) || empty($email) || empty($password) || empty($confirm_password)) {
+    $error = "All fields are required.";
+    }
+
+    // Email format
     elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = "Invalid email format.";
     } 
-    // 3️⃣ Full name validation (letters, spaces, dash, apostrophe)
+    // Full name validation (letters, spaces, dash, apostrophe)
     elseif (!preg_match("/^[a-zA-Z-' ]+$/", $fullname)) {
         $error = "Full name can only contain letters, spaces, apostrophes, and dashes.";
     } 
-    
-    // 4️⃣ Password rule: 8–12 chars, must contain letter, number, special char, no spaces
-elseif (!preg_match('/^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9])[^\s]{8,12}$/', $password)) {
-    $error = "Password must be 8–12 characters and include at least one letter, one number, and one special character (no spaces).";
-}
+
+    // Confirm password check
+    elseif ($password !== $confirm_password) {
+        $error = "Passwords do not match.";
+    }
+
+    elseif (!preg_match('/^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9])[^\s]{8,20}$/', $password)) {
+    $error = "Password must be 8–12 characters long and must not contain spaces.";
+    }
 
     else {
 
         // Sanitize fullname for DB
         $fullname = htmlspecialchars($fullname, ENT_QUOTES, 'UTF-8');
 
-        // 5️⃣ Check if email already exists
+        // Check if email already exists
         $check = $conn->prepare("SELECT id FROM user WHERE email = ?");
         if (!$check) {
             $error = "Database error. Try again.";
@@ -49,10 +56,10 @@ elseif (!preg_match('/^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9])[^\s]{8,12}$/', $
                 $error = "Email already registered.";
             } else {
 
-                // 6️⃣ Hash password
+                // Hash password
                 $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-                // 7️⃣ Insert user with status 'pending'
+                // Insert user with status 'pending'
                 $stmt = $conn->prepare("
                     INSERT INTO user (fullname, dept, email, password, role, status)
                     VALUES (?, ?,  ?, ?, 'user', 'pending')

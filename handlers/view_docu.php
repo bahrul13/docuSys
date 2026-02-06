@@ -38,8 +38,25 @@ $pdfFilePath = __DIR__ . "/../uploads/other/" . $doc['file_name'];
 // ✅ Web path for iframe
 $pdfFileUrl  = "../uploads/other/" . $doc['file_name'];
 
+// ✅ Detect file extension
+$fileName = $doc['file_name'] ?? '';
+$fileExt  = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+
+// ✅ Default iframe source uses local web path (works for PDF)
+$iframeSrc = $pdfFileUrl;
+
+// ✅ If Word file, use Google Docs Viewer (requires public URL)
+if (in_array($fileExt, ['doc', 'docx'])) {
+
+    // 🔥 CHANGE THIS to your real public domain / public IP
+    // Example: https://yourdomain.com/uploads/other/filename.docx
+    $publicUrl = "https://yourdomain.com/uploads/other/" . rawurlencode($fileName);
+
+    $iframeSrc = "https://docs.google.com/gview?url={$publicUrl}&embedded=true";
+}
+
 if (!file_exists($pdfFilePath)) {
-    $_SESSION['flash'] = "PDF file not found.";
+    $_SESSION['flash'] = "File not found.";
     header("Location: ../users/other.php");
     exit();
 }
@@ -52,7 +69,7 @@ if ($user_id) {
         'documents',
         $doc_id,
         'View Document',
-        "Viewed Document: {$doc['document']} (File: {$doc['file_name']})"
+        "Viewed Document: {$doc['document']}"
     );
 }
 

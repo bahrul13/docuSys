@@ -54,8 +54,41 @@ if ($newFileUploaded) {
     $mime  = finfo_file($finfo, $_FILES['file_name']['tmp_name']);
     finfo_close($finfo);
 
-    if ($mime !== 'application/pdf') {
-        $_SESSION['flash'] = "❌ Only PDF files are allowed.";
+    $allowedMimes = [
+        // PDF
+        'application/pdf',
+
+        // Word
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+
+        // Excel
+        'application/vnd.ms-excel',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+
+        // PowerPoint
+        'application/vnd.ms-powerpoint',
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+
+        // Images
+        'image/jpeg',
+        'image/png',
+        'image/gif',
+        'image/webp',
+
+        // Text
+        'text/plain',
+
+        // ZIP / RAR
+        'application/zip',
+        'application/x-zip-compressed',
+        'application/x-rar-compressed',
+        'application/vnd.rar',
+        'application/x-rar'
+    ];
+
+    if (!in_array($mime, $allowedMimes)) {
+        $_SESSION['flash'] = "❌ File type not allowed.";
         header("Location: ../users/other.php");
         exit();
     }

@@ -5,6 +5,8 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 require "../db/db_conn.php";
+require_once __DIR__ . '/../function/csrf.php';
+
 
 // Redirect if not logged in
 if (!isset($_SESSION['user_id'])) {
@@ -104,6 +106,7 @@ $result = $conn->query($sql);
     <p>Are you sure you want to reactivate this user?</p>
 
     <form method="POST" action="reactivate_user.php">
+      <?= csrf_field(); ?>
       <input type="hidden" name="id" id="reactivateUserId">
       <div class="modal-buttons">
         <button type="submit" class="btn-update">Yes, Reactivate</button>
