@@ -10,7 +10,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 require '../vendor/autoload.php';
 
-// ✅ must be logged in + admin (recommended)
+// must be logged in + admin (recommended)
 if (!isset($_SESSION['user_id'])) {
     header("Location: ../index.php");
     exit();
@@ -21,17 +21,16 @@ if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
     exit();
 }
 
-// ✅ POST only (approve changes DB)
+// POST only (approve changes DB)
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     $_SESSION['flash'] = "⚠️ Invalid request.";
     header("Location: ../admin/pending_user.php");
     exit();
 }
 
-// ✅ CSRF verify
 csrf_verify();
 
-// ✅ Get id from POST, not GET
+//  Get id from POST, not GET
 $id = (int)($_POST['id'] ?? 0);
 if ($id <= 0) {
     $_SESSION['flash'] = "⚠️ Invalid user ID.";
@@ -39,7 +38,7 @@ if ($id <= 0) {
     exit();
 }
 
-// 1️⃣ Get user's email and fullname first
+// Get user's email and fullname first
 $stmt = $conn->prepare("SELECT fullname, email FROM user WHERE id = ? LIMIT 1");
 $stmt->bind_param("i", $id);
 $stmt->execute();
@@ -50,13 +49,13 @@ if ($result && $result->num_rows > 0) {
     $fullname = $user['fullname'];
     $email = $user['email'];
 
-    // 2️⃣ Update status to approved
+    // Update status to approved
     $updateStmt = $conn->prepare("UPDATE user SET status = 'approved' WHERE id = ?");
     $updateStmt->bind_param("i", $id);
     $updateStmt->execute();
     $updateStmt->close();
 
-    // 3️⃣ Log action
+    //  Log action
     logAction(
         $conn,
         $_SESSION['user_id'], // ✅ fix: use user_id
@@ -66,7 +65,7 @@ if ($result && $result->num_rows > 0) {
         "Admin approved user registration: {$fullname}"
     );
 
-    // 4️⃣ Send email notification
+    //  Send email notification
     $mail = new PHPMailer(true);
 
     try {
