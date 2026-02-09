@@ -16,7 +16,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-include('../db/db_conn.php');
+require_once __DIR__ . '/../db/db_conn.php';
 
 ?>
 

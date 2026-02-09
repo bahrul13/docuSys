@@ -1,6 +1,7 @@
 <?php
 session_start();
 require '../db/db_conn.php';
+require '../function/csrf.php';
 
 // Check if user is admin
 if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
@@ -37,7 +38,8 @@ while ($row = $result->fetch_assoc()) {
 
     <div class="form-container">
       <form action="../handlers/add_docu.php" method="POST" enctype="multipart/form-data" class="form-box">
-        <label for="document">Document Name</label>
+        <?= csrf_field(); ?>
+        <label for="documentName">Document Name</label>
         <input type="text" name="documentName" id="documentID" required>
 
         <label for="file_name">PDF File</label>

@@ -1,7 +1,8 @@
 <?php
 session_start();
-require_once '../db/db_conn.php';
-require "../handlers/view_sfr.php"; // Fetch document data from DB
+
+require_once __DIR__ . '/../db/db_conn.php';
+require_once __DIR__ . '/../handlers/view_sfr.php';
 
 // Build PDF path safely
 $pdfFileUrl = isset($doc['file_name']) ? "../uploads/sfr/" . $doc['file_name'] : null;

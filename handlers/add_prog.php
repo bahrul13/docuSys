@@ -1,67 +1,79 @@
 <?php
 session_start();
-require '../db/db_conn.php';
-require "../function/log_handler.php";
 
-// ✅ Define user_id for logging
-$user_id = $_SESSION['user_id'] ?? null;
+require_once __DIR__ . '/../db/db_conn.php';
+require_once __DIR__ . '/../function/csrf.php';
+require_once __DIR__ . '/../function/log_handler.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+// ✅ Login check
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../index.php");
+    exit();
+}
 
-    $program_name = trim($_POST['program_name'] ?? '');
-
-    if (empty($program_name)) {
-        $_SESSION['flash'] = "❌ All fields are required.";
-        header("Location: ../users/programs.php");
-        exit();
-    }
-
-    // ✅ Check if program name already exists
-    $check_stmt = $conn->prepare("SELECT id FROM programs WHERE name = ?");
-    $check_stmt->bind_param("s", $program_name);
-    $check_stmt->execute();
-    $check_stmt->store_result();
-
-    if ($check_stmt->num_rows > 0) {
-        $check_stmt->close();
-        $_SESSION['flash'] = "❌ Program name already exists.";
-        header("Location: ../users/programs.php");
-        exit();
-    }
-    $check_stmt->close();
-
-    // ✅ Insert new program
-    $stmt = $conn->prepare("INSERT INTO programs (name) VALUES (?)");
-    $stmt->bind_param("s", $program_name);
-
-    if ($stmt->execute()) {
-
-        $newRecordId = $stmt->insert_id;
-
-        // ✅ Log the action
-        
-        logAction(
-            $conn,
-            $user_id,
-            'programs',
-            (int)$newRecordId,
-            'Add Program',
-            "Added Program document for program: $program_name"
-        );
-
-        $_SESSION['flash'] = "✅ Program added successfully.";
-
-    } else {
-        $_SESSION['flash'] = "❌ Error: Could not save the program.";
-    }
-
-    $stmt->close();
-
+// ✅ Admin only (recommended for adding programs)
+if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
+    $_SESSION['flash'] = "Access denied.";
     header("Location: ../users/programs.php");
     exit();
+}
 
-} else {
+$user_id = (int)$_SESSION['user_id'];
+
+// ✅ Only POST
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     $_SESSION['flash'] = "⚠️ Invalid request method.";
     header("Location: ../users/programs.php");
     exit();
 }
+
+// ✅ CSRF verify
+csrf_verify();
+
+$program_name = trim($_POST['program_name'] ?? '');
+
+if ($program_name === '') {
+    $_SESSION['flash'] = "❌ Program name is required.";
+    header("Location: ../users/programs.php");
+    exit();
+}
+
+// ✅ Check duplicate
+$check_stmt = $conn->prepare("SELECT id FROM programs WHERE name = ? LIMIT 1");
+$check_stmt->bind_param("s", $program_name);
+$check_stmt->execute();
+$check_stmt->store_result();
+
+if ($check_stmt->num_rows > 0) {
+    $check_stmt->close();
+    $_SESSION['flash'] = "❌ Program name already exists.";
+    header("Location: ../users/programs.php");
+    exit();
+}
+$check_stmt->close();
+
+// ✅ Insert
+$stmt = $conn->prepare("INSERT INTO programs (name) VALUES (?)");
+$stmt->bind_param("s", $program_name);
+
+if ($stmt->execute()) {
+    $newRecordId = (int)$stmt->insert_id;
+
+    logAction(
+        $conn,
+        $user_id,
+        'programs',
+        $newRecordId,
+        'Add Program',
+        "Added program: {$program_name}"
+    );
+
+    $_SESSION['flash'] = "✅ Program added successfully.";
+} else {
+    $_SESSION['flash'] = "❌ Error: Could not save the program.";
+}
+
+$stmt->close();
+
+header("Location: ../users/programs.php");
+exit();

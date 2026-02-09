@@ -1,66 +1,88 @@
 <?php
 session_start();
-require '../db/db_conn.php';
-require '../function/log_handler.php';
 
-// ✅ Get logged-in user id (for logs)
-$user_id = $_SESSION['user_id'] ?? null;
+require_once __DIR__ . '/../db/db_conn.php';
+require_once __DIR__ . '/../function/csrf.php';
+require_once __DIR__ . '/../function/log_handler.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
-    $id = (int)$_POST['id'];
-
-    // Get file name to delete from uploads folder
-    $stmt = $conn->prepare("SELECT file_name FROM copc WHERE id = ?");
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($result && $result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        $fileName = $row['file_name'];
-        $filePath = '../uploads/copc/' . $fileName;
-
-        // Delete from database
-        $deleteStmt = $conn->prepare("DELETE FROM copc WHERE id = ?");
-        $deleteStmt->bind_param("i", $id);
-
-        if ($deleteStmt->execute()) {
-
-            // Delete physical file if it exists
-            if (!empty($fileName) && file_exists($filePath)) {
-                unlink($filePath);
-            }
-
-            // ✅ Log the delete action
-            logAction(
-                $conn,
-                $user_id,
-                'copc',
-                $id,
-                'Delete COPC',
-                "Deleted COPC document: {$fileName}"
-            );
-
-            $_SESSION['flash'] = "✅ Document deleted successfully.";
-
-        } else {
-            $_SESSION['flash'] = "❌ Failed to delete the document from database.";
-        }
-
-        $deleteStmt->close();
-
-    } else {
-        $_SESSION['flash'] = "⚠️ Document not found.";
-    }
-
-    $stmt->close();
-
-} else {
-    $_SESSION['flash'] = "⚠️ Invalid request.";
+// ✅ Must be logged in
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../index.php");
+    exit();
 }
 
-// ❌ Remove this line (PHP closes it automatically)
-// $conn->close();
+// ✅ Admin only (recommended for delete)
+if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
+    $_SESSION['flash'] = "Access denied.";
+    header("Location: ../users/copc.php");
+    exit();
+}
+
+// ✅ CSRF verify (MUST for delete)
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    $_SESSION['flash'] = "⚠️ Invalid request method.";
+    header("Location: ../users/copc.php");
+    exit();
+}
+csrf_verify();
+
+// ✅ Validate ID
+$id = (int)($_POST['id'] ?? 0);
+if ($id <= 0) {
+    $_SESSION['flash'] = "⚠️ Invalid ID.";
+    header("Location: ../users/copc.php");
+    exit();
+}
+
+// ✅ Actor for logs
+$user_id = (int)$_SESSION['user_id'];
+
+// ✅ Get file name first
+$stmt = $conn->prepare("SELECT file_name, program FROM copc WHERE id = ? LIMIT 1");
+$stmt->bind_param("i", $id);
+$stmt->execute();
+$result = $stmt->get_result();
+$row = $result ? $result->fetch_assoc() : null;
+$stmt->close();
+
+if (!$row) {
+    $_SESSION['flash'] = "⚠️ Document not found.";
+    header("Location: ../users/copc.php");
+    exit();
+}
+
+$fileName = $row['file_name'] ?? '';
+$program  = $row['program'] ?? 'Unknown';
+$filePath = __DIR__ . '/../uploads/copc/' . $fileName;
+
+// ✅ Delete from DB
+$deleteStmt = $conn->prepare("DELETE FROM copc WHERE id = ? LIMIT 1");
+$deleteStmt->bind_param("i", $id);
+
+if ($deleteStmt->execute()) {
+
+    // ✅ Delete physical file (optional; only if exists)
+    if (!empty($fileName) && file_exists($filePath)) {
+        unlink($filePath);
+    }
+
+    // ✅ Log
+    logAction(
+        $conn,
+        $user_id,
+        'copc',
+        $id,
+        'Delete COPC',
+        "Deleted COPC record: {$program}"
+    );
+
+    $_SESSION['flash'] = "✅ COPC deleted successfully.";
+
+} else {
+    $_SESSION['flash'] = "❌ Failed to delete COPC.";
+}
+
+$deleteStmt->close();
 
 header("Location: ../users/copc.php");
 exit();

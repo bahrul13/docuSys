@@ -16,7 +16,8 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-require '../db/db_conn.php';
+require_once __DIR__ . '/../db/db_conn.php';
+require_once __DIR__ . '/../function/csrf.php';
 
 // Check if user is admin
 $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
@@ -118,12 +119,13 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
     <span class="close" onclick="closeUpdateProgramModal()">&times;</span>
     <h1>Update Program</h1>
     <form action="../handlers/update_prog.php" method="POST">
+      <?= csrf_field(); ?>
       <input type="hidden" name="id" id="updateProgramId">
       <label for="updateProgramName">Program Name</label>
       <input type="text" name="name" id="updateProgramName" required>
-      
       <button type="submit">Update</button>
     </form>
+
   </div>
 </div>
 
@@ -134,6 +136,7 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
     <h1>Delete Program</h1>
     <p>Are you sure you want to delete this program?</p>
     <form action="../handlers/delete_prog.php" method="POST">
+      <?= csrf_field(); ?>
       <input type="hidden" name="id" id="deleteProgramId">
       <button type="submit" class="btn-delete-confirm">Confirm</button>
       <button type="button" onclick="closeDeleteProgramModal()" style="background-color: gray; margin-left: 10px;">Cancel</button>

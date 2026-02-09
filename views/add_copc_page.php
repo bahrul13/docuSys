@@ -1,7 +1,8 @@
 <?php
 session_start();
-require '../db/db_conn.php';
-require '../function/csrf.php';
+require_once __DIR__ . '/../db/db_conn.php';
+require_once __DIR__ . '/../function/csrf.php';
+require_once __DIR__ . '/../function/log_handler.php';
 
 // Check if user is admin
 if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {

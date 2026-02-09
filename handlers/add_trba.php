@@ -1,7 +1,8 @@
 <?php
 session_start();
-require '../db/db_conn.php';
-require "../function/log_handler.php";
+require_once __DIR__ . '/../db/db_conn.php';
+require_once __DIR__ . '/../function/csrf.php';
+require_once __DIR__ . '/../function/log_handler.php';
 
 // Ensure user_id exists for logging
 $user_id = $_SESSION['user_id'] ?? null;

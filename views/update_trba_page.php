@@ -1,6 +1,8 @@
 <?php
 session_start();
-require '../db/db_conn.php';
+
+require_once __DIR__ . '/../db/db_conn.php';
+require_once __DIR__ . '/../function/csrf.php';
 
 // 🔐 Admin only
 if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
@@ -57,7 +59,7 @@ while ($row = $res->fetch_assoc()) {
         <h2>Update TRBA</h2>
         <div class="form-container">
             <form action="../handlers/update_trba.php" method="POST" enctype="multipart/form-data" class="form-box">
-
+            <?= csrf_field(); ?>
             <!-- Hidden ID -->
             <input type="hidden" name="id" value="<?= (int)$trba['id'] ?>">
 
@@ -162,8 +164,6 @@ while ($row = $res->fetch_assoc()) {
             if (e.target === trbaCancelModal) trbaCancelModal.style.display = 'none';
         };
     </script>
-
-
 
 <?php $conn->close(); ?>
 

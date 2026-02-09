@@ -1,10 +1,17 @@
 <?php
 session_start();
-require '../db/db_conn.php';
-require "../function/log_handler.php";
+require_once __DIR__ . '/../db/db_conn.php';
+require_once __DIR__ . '/../function/csrf.php';
+require_once __DIR__ . '/../function/log_handler.php';
+
+// Must be logged in (recommended)
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../index.php");
+    exit();
+}
 
 // Ensure user_id exists for logging
-$user_id = $_SESSION['user_id'] ?? null;
+$user_id = (int)($_SESSION['user_id'] ?? 0);
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     $_SESSION['flash'] = "⚠️ Invalid request method.";
@@ -12,12 +19,22 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 
+// ✅ CSRF check (do this only on POST)
+csrf_verify();
+
 $program = trim($_POST['documentName'] ?? '');
 $file    = $_FILES['file_name'] ?? null;
 
-// ======= REQUIRED FIELDS VALIDATION =======
-if (empty($program) || empty($file) || empty($file['name'])) {
+// ======= BASIC VALIDATION =======
+if ($program === '' || empty($file) || empty($file['name'])) {
     $_SESSION['flash'] = "❌ Document name and file are required.";
+    header("Location: ../users/other.php");
+    exit();
+}
+
+// Optional: limit title length
+if (mb_strlen($program) > 150) {
+    $_SESSION['flash'] = "❌ Document name is too long (max 150 characters).";
     header("Location: ../users/other.php");
     exit();
 }
@@ -25,6 +42,14 @@ if (empty($program) || empty($file) || empty($file['name'])) {
 // ======= UPLOAD ERROR CHECK =======
 if (!isset($file['error']) || $file['error'] !== UPLOAD_ERR_OK) {
     $_SESSION['flash'] = "❌ File upload failed. Error code: " . ($file['error'] ?? 'unknown');
+    header("Location: ../users/other.php");
+    exit();
+}
+
+// Optional: file size limit (example 20MB)
+$maxBytes = 20 * 1024 * 1024;
+if (!empty($file['size']) && $file['size'] > $maxBytes) {
+    $_SESSION['flash'] = "❌ File is too large. Max 20MB.";
     header("Location: ../users/other.php");
     exit();
 }
@@ -63,7 +88,7 @@ $allowedMimes = [
     'application/x-rar-compressed'
 ];
 
-if (!in_array($mime, $allowedMimes)) {
+if (!in_array($mime, $allowedMimes, true)) {
     $_SESSION['flash'] = "❌ File type not allowed.";
     header("Location: ../users/other.php");
     exit();
@@ -147,9 +172,6 @@ if ($stmt->execute()) {
 }
 
 $stmt->close();
-
-// ❌ REMOVE this — PHP auto-closes DB connection
-// $conn->close();
 
 header("Location: ../users/other.php");
 exit();

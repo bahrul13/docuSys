@@ -5,7 +5,7 @@ $success = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    require_once 'function/csrf.php';
+    require_once __DIR__ . '/../function/csrf.php';
     csrf_verify();
 
     // Trim inputs

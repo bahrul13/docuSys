@@ -1,29 +1,41 @@
 <?php
 session_start();
-require '../db/db_conn.php';
-require '../function/log_handler.php';
+
+require_once __DIR__ . '/../db/db_conn.php';
+require_once __DIR__ . '/../function/csrf.php';
+require_once __DIR__ . '/../function/log_handler.php';
+
+// ✅ Must be logged in
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../index.php");
+    exit();
+}
 
 // Get logged-in user ID
-$user_id = $_SESSION['user_id'] ?? null;
+$user_id = (int)$_SESSION['user_id'];
 
-// Check if admin
+// ✅ Admin only
 if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
     $_SESSION['flash'] = "Access denied.";
     header("Location: ../users/sfr.php");
     exit();
 }
 
+// ✅ POST only
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     $_SESSION['flash'] = "⚠️ Invalid request method.";
     header("Location: ../users/sfr.php");
     exit();
 }
 
+// ✅ CSRF protection
+csrf_verify();
+
 // Form data
 $id         = (int)($_POST['id'] ?? 0);
 $name       = trim($_POST['program_name'] ?? '');
-$surveyType = $_POST['survey_type'] ?? '';
-$surveyDate = $_POST['survey_date'] ?? '';
+$surveyType = trim($_POST['survey_type'] ?? '');
+$surveyDate = trim($_POST['survey_date'] ?? '');
 
 if ($id <= 0 || $name === '' || $surveyType === '' || $surveyDate === '') {
     $_SESSION['flash'] = "❌ Missing required fields.";
@@ -32,7 +44,7 @@ if ($id <= 0 || $name === '' || $surveyType === '' || $surveyDate === '') {
 }
 
 // ✅ Get current file name (for delete if replaced)
-$currentStmt = $conn->prepare("SELECT file_name FROM sfr WHERE id = ?");
+$currentStmt = $conn->prepare("SELECT file_name FROM sfr WHERE id = ? LIMIT 1");
 $currentStmt->bind_param("i", $id);
 $currentStmt->execute();
 $currentRes = $currentStmt->get_result();
@@ -46,13 +58,13 @@ if (!$currentRow) {
 }
 
 $oldFileName = $currentRow['file_name'] ?? '';
-$uploadDir   = "../uploads/sfr/";
+$uploadDir   = __DIR__ . "/../uploads/sfr/"; // safer absolute path
 
 $newFileUploaded = (isset($_FILES['file_name']) && $_FILES['file_name']['error'] === UPLOAD_ERR_OK);
 
 if ($newFileUploaded) {
 
-    // ✅ Real PDF check
+    // ✅ Real PDF MIME check
     $finfo = finfo_open(FILEINFO_MIME_TYPE);
     $mime  = finfo_file($finfo, $_FILES['file_name']['tmp_name']);
     finfo_close($finfo);
@@ -73,7 +85,7 @@ if ($newFileUploaded) {
 
     $targetFile = $uploadDir . $fileName;
 
-    // Optional: prevent duplicate file name (unless it's the same old file)
+    // Prevent duplicate file name unless it's same as old
     if (file_exists($targetFile) && $fileName !== $oldFileName) {
         $_SESSION['flash'] = "❌ A file with the same name already exists. Please rename your file.";
         header("Location: ../users/sfr.php");
@@ -109,7 +121,7 @@ if ($newFileUploaded) {
 if ($stmt->execute()) {
 
     // ✅ Delete old file if replaced
-    if ($newFileUploaded && !empty($oldFileName) && isset($fileName) && $fileName !== $oldFileName) {
+    if ($newFileUploaded && $oldFileName !== '' && isset($fileName) && $fileName !== $oldFileName) {
         $oldPath = $uploadDir . $oldFileName;
         if (file_exists($oldPath)) {
             unlink($oldPath);
@@ -122,7 +134,6 @@ if ($stmt->execute()) {
     if ($newFileUploaded && isset($fileName)) {
         $logMessage .= " (Replaced file with: $fileName)";
     }
-
     logAction($conn, $user_id, 'sfr', $id, 'Update SFR', $logMessage);
 
 } else {
@@ -139,9 +150,6 @@ if ($stmt->execute()) {
 }
 
 $stmt->close();
-
-// ❌ REMOVE this — PHP auto closes DB connection
-// $conn->close();
 
 header("Location: ../users/sfr.php");
 exit();

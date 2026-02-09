@@ -1,70 +1,92 @@
 <?php
 session_start();
-require '../db/db_conn.php';
-require '../function/log_handler.php';
 
-// Get logged-in user ID and role
-$user_id   = $_SESSION['user_id'] ?? null;
-$user_role = $_SESSION['user_role'] ?? null;
+require_once __DIR__ . '/../db/db_conn.php';
+require_once __DIR__ . '/../function/csrf.php';
+require_once __DIR__ . '/../function/log_handler.php';
 
-// Check for valid POST request with document ID
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
-
-    $id = (int)$_POST['id'];
-
-    // Get document name and file name for logging and deleting
-    $stmt = $conn->prepare("SELECT file_name, document FROM documents WHERE id = ?");
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($result && $result->num_rows > 0) {
-
-        $row      = $result->fetch_assoc();
-        $fileName = $row['file_name'];
-        $docName  = $row['document'];
-
-        $filePath = '../uploads/other/' . $fileName;
-
-        // Delete from database
-        $deleteStmt = $conn->prepare("DELETE FROM documents WHERE id = ?");
-        $deleteStmt->bind_param("i", $id);
-
-        if ($deleteStmt->execute()) {
-
-            // Delete physical file if it exists
-            if (!empty($fileName) && file_exists($filePath)) {
-                unlink($filePath);
-            }
-
-            // ✅ Prepare log message
-            $logMessage = ($user_role === 'admin')
-                ? "Deleted Document: {$docName} (File: {$fileName})"
-                : "Deleted a document";
-
-            // ✅ Log action (logAction will fallback if user_id is invalid/null)
-            logAction($conn, $user_id, 'documents', $id, 'Delete Document', $logMessage);
-
-            $_SESSION['flash'] = "✅ Document deleted successfully.";
-
-        } else {
-            $_SESSION['flash'] = "❌ Failed to delete the document from database.";
-        }
-
-        $deleteStmt->close();
-
-    } else {
-        $_SESSION['flash'] = "⚠️ Document not found.";
-    }
-
-    $stmt->close();
-
-} else {
-    $_SESSION['flash'] = "⚠️ Invalid request.";
+// ✅ Must be logged in
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../index.php");
+    exit();
 }
 
-// ❌ Remove this (PHP auto closes connection)
-// $conn->close();
+$user_id   = (int)$_SESSION['user_id'];
+$user_role = $_SESSION['user_role'] ?? '';
+
+// ✅ Admin only (recommended for delete)
+if ($user_role !== 'admin') {
+    $_SESSION['flash'] = "Access denied.";
+    header("Location: ../users/other.php");
+    exit();
+}
+
+// ✅ Must be POST
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    $_SESSION['flash'] = "⚠️ Invalid request method.";
+    header("Location: ../users/other.php");
+    exit();
+}
+
+// ✅ CSRF verify
+csrf_verify();
+
+// ✅ Validate ID
+$id = (int)($_POST['id'] ?? 0);
+if ($id <= 0) {
+    $_SESSION['flash'] = "⚠️ Invalid document ID.";
+    header("Location: ../users/other.php");
+    exit();
+}
+
+// ✅ Get document info first
+$stmt = $conn->prepare("SELECT file_name, document FROM documents WHERE id = ? LIMIT 1");
+$stmt->bind_param("i", $id);
+$stmt->execute();
+$res = $stmt->get_result();
+$row = $res ? $res->fetch_assoc() : null;
+$stmt->close();
+
+if (!$row) {
+    $_SESSION['flash'] = "⚠️ Document not found.";
+    header("Location: ../users/other.php");
+    exit();
+}
+
+$fileName = $row['file_name'] ?? '';
+$docName  = $row['document'] ?? 'Unknown';
+
+// ✅ Delete from database
+$deleteStmt = $conn->prepare("DELETE FROM documents WHERE id = ? LIMIT 1");
+$deleteStmt->bind_param("i", $id);
+
+if ($deleteStmt->execute()) {
+
+    // ✅ Delete physical file (use absolute path)
+    if (!empty($fileName)) {
+        $filePath = __DIR__ . '/../uploads/other/' . $fileName;
+        if (file_exists($filePath)) {
+            unlink($filePath);
+        }
+    }
+
+    // ✅ Log action
+    logAction(
+        $conn,
+        $user_id,
+        'accreditation',
+        $id,
+        'Delete Document',
+        "Deleted Document: {$docName})"
+    );
+
+    $_SESSION['flash'] = "✅ Document deleted successfully.";
+
+} else {
+    $_SESSION['flash'] = "❌ Failed to delete the document from database.";
+}
+
+$deleteStmt->close();
 
 header("Location: ../users/other.php");
 exit();

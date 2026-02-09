@@ -1,6 +1,7 @@
 <?php
 session_start();
-require '../db/db_conn.php';
+require_once __DIR__ . '/../db/db_conn.php';
+require_once __DIR__ . '/../function/csrf.php';
 
 if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
     header("Location: ../index.php");
@@ -55,6 +56,7 @@ while ($row = $res->fetch_assoc()) {
 
   <div class="form-container">
     <form action="../handlers/update_docu.php" method="POST" enctype="multipart/form-data" class="form-box">
+      <?= csrf_field(); ?>
 
       <input type="hidden" name="id" value="<?= $other['id'] ?>">
 

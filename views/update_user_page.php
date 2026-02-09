@@ -1,6 +1,7 @@
 <?php
 session_start();
-require '../db/db_conn.php';
+require_once __DIR__ . '/../db/db_conn.php';
+require_once __DIR__ . '/../function/csrf.php';
 
 // 🔐 Admin only
 if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
@@ -51,6 +52,8 @@ if (!$user) {
 
     <div class="form-container">
       <form action="../handlers/update_user.php" method="POST" enctype="multipart/form-data" class="form-box">
+
+      <?= csrf_field(); ?>
 
         <!-- Hidden ID -->
         <input type="hidden" name="id" value="<?= (int)$user['id'] ?>">

@@ -16,17 +16,18 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-require '../db/db_conn.php';
+require_once __DIR__ . '/../db/db_conn.php';
+require_once __DIR__ . '/../function/csrf.php';
 
 // Check if user is admin
 $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
 
-// Fetch programs from database
-$programs = [];
-$result = $conn->query("SELECT * FROM programs ORDER BY name ASC");
-while ($row = $result->fetch_assoc()) {
-    $programs[] = $row['name'];
-}
+// // Fetch programs from database
+// $programs = [];
+// $result = $conn->query("SELECT * FROM programs ORDER BY name ASC");
+// while ($row = $result->fetch_assoc()) {
+//     $programs[] = $row['name'];
+// }
 ?>
 
 <!DOCTYPE html>
@@ -152,6 +153,7 @@ while ($row = $result->fetch_assoc()) {
     <p>Are you sure you want to archive this document?</p>
 
     <form method="POST" action="../handlers/archive.php">
+      <?= csrf_field(); ?>
       <input type="hidden" name="id" id="archiveId">
       <input type="hidden" name="table" id="archiveTable">
       <input type="hidden" name="redirect" value="<?= $_SERVER['PHP_SELF'] ?>">

@@ -4,7 +4,8 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-require "../db/db_conn.php";
+require_once __DIR__ . '/../db/db_conn.php';
+require_once __DIR__ . '/../function/csrf.php';
 
 // Redirect if not logged in
 if (!isset($_SESSION['user_id'])) {
@@ -75,7 +76,6 @@ $stmt->close();
     <div class="form-container">
         <form action="../handlers/update_profile.php" method="POST" class="form-box">
 
-        <?php require_once __DIR__ . '/../function/csrf.php'; ?>
         <?= csrf_field(); ?>
 
         <!-- Full Name -->

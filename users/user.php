@@ -16,7 +16,8 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-require "../db/db_conn.php";      // your database connection
+require_once __DIR__ . '/../db/db_conn.php';
+require_once __DIR__ . '/../function/csrf.php';
 
 // Check if user is admin
 $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
@@ -144,6 +145,7 @@ $result = $conn->query("SELECT id, fullname, dept, email, role FROM user ORDER B
     <h1>Confirm Deactivation</h1>
     <p>Are you sure you want to deactivate this User?</p><br>
     <form method="POST" action="../handlers/delete_user.php">
+      <?= csrf_field(); ?>
       <input type="hidden" name="id" id="deleteUserId">
       <button type="submit" class="btn-delete-confirm">Confirm</button>
       <button type="button" onclick="closeUserDeleteModal()" style="background-color: gray; margin-left: 10px;">Cancel</button>

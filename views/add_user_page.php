@@ -1,6 +1,7 @@
 <?php
 session_start();
-require '../db/db_conn.php';
+require_once __DIR__ . '/../db/db_conn.php';
+require_once __DIR__ . '/../function/csrf.php';
 
 // Check if user is admin
 if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
@@ -31,6 +32,7 @@ if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
 
     <div class="form-container">
       <form action="../handlers/add_user.php" method="POST" enctype="multipart/form-data" class="form-box">
+        <?= csrf_field(); ?>
         <label for="fullname">Name</label>
         <input type="text" name="fullname" id="fullname" required>
 

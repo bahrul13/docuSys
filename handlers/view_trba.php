@@ -3,8 +3,8 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-require "../db/db_conn.php";
-require "../function/log_handler.php";
+require_once __DIR__ . '/../db/db_conn.php';
+require_once __DIR__ . '/../function/log_handler.php';
 
 // Get logged-in user info
 $user_id   = $_SESSION['user_id'] ?? null;
@@ -52,7 +52,7 @@ if ($user_id) {
         'trba',
         $doc_id,
         'View Document',
-        "Viewed Document: {$doc['program_name']} (File: {$doc['file_name']})"
+        "Viewed Document: {$doc['program_name']}"
     );
 }
 

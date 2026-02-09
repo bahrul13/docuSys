@@ -1,6 +1,7 @@
 <?php
 session_start();
-require '../db/db_conn.php';
+require_once __DIR__ . '/../db/db_conn.php';
+require_once __DIR__ . '/../function/csrf.php';
 
 // Check if user is admin
 if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
@@ -37,6 +38,7 @@ while ($row = $result->fetch_assoc()) {
 
     <div class="trba-form-container">
       <form action="../handlers/add_trba.php" method="POST" enctype="multipart/form-data" class="form-box">
+        <?= csrf_field(); ?>
         <label for="program">Program Name</label>
         <div class="select-wrapper">
           <select name="program_name" id="program" required>

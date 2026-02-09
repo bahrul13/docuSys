@@ -16,7 +16,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-require "../db/db_conn.php";
+require_once __DIR__ . '/../db/db_conn.php';
 
 // Check if user is admin
 $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
